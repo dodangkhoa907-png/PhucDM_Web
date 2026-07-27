@@ -16,6 +16,13 @@
 
 /* ── 1. TOKENS ───────────────────────────────────────────────────────────── */
 :root {
+    /* Canonical Eight Tea Design Tokens */
+    --et-canvas:        #FAF6F0;
+    --et-surface:       #FFFFFF;
+    --et-surface-muted: #EFEAE2;
+    --et-dark:          #120E0C;
+    --et-accent:        #D2691E;
+
     /* Canvas kem dịu + bề mặt trắng — phân tầng bằng nền, không viền */
     --paper:        #FAF6F0;
     --paper-2:      #F2EBE1;
