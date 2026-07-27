@@ -12,8 +12,13 @@ import java.util.Properties;
 
 /**
  * Connection pool dùng chung toàn ứng dụng (HikariCP).
- * Đọc cấu hình từ src/main/resources/db.properties.
- * Mọi DAO lấy Connection qua {@link #getConnection()}.
+ *
+ * Cấu hình ưu tiên biến môi trường (DB_URL, DB_USERNAME, DB_PASSWORD, DB_DRIVER — cùng
+ * quy ước với {@link PayOSConfig}), fallback sang src/main/resources/db.properties (db.url,
+ * db.username, db.password, db.driver) cho local dev. File db.properties bị .gitignore
+ * chặn (chứa mật khẩu thật) nên KHÔNG có mặt khi build image Docker từ Git — nếu vẫn bắt
+ * buộc phải có file này, container sẽ crash ngay lúc khởi động trên mọi nền tảng deploy
+ * (Render, Railway...). Mọi DAO lấy Connection qua {@link #getConnection()}.
  */
 public final class Database {
 
@@ -27,24 +32,32 @@ public final class Database {
 
         Properties props = new Properties();
         try (InputStream in = Database.class.getClassLoader().getResourceAsStream("db.properties")) {
-            if (in == null) {
-                throw new IllegalStateException("Không tìm thấy db.properties trong classpath");
-            }
-            props.load(in);
+            if (in != null) props.load(in);
         } catch (IOException e) {
             throw new IllegalStateException("Lỗi đọc db.properties", e);
         }
 
-        String jdbcUrl = props.getProperty("db.url");
-        if (jdbcUrl != null && !jdbcUrl.toLowerCase().contains("statementpoolingcachesize")) {
+        String jdbcUrl = resolve("DB_URL", props.getProperty("db.url"));
+        String username = resolve("DB_USERNAME", props.getProperty("db.username"));
+        String password = resolve("DB_PASSWORD", props.getProperty("db.password"));
+        String driver = resolve("DB_DRIVER", props.getProperty("db.driver"));
+        if (driver == null || driver.isBlank()) driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+
+        if (jdbcUrl == null || jdbcUrl.isBlank()) {
+            throw new IllegalStateException(
+                "Chưa cấu hình kết nối CSDL — đặt biến môi trường DB_URL (kèm DB_USERNAME, "
+                + "DB_PASSWORD) hoặc tạo src/main/resources/db.properties cho local dev.");
+        }
+
+        if (!jdbcUrl.toLowerCase().contains("statementpoolingcachesize")) {
             jdbcUrl += (jdbcUrl.endsWith(";") ? "" : ";") + "statementPoolingCacheSize=512;disableStatementPooling=false";
         }
 
         HikariConfig cfg = new HikariConfig();
         cfg.setJdbcUrl(jdbcUrl);
-        cfg.setUsername(props.getProperty("db.username"));
-        cfg.setPassword(props.getProperty("db.password"));
-        cfg.setDriverClassName(props.getProperty("db.driver"));
+        cfg.setUsername(username);
+        cfg.setPassword(password);
+        cfg.setDriverClassName(driver);
         cfg.setPoolName("NhietDoiXanhPool");
         cfg.setMaximumPoolSize(8);
         cfg.setMinimumIdle(2);
@@ -74,5 +87,11 @@ public final class Database {
             dataSource.close();
             dataSource = null;
         }
+    }
+
+    private static String resolve(String envKey, String fromProps) {
+        String fromEnv = System.getenv(envKey);
+        if (fromEnv != null && !fromEnv.isBlank()) return fromEnv.trim();
+        return (fromProps == null || fromProps.isBlank()) ? null : fromProps.trim();
     }
 }

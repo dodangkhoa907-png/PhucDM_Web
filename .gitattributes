@@ -1,0 +1,5 @@
+# docker-entrypoint.sh chạy trong container Linux — PHẢI giữ line-ending LF.
+# Nếu để git tự "sửa" thành CRLF (mặc định hay gặp khi commit từ Windows), shebang
+# "#!/bin/sh\r" sẽ khiến container báo "no such file or directory" rất khó đoán ra
+# nguyên nhân thật (do line-ending, không phải do thiếu file).
+*.sh text eol=lf
