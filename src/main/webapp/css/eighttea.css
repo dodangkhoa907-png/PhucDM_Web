@@ -205,6 +205,18 @@ h1, h2, h3, h4,
 }
 .nav-login-link:hover { background: var(--mist) !important; }
 
+.nav-login-icon-trigger {
+    width: 40px; height: 40px; margin-left: 8px; padding: 0 !important;
+    border-radius: 50%; border: none !important; cursor: pointer;
+    background: var(--paper-2) !important; color: var(--ink-2) !important;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .95rem; transition: background-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+.nav-login-icon-trigger:hover,
+.nav-login-wrap.open .nav-login-icon-trigger {
+    background: var(--leaf) !important; color: #fff !important; transform: translateY(-1px);
+}
+
 .nav-cta, .nav-user-trigger {
     background: var(--leaf) !important; color: #fff !important;
     font-family: var(--font); font-weight: 600; font-size: .875rem;
@@ -243,6 +255,88 @@ h1, h2, h3, h4,
 
 .nav-toggle { background: none; border: none; padding: 8px; cursor: pointer; }
 .nav-toggle span { display: block; width: 21px; height: 2px; background: var(--ink); border-radius: 2px; margin: 4px 0; }
+
+/* ── 3b. DROPDOWN "ĐĂNG NHẬP" — panel nổi mở từ nút navbar, cùng kiểu chuyển
+   động với .nav-user-menu (fade + trượt nhẹ), chứa form đăng nhập rút gọn. ── */
+.nav-login-wrap { position: relative; display: inline-flex; align-items: center; }
+.nav-login-panel {
+    position: absolute !important; top: calc(100% + 10px); right: 0; left: auto; width: 320px;
+    background: var(--white); border: none; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); padding: 20px; z-index: 1200;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateY(-6px) scale(.98);
+    transform-origin: top right;
+    transition: opacity .22s var(--ease), transform .22s var(--ease), visibility .22s;
+}
+.nav-login-wrap.open .nav-login-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+.nav-login-panel-head { margin-bottom: 14px; }
+.nav-login-panel-title { display: block; font-family: var(--font-display); font-weight: 800; font-size: .98rem; color: var(--ink); }
+.nav-login-panel-sub { display: block; font-size: .78rem; color: var(--muted); margin-top: 3px; }
+.nav-login-form { display: flex; flex-direction: column; gap: 10px; }
+.nav-login-field input {
+    width: 100%; background: var(--paper) !important; border: none !important;
+    border-radius: 12px; padding: 12px 14px; font-family: var(--font); font-size: .88rem; color: var(--ink);
+    transition: box-shadow .2s var(--ease), background-color .2s var(--ease);
+}
+.nav-login-field input:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(210,105,30,.16) !important; outline: none; }
+.nav-login-submit {
+    background: var(--leaf) !important; color: #fff !important; border: none; border-radius: var(--radius-pill);
+    padding: 12px; font-family: var(--font); font-weight: 700; font-size: .88rem; cursor: pointer;
+    box-shadow: var(--shadow-cta); transition: background-color .2s var(--ease), transform .2s var(--ease);
+}
+.nav-login-submit:hover { background: var(--leaf-deep) !important; transform: translateY(-1px); }
+.nav-login-panel-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--mist);
+    font-family: var(--font); font-size: .78rem;
+}
+.nav-login-panel-foot a { color: var(--ink-2); text-decoration: none; }
+.nav-login-panel-foot a:hover { color: var(--leaf-deep); }
+.nav-login-panel-cta { color: var(--leaf-deep) !important; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; }
+.nav-login-link-mobile { color: var(--ink) !important; font-weight: 600; }
+
+/* ── 3c. AUTH PANEL — 4 view (login / forgot-email / otp / reset) dùng chung
+   1 dropdown, chuyển view bằng JS thay vì rời trang. ── */
+.auth-view[hidden] { display: none !important; }
+.auth-back {
+    display: inline-flex; align-items: center; gap: 6px; background: none; border: none;
+    color: var(--muted); font-family: var(--font); font-size: .76rem; font-weight: 600;
+    padding: 0 0 12px; cursor: pointer;
+}
+.auth-back:hover { color: var(--leaf-deep); }
+.auth-mini-alert {
+    border-radius: 12px; padding: 9px 12px; font-family: var(--font); font-size: .76rem; font-weight: 600;
+    margin-bottom: 12px; display: none;
+}
+.auth-mini-alert.show { display: block; }
+.auth-mini-alert.err { background: #FBE3E1; color: #8E1F1F; }
+.auth-mini-alert.ok { background: #E7F6EC; color: #187A43; }
+
+.otp-mini-row { display: flex; gap: 7px; justify-content: space-between; margin: 4px 0 12px; }
+.otp-mini-box {
+    width: 38px; height: 46px; text-align: center; border: none !important; border-radius: 10px;
+    background: var(--paper) !important; color: var(--ink); font-family: var(--font-mono);
+    font-size: 1.1rem; font-weight: 600; transition: box-shadow .2s var(--ease), background-color .2s var(--ease);
+}
+.otp-mini-box:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(210,105,30,.16) !important; outline: none; }
+.otp-mini-meta { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); margin-bottom: 12px; }
+.otp-mini-meta .time { color: var(--leaf-deep); font-weight: 600; }
+.otp-mini-resend { background: none; border: none; color: var(--leaf-deep); font-family: var(--font); font-weight: 700; font-size: .76rem; cursor: pointer; padding: 0; }
+.otp-mini-resend:disabled { color: var(--muted); cursor: not-allowed; }
+
+.mini-strength-track { display: flex; gap: 3px; margin-top: 7px; }
+.mini-strength-seg { flex: 1; height: 3px; border-radius: 99px; background: var(--mist); transition: background .3s; }
+.mini-match { font-family: var(--font); font-size: .72rem; font-weight: 600; margin-top: 5px; min-height: 14px; }
+.mini-match.ok { color: var(--leaf-deep); }
+.mini-match.bad { color: #BC5A24; }
+
+/* Hiệu ứng rời trang khi bấm link có [data-transition] — fade + scale nhẹ,
+   dùng chung cho cả navbar lẫn các trang auth độc lập. */
+body.page-leaving { animation: pageLeave .22s var(--ease) forwards; }
+@keyframes pageLeave { to { opacity: 0; transform: scale(.985); } }
+@media (prefers-reduced-motion: reduce) {
+    body.page-leaving { animation: none; }
+}
 
 /* ── 4. NÚT — TUYỆT ĐỐI KHÔNG VIỀN ──────────────────────────────────────── */
 button, [type="button"], [type="submit"], [type="reset"] {
@@ -286,6 +380,7 @@ input[type="number"], input[type="search"], select, textarea,
     border-radius: 13px; padding: 13px 16px;
     font-family: var(--font); font-size: .94rem; color: var(--ink);
     box-shadow: none;
+    width: 100%; box-sizing: border-box;
     transition: background-color .2s var(--ease), box-shadow .2s var(--ease);
 }
 input:focus, select:focus, textarea:focus, .form-control:focus {

@@ -7,82 +7,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Đặt lại mật khẩu — Eight Tea</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${ctx}/css/eighttea.css?v=${initParam.assetVer}">
 <style>
-:root{--green:#BC5A24;--green-dark:#8F3F14;--gold:#D9A066;--coral:#E07A5F;--cream:#FAF6F0;--paper:#FFFFFF;--ink:#241C17;--ink-soft:#9A8878;--line:#E7DCCE;--fd:'Bricolage Grotesque',sans-serif;--fb:'Hanken Grotesk','Be Vietnam Pro',sans-serif}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--fb);background:var(--cream);color:var(--ink);min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:28px}
-a{text-decoration:none;color:inherit}button{font:inherit;cursor:pointer;border:none}
-.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.3;pointer-events:none;z-index:0;animation:drift 14s ease-in-out infinite}
-.blob.b1{width:340px;height:340px;background:#C9E4D2;top:-110px;right:-90px}
-.blob.b2{width:300px;height:300px;background:#F9C784;bottom:-100px;left:-80px;animation-delay:-6s}
+body{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:28px}
+a{text-decoration:none;color:inherit}
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.35;pointer-events:none;z-index:0;animation:drift 14s ease-in-out infinite}
+.blob.b1{width:340px;height:340px;background:var(--leaf-wash);top:-110px;right:-90px}
+.blob.b2{width:300px;height:300px;background:var(--gold-light);bottom:-100px;left:-80px;animation-delay:-6s}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-30px)}}
-.back{position:fixed;top:22px;left:24px;z-index:20;display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);padding:10px 20px;border-radius:99px;font-weight:600;font-size:13.5px;color:var(--ink-soft);box-shadow:0 10px 26px -14px rgba(20,30,20,.3);transition:transform .2s,color .2s}
-.back:hover{transform:translateX(-3px);color:var(--green)}
-@keyframes cardIn{from{opacity:0;transform:translateY(36px) scale(.97)}to{opacity:1;transform:none}}
-.card{position:relative;z-index:5;width:min(480px,100%);background:var(--paper);border-radius:28px;border:1px solid var(--line);box-shadow:0 40px 90px -36px rgba(30,63,39,.35);padding:42px 40px;animation:cardIn .7s cubic-bezier(.16,1,.3,1);text-align:center}
-.badge{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-dark));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px;box-shadow:0 18px 34px -14px rgba(42,92,56,.55);animation:bob 5s ease-in-out infinite}
+.back{position:fixed;top:22px;left:24px;z-index:20;display:inline-flex;align-items:center;gap:8px;background:var(--white);padding:10px 20px;border-radius:99px;font-family:var(--font);font-weight:600;font-size:13.5px;color:var(--ink-2);box-shadow:var(--shadow-sm);transition:transform .2s,color .2s}
+.back:hover{transform:translateX(-3px);color:var(--leaf-deep)}
+@keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.auth-card{position:relative;z-index:5;width:min(480px,100%);background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:42px 40px;animation:cardIn .6s cubic-bezier(.16,1,.3,1);text-align:center}
+.badge{width:72px;height:72px;border-radius:50%;background:var(--leaf);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px;box-shadow:var(--shadow-cta);animation:bob 5s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-h1{font-family:var(--fd);font-weight:700;font-size:26px;color:var(--green-dark)}
-.sub{color:var(--ink-soft);margin:8px 0 22px;font-size:13.5px;line-height:1.6}
-.alert{border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;margin-bottom:14px;display:flex;gap:9px;text-align:left;background:#FBE3E1;color:#8E1F1F;border:1px solid #F0A199}
+.auth-card h1{font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--ink)}
+.sub{color:var(--muted);margin:8px 0 22px;font-size:13.5px;line-height:1.6}
+.alert{border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;margin-bottom:14px;display:flex;gap:9px;text-align:left;background:#FBE3E1;color:#8E1F1F}
 .field{text-align:left;margin-bottom:14px}
-.field label{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.field label{display:block;font-family:var(--font-mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .field .box{position:relative}
-.field input{width:100%;padding:13px 44px 13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#FFF;font:inherit;font-size:14px;transition:border-color .2s,box-shadow .2s}
-.field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(42,92,56,.12)}
-.field input.err-border{border-color:var(--coral);box-shadow:0 0 0 3px rgba(217,83,79,.08)}
-.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;color:var(--ink-soft);display:flex;padding:4px}
+.field .box.has-eye input{padding-right:44px}
+.field input.err-border{box-shadow:0 0 0 3px rgba(224,139,69,.25) !important}
+.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);display:flex;padding:4px;cursor:pointer;z-index:2}
 
 .steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:20px}
-.step-dot{width:10px;height:10px;border-radius:50%;background:var(--line);transition:all .3s}
-.step-dot.active{width:28px;border-radius:99px;background:var(--green)}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--mist);transition:all .3s}
+.step-dot.active{width:28px;border-radius:99px;background:var(--leaf)}
 .step-dot.done{background:var(--gold)}
-.step-line{width:28px;height:2px;background:var(--line);margin:0 4px}
+.step-line{width:28px;height:2px;background:var(--mist);margin:0 4px}
 .step-line.done{background:var(--gold)}
 
 .strength-wrap{margin-top:8px}
 .strength-track{display:flex;gap:3px}
-.strength-seg{flex:1;height:3px;border-radius:99px;background:var(--line);transition:background .3s}
+.strength-seg{flex:1;height:3px;border-radius:99px;background:var(--mist);transition:background .3s}
 .strength-label{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
-.strength-text{font-size:10px;font-weight:700;transition:color .3s}
-.strength-pct{font-size:10px;color:var(--ink-soft);font-weight:600}
+.strength-text{font-family:var(--font-mono);font-size:10px;font-weight:600;transition:color .3s}
+.strength-pct{font-family:var(--font-mono);font-size:10px;color:var(--muted);font-weight:600}
 
-.pw-rules{background:#F8F6F1;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;text-align:left}
-.pw-rules-title{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
-.pw-rule{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12.5px;font-weight:500;color:var(--ink-soft);transition:color .3s}
-.pw-rule + .pw-rule{border-top:1px solid rgba(36,31,24,.06)}
-.pw-rule.pass{color:var(--green)}
-.pw-rule .icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;transition:all .3s;border:1.5px solid var(--line);background:#fff;color:var(--ink-soft)}
-.pw-rule.pass .icon{background:var(--green);border-color:var(--green);color:#fff;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.pw-rules{background:var(--paper);border-radius:12px;padding:12px 14px;margin-top:10px;text-align:left}
+.pw-rules-title{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.pw-rule{display:flex;align-items:center;gap:8px;padding:5px 0;font-family:var(--font);font-size:12.5px;font-weight:500;color:var(--muted);transition:color .3s}
+.pw-rule.pass{color:var(--leaf-deep)}
+.pw-rule .icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;transition:all .3s;background:var(--white);color:var(--muted)}
+.pw-rule.pass .icon{background:var(--leaf);color:#fff;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-.match-row{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:12px;font-weight:600;min-height:18px;transition:all .3s}
-.match-row.ok{color:var(--green)}
-.match-row.bad{color:var(--coral)}
+.match-row{display:flex;align-items:center;gap:7px;margin-top:6px;font-family:var(--font);font-size:12px;font-weight:600;min-height:18px;transition:all .3s}
+.match-row.ok{color:var(--leaf-deep)}
+.match-row.bad{color:#BC5A24}
 .match-row .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.match-row.ok .dot{background:var(--green)}
-.match-row.bad .dot{background:var(--coral)}
+.match-row.ok .dot{background:var(--leaf)}
+.match-row.bad .dot{background:#BC5A24}
 
-.submit{width:100%;margin-top:16px;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;font-weight:700;font-size:15px;box-shadow:0 16px 30px -14px rgba(42,92,56,.6);transition:transform .2s,opacity .2s}
-.submit:hover:not(:disabled){transform:translateY(-2px)}
-.submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.auth-submit{width:100%;margin-top:16px;font-weight:700 !important;font-size:15px !important;padding:14px !important;opacity:1;transition:transform .2s,opacity .2s,background-color .2s}
+.auth-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
 @media(max-width:520px){
   body{padding:16px 12px;align-items:flex-start;padding-top:68px}
   .back{top:14px;left:14px;padding:8px 14px;font-size:12px}
-  .card{padding:24px 18px;border-radius:20px}
+  .auth-card{padding:24px 18px;border-radius:20px;box-shadow:none}
   .badge{width:60px;height:60px;font-size:26px;margin-bottom:12px}
-  h1{font-size:21px}
+  .auth-card h1{font-size:21px}
 }
 </style>
 </head>
 <body>
 <span class="blob b1"></span><span class="blob b2"></span>
-<a href="${ctx}/login" class="back">&larr; Về đăng nhập</a>
+<a href="${ctx}/login" class="back" data-transition>&larr; Về đăng nhập</a>
 
-<div class="card">
+<div class="auth-card">
   <div class="steps">
     <span class="step-dot done"></span><span class="step-line done"></span>
     <span class="step-dot done"></span><span class="step-line done"></span>
@@ -99,7 +93,7 @@ h1{font-family:var(--fd);font-weight:700;font-size:26px;color:var(--green-dark)}
     <input type="hidden" name="_csrf" value="${sessionScope._csrf}">
     <div class="field">
       <label for="password">Mật khẩu mới</label>
-      <div class="box">
+      <div class="box has-eye">
         <input type="password" id="password" name="password" placeholder="••••••••" required autofocus autocomplete="new-password">
         <button type="button" class="eye" onclick="togglePw('password',this)" aria-label="Hiện mật khẩu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
@@ -122,14 +116,14 @@ h1{font-family:var(--fd);font-weight:700;font-size:26px;color:var(--green-dark)}
 
     <div class="field">
       <label for="confirmPassword">Xác nhận mật khẩu mới</label>
-      <div class="box">
+      <div class="box has-eye">
         <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required autocomplete="new-password">
         <button type="button" class="eye" onclick="togglePw('confirmPassword',this)" aria-label="Hiện mật khẩu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="match-row" id="matchRow"></div>
     </div>
 
-    <button type="submit" class="submit" id="submitBtn" disabled>Đổi mật khẩu</button>
+    <button type="submit" class="submit auth-submit" id="submitBtn" disabled>Đổi mật khẩu</button>
   </form>
 </div>
 
@@ -159,9 +153,9 @@ function togglePw(id, btn){
   var strengthText = document.getElementById('strengthText');
   var strengthPct = document.getElementById('strengthPct');
   var levels = [
-    { color: '#D9534F', label: 'Yếu' },
-    { color: '#F4A261', label: 'Trung bình' },
-    { color: '#2A5C38', label: 'Mạnh' }
+    { color: '#BC5A24', label: 'Yếu' },
+    { color: '#E08B45', label: 'Trung bình' },
+    { color: '#A9531A', label: 'Mạnh' }
   ];
 
   function checkRules(){
@@ -207,6 +201,14 @@ function togglePw(id, btn){
   pw.addEventListener('input', checkRules);
   confirm.addEventListener('input', checkMatch);
 })();
+
+document.addEventListener('click', function(e){
+  var link = e.target.closest('[data-transition]');
+  if(!link || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  document.body.classList.add('page-leaving');
+  setTimeout(function(){ window.location.href = link.href; }, 220);
+});
 </script>
 </body>
 </html>

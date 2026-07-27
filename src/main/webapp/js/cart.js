@@ -90,9 +90,13 @@
             .then(({ status, data }) => {
                 if (status === 401 && data && data.requireLogin) {
                     showToast('Vui lòng đăng nhập để thêm vào giỏ hàng.', true);
-                    setTimeout(() => {
-                        window.location.href = CONTEXT_PATH + (data.loginUrl ? data.loginUrl.replace(CONTEXT_PATH, '') : '/login');
-                    }, 900);
+                    if (typeof window.openAuthLoginDropdown === 'function') {
+                        window.openAuthLoginDropdown();
+                    } else {
+                        setTimeout(() => {
+                            window.location.href = CONTEXT_PATH + (data.loginUrl ? data.loginUrl.replace(CONTEXT_PATH, '') : '/login');
+                        }, 900);
+                    }
                     return;
                 }
                 if (data && data.success) {
