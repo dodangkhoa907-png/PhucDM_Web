@@ -1,0 +1,67 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%-- Fragment thẻ sản phẩm dùng chung cho mọi khu vực trong lưới sản phẩm.
+     Yêu cầu biến "p" (Product) và "ctx" đã có sẵn trong scope của trang gọi include này. --%>
+<c:set var="imgSrc" value=""/>
+<c:if test="${not empty p.imageUrl}"><c:set var="imgSrc" value="${ctx}${p.imageUrl}"/></c:if>
+<c:if test="${empty imgSrc and (fn:containsIgnoreCase(p.name,'dưa hấu') or fn:containsIgnoreCase(p.name,'dua hau'))}"><c:set var="imgSrc" value="${ctx}/images/duahau.png"/></c:if>
+<c:if test="${empty imgSrc and (fn:containsIgnoreCase(p.name,'thơm') or fn:containsIgnoreCase(p.name,'thom') or fn:containsIgnoreCase(p.name,'dứa'))}"><c:set var="imgSrc" value="${ctx}/images/thom.png"/></c:if>
+<c:if test="${empty imgSrc and fn:containsIgnoreCase(p.name,'cam')}"><c:set var="imgSrc" value="${ctx}/images/cam.png"/></c:if>
+
+<c:set var="variantsJson"><c:forEach var="v" items="${p.variants}" varStatus="vs">{"variantId":${v.variantId},"size":"${fn:escapeXml(v.size)}","price":${v.price}}<c:if test="${!vs.last}">,</c:if></c:forEach></c:set>
+
+<div class="product-card group bg-surface rounded-[24px] shadow-card overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-float transition cursor-pointer"
+     data-category-id="${p.categoryId}"
+     data-category-name="${fn:escapeXml(p.categoryName)}"
+     data-id="${p.productId}"
+     data-name="${fn:escapeXml(p.name)}"
+     data-description="${fn:escapeXml(not empty p.description ? p.description : '')}"
+     data-image="${imgSrc}"
+     data-detail-url="${ctx}/san-pham/chi-tiet?id=${p.productId}"
+     data-variants='[${variantsJson}]'>
+  <div class="relative aspect-square bg-gradient-to-br from-canvas to-mist overflow-hidden">
+    <c:if test="${not empty p.categoryName}">
+      <span class="absolute top-3.5 left-3.5 z-10 bg-white/90 text-ink-2 font-mono text-[.55rem] font-semibold tracking-[.1em] uppercase px-2.5 py-1 rounded-full">
+        <c:out value="${p.categoryName}"/>
+      </span>
+    </c:if>
+    <div class="w-full h-full grid place-items-center p-7">
+      <c:choose>
+        <c:when test="${not empty imgSrc}">
+          <img src="${imgSrc}" alt="${fn:escapeXml(p.name)}" loading="lazy"
+               class="product-card-img w-4/5 h-4/5 object-contain transition duration-500 group-hover:scale-105">
+        </c:when>
+        <c:otherwise>
+          <%-- Chưa có ảnh: ly vẽ bằng CSS thay vì emoji (emoji thiếu glyph sẽ hiện ô vuông vỡ) --%>
+          <span class="block w-[42%] aspect-[.72/1] relative transition duration-500 group-hover:scale-105"
+                style="background:linear-gradient(178deg,#E08B45,#B4661F);
+                       clip-path:polygon(12% 0,88% 0,77% 100%,23% 100%);
+                       border-radius:4px 4px 12px 12px;"
+                role="img" aria-label="${fn:escapeXml(p.name)}"></span>
+        </c:otherwise>
+      </c:choose>
+    </div>
+  </div>
+  <div class="p-5 flex flex-col gap-1.5 flex-1">
+    <span class="text-[1.02rem] font-extrabold text-ink group-hover:text-accent transition"><c:out value="${p.name}"/></span>
+    <c:if test="${not empty p.description}">
+      <span class="block text-xs leading-snug text-muted line-clamp-1"><c:out value="${p.description}"/></span>
+    </c:if>
+    <div class="mt-auto pt-3.5 flex items-center justify-between gap-2">
+      <span class="flex items-baseline gap-1.5">
+        <span class="font-mono text-[.55rem] tracking-[.1em] uppercase text-muted">Từ</span>
+        <span class="font-extrabold text-ink text-[1.15rem] tnum"><fmt:formatNumber value="${p.fromPrice}" type="number" groupingUsed="true"/>đ</span>
+      </span>
+      <button type="button"
+              class="shrink-0 inline-flex items-center gap-1.5 bg-accent text-white font-semibold text-[.8rem]
+                     px-4 py-2.5 rounded-full shadow-cta hover:bg-accent-deep hover:-translate-y-0.5 active:translate-y-0 transition">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="1.6" fill="currentColor" stroke="none"/>
+        </svg> Chọn món
+      </button>
+    </div>
+  </div>
+</div>
