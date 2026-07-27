@@ -612,7 +612,9 @@
                     <%-- Từ topping thứ 5 trở đi ẩn sau nút "Xem thêm" — checkbox thật vẫn nằm
                          trong DOM nên trạng thái tick không bao giờ bị mất.
                          Giá hiển thị rút gọn dạng "+7k"; giá thật vẫn do backend tính. --%>
-                    <label class="pd-top" title="${fn:escapeXml(t.name)} · +<fmt:formatNumber value="${t.variants[0].price}" type="number" groupingUsed="true"/>đ"
+                    <fmt:formatNumber var="topFullPrice" value="${t.variants[0].price}" type="number" groupingUsed="true"/>
+                    <fmt:formatNumber var="topShortPrice" value="${t.variants[0].price / 1000}" type="number" maxFractionDigits="0"/>
+                    <label class="pd-top" title="${fn:escapeXml(t.name)} · +${topFullPrice}đ"
                            ${ts.index ge 4 ? 'data-extra="1"' : ''}>
                       <input type="checkbox" class="pd-top-input"
                              data-variant-id="${t.variants[0].variantId}"
@@ -620,7 +622,7 @@
                              data-price="${t.variants[0].price}">
                       <span class="pd-top-wrap">
                         <span class="pd-top-name"><c:out value="${t.name}"/></span>
-                        <span class="pd-top-price pd-mono tnum">+<fmt:formatNumber value="${t.variants[0].price / 1000}" type="number" maxFractionDigits="0"/>k</span>
+                        <span class="pd-top-price pd-mono tnum">+${topShortPrice}k</span>
                         <span class="pd-top-dot" aria-hidden="true"></span>
                       </span>
                     </label>
