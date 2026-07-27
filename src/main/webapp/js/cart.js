@@ -64,8 +64,13 @@
             .catch(() => {});
     }
 
+    /**
+     * Trả về Promise đã resolve sau khi toast/badge xử lý xong (không bao giờ reject) để nơi
+     * gọi có thể chờ nhiều lần thêm — ví dụ trang chi tiết thêm size + nhiều topping cùng lúc
+     * rồi mới mở khoá nút. Giá luôn do server tự tính, client chỉ gửi variantId + quantity.
+     */
     function addToCart(variantId, quantity, triggerBtn) {
-        if (!variantId) return;
+        if (!variantId) return Promise.resolve();
 
         const originalHtml = triggerBtn ? triggerBtn.innerHTML : null;
         if (triggerBtn) {
@@ -78,7 +83,7 @@
         body.set('quantity', String(quantity || 1));
         body.set('_csrf', getCsrfToken());
 
-        fetch(CONTEXT_PATH + '/cart/add', {
+        return fetch(CONTEXT_PATH + '/cart/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -90,9 +95,13 @@
             .then(({ status, data }) => {
                 if (status === 401 && data && data.requireLogin) {
                     showToast('Vui lòng đăng nhập để thêm vào giỏ hàng.', true);
-                    setTimeout(() => {
-                        window.location.href = CONTEXT_PATH + (data.loginUrl ? data.loginUrl.replace(CONTEXT_PATH, '') : '/login');
-                    }, 900);
+                    if (typeof window.openAuthLoginDropdown === 'function') {
+                        window.openAuthLoginDropdown();
+                    } else {
+                        setTimeout(() => {
+                            window.location.href = CONTEXT_PATH + (data.loginUrl ? data.loginUrl.replace(CONTEXT_PATH, '') : '/login');
+                        }, 900);
+                    }
                     return;
                 }
                 if (data && data.success) {

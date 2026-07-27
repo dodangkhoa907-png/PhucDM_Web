@@ -28,8 +28,8 @@
 .fb-registered i{margin-right:3px}
 
 .fb-stars{white-space:nowrap;font-size:13px}
-.fb-stars i{color:#D8D2C4;margin-right:1px}
-.fb-stars i.filled{color:#F4A261}
+.fb-stars i{color:#DCD2C6;margin-right:1px}
+.fb-stars i.filled{color:#D2691E}
 .fb-no-rating{font-size:12.5px;color:var(--admin-text-light)}
 
 .fb-msg-cell{max-width:320px}
@@ -50,7 +50,7 @@
 .fb-pager{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:22px}
 .fb-pager a,.fb-pager span{min-width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--admin-text)}
 .fb-pager a{background:var(--admin-bg)}
-.fb-pager a:hover{background:#EAF0E7}
+.fb-pager a:hover{background:#FAF6F0}
 .fb-pager span.current{background:var(--admin-primary);color:#fff}
 
 .fb-row-removing{opacity:0;transition:opacity .35s ease}

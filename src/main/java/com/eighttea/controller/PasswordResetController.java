@@ -83,10 +83,12 @@ public class PasswordResetController extends HttpServlet {
 
     private void handleForgot(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        boolean ajax = isAjax(req);
         String email = req.getParameter("email");
         if (email != null) email = email.trim().toLowerCase();
 
         if (email == null || email.isEmpty()) {
+            if (ajax) { writeJson(resp, false, "Vui lòng nhập địa chỉ email.", null); return; }
             req.setAttribute("errorMessage", "Vui lòng nhập địa chỉ email.");
             req.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(req, resp);
             return;
@@ -95,6 +97,7 @@ public class PasswordResetController extends HttpServlet {
         Optional<User> userOpt = userDao.findByEmail(email);
 
         if (userOpt.isEmpty()) {
+            if (ajax) { writeJson(resp, false, "Email này chưa được đăng ký tài khoản.", null); return; }
             req.setAttribute("errorMessage", "Email này chưa được đăng ký tài khoản.");
             req.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(req, resp);
             return;
@@ -116,14 +119,17 @@ public class PasswordResetController extends HttpServlet {
 
         sendOtpEmail(user.getEmail(), user.getFullName(), otp);
 
+        if (ajax) { writeJson(resp, true, null, "\"remainingMs\":" + OTP_TTL_MS); return; }
         resp.sendRedirect(req.getContextPath() + "/verify-otp");
     }
 
     private void handleVerifyOtp(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        boolean ajax = isAjax(req);
         HttpSession session = req.getSession();
         String sessionEmail = (String) session.getAttribute("reset_email");
         if (sessionEmail == null) {
+            if (ajax) { writeJson(resp, false, "Phiên đã hết hạn, vui lòng yêu cầu lại.", null); return; }
             resp.sendRedirect(req.getContextPath() + "/forgot-password");
             return;
         }
@@ -136,6 +142,7 @@ public class PasswordResetController extends HttpServlet {
         String d6 = req.getParameter("d6");
 
         if (d1 == null || d2 == null || d3 == null || d4 == null || d5 == null || d6 == null) {
+            if (ajax) { writeJson(resp, false, "Vui lòng nhập đủ 6 chữ số.", null); return; }
             req.setAttribute("errorMessage", "Vui lòng nhập đủ 6 chữ số.");
             forwardToOtpPage(req, resp, session);
             return;
@@ -150,6 +157,7 @@ public class PasswordResetController extends HttpServlet {
 
         if (attempts > 5) {
             clearResetSession(session);
+            if (ajax) { writeJson(resp, false, "Bạn đã nhập sai quá nhiều lần. Vui lòng yêu cầu mã mới.", null); return; }
             req.setAttribute("errorMessage", "Bạn đã nhập sai quá nhiều lần. Vui lòng yêu cầu mã mới.");
             req.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(req, resp);
             return;
@@ -159,13 +167,16 @@ public class PasswordResetController extends HttpServlet {
         Long expiresAt = (Long) session.getAttribute("reset_otp_expires");
 
         if (expiresAt == null || System.currentTimeMillis() > expiresAt) {
+            if (ajax) { writeJson(resp, false, "Mã OTP đã hết hạn. Vui lòng yêu cầu gửi lại mã.", null); return; }
             req.setAttribute("errorMessage", "Mã OTP đã hết hạn. Vui lòng yêu cầu gửi lại mã.");
             forwardToOtpPage(req, resp, session);
             return;
         }
 
         if (!inputOtp.equals(storedOtp)) {
-            req.setAttribute("errorMessage", "Mã OTP không chính xác. Còn " + (5 - attempts) + " lần thử.");
+            String msg = "Mã OTP không chính xác. Còn " + (5 - attempts) + " lần thử.";
+            if (ajax) { writeJson(resp, false, msg, null); return; }
+            req.setAttribute("errorMessage", msg);
             forwardToOtpPage(req, resp, session);
             return;
         }
@@ -174,23 +185,27 @@ public class PasswordResetController extends HttpServlet {
         session.removeAttribute("reset_otp");
         session.removeAttribute("reset_attempts");
 
+        if (ajax) { writeJson(resp, true, null, null); return; }
         resp.sendRedirect(req.getContextPath() + "/reset-password");
     }
 
     private void handleResend(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        boolean ajax = isAjax(req);
         HttpSession session = req.getSession();
         String email = (String) session.getAttribute("reset_email");
         Integer userId = (Integer) session.getAttribute("reset_user_id");
         String fullName = (String) session.getAttribute("reset_user_name");
 
         if (email == null || userId == null) {
+            if (ajax) { writeJson(resp, false, "Phiên đã hết hạn, vui lòng yêu cầu lại.", null); return; }
             resp.sendRedirect(req.getContextPath() + "/forgot-password");
             return;
         }
 
         Long sentAt = (Long) session.getAttribute("reset_otp_sent_at");
         if (sentAt != null && System.currentTimeMillis() - sentAt < RESEND_COOLDOWN_MS) {
+            if (ajax) { writeJson(resp, false, "Vui lòng đợi trước khi gửi lại mã.", null); return; }
             resp.sendRedirect(req.getContextPath() + "/verify-otp");
             return;
         }
@@ -206,16 +221,19 @@ public class PasswordResetController extends HttpServlet {
 
         sendOtpEmail(email, fullName, otp);
 
+        if (ajax) { writeJson(resp, true, null, "\"remainingMs\":" + OTP_TTL_MS); return; }
         resp.sendRedirect(req.getContextPath() + "/verify-otp");
     }
 
     private void handleReset(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        boolean ajax = isAjax(req);
         HttpSession session = req.getSession();
         Boolean verified = (Boolean) session.getAttribute("reset_otp_verified");
         Integer userId = (Integer) session.getAttribute("reset_user_id");
 
         if (verified == null || !verified || userId == null) {
+            if (ajax) { writeJson(resp, false, "Phiên đã hết hạn, vui lòng yêu cầu lại.", null); return; }
             resp.sendRedirect(req.getContextPath() + "/forgot-password");
             return;
         }
@@ -224,19 +242,26 @@ public class PasswordResetController extends HttpServlet {
         String confirm = req.getParameter("confirmPassword");
 
         if (password == null || !password.equals(confirm)) {
+            if (ajax) { writeJson(resp, false, "Mật khẩu xác nhận không khớp.", null); return; }
             req.setAttribute("errorMessage", "Mật khẩu xác nhận không khớp.");
             req.getRequestDispatcher("/WEB-INF/views/reset-password.jsp").forward(req, resp);
             return;
         }
         if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$")) {
-            req.setAttribute("errorMessage",
-                    "Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số.");
+            String msg = "Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số.";
+            if (ajax) { writeJson(resp, false, msg, null); return; }
+            req.setAttribute("errorMessage", msg);
             req.getRequestDispatcher("/WEB-INF/views/reset-password.jsp").forward(req, resp);
             return;
         }
 
         boolean ok = userDao.updatePassword(userId, Passwords.hash(password));
         clearResetSession(session);
+
+        if (ajax) {
+            writeJson(resp, ok, ok ? null : "Có lỗi hệ thống, vui lòng thử lại.", null);
+            return;
+        }
 
         if (ok) {
             resp.sendRedirect(req.getContextPath() + "/login?reset=success");
@@ -291,6 +316,25 @@ public class PasswordResetController extends HttpServlet {
             + "</table></td></tr></table></body></html>";
 
         EmailUtil.sendEmail(toEmail, "Nhiệt Đới Xanh — Mã xác thực OTP", html);
+    }
+
+    private boolean isAjax(HttpServletRequest req) {
+        return "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+    }
+
+    private void writeJson(HttpServletResponse resp, boolean success, String message, String extraJsonField)
+            throws IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        StringBuilder json = new StringBuilder("{\"success\":").append(success);
+        if (message != null) json.append(",\"message\":\"").append(escapeJson(message)).append('"');
+        if (extraJsonField != null) json.append(',').append(extraJsonField);
+        json.append('}');
+        resp.getWriter().write(json.toString());
+    }
+
+    private String escapeJson(String s) {
+        return s.replace("\\", "\\\\").replace("\"", "\\\"")
+                .replace("\n", "\\n").replace("\r", "");
     }
 
     private void clearResetSession(HttpSession session) {
