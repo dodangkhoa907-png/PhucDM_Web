@@ -11,30 +11,30 @@
 /* ============================ HÀNG ĐỢI KHẨN CẤP ============================ */
 /* Vùng "nóng" ấm màu hổ phách, tương phản với shell xanh rừng — báo hiệu việc cần làm ngay. */
 .uq-zone{
-    position:relative;background:linear-gradient(135deg,#FFFBF3 0%,#FEF4E4 100%);
-    border:1px solid #F6E3C4;border-left:6px solid transparent;border-radius:16px;
+    position:relative;background:linear-gradient(135deg,#FAF6F0 0%,#F7EADC 100%);
+    border:1px solid #EFE7DC;border-left:6px solid transparent;border-radius:16px;
     padding:22px 24px 8px;margin-bottom:24px;overflow:hidden;
     box-shadow:0 10px 30px -20px rgba(226,112,58,.5);
 }
 /* Thanh ray trái gradient gold→ember (dùng ::before để giữ được bo góc cạnh trái) */
 .uq-zone::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;
-    background:linear-gradient(180deg,#F4A261 0%,#E2703A 100%)}
+    background:linear-gradient(180deg,#D2691E 0%,#D2691E 100%)}
 .uq-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .uq-head-left{display:flex;align-items:center;gap:12px}
-.uq-live{position:relative;width:11px;height:11px;flex:none;border-radius:50%;background:#E2703A}
-.uq-live::after{content:"";position:absolute;inset:0;border-radius:50%;background:#E2703A;
+.uq-live{position:relative;width:11px;height:11px;flex:none;border-radius:50%;background:#D2691E}
+.uq-live::after{content:"";position:absolute;inset:0;border-radius:50%;background:#D2691E;
     animation:uqpulse 1.8s ease-out infinite}
 @keyframes uqpulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.2);opacity:0}}
-.uq-title{font-family:var(--fd);font-size:19px;font-weight:800;color:#B5541F;line-height:1.15}
-.uq-title small{display:block;font-family:var(--fb);font-size:12.5px;font-weight:600;color:#C08A4E;margin-top:1px}
-.uq-sum{text-align:right;font-size:12.5px;color:#B0895A;font-weight:600}
-.uq-sum b{display:block;font-family:var(--fd);font-size:18px;color:#B5541F;font-variant-numeric:tabular-nums}
+.uq-title{font-family:var(--fd);font-size:19px;font-weight:800;color:#A9531A;line-height:1.15}
+.uq-title small{display:block;font-family:var(--fb);font-size:12.5px;font-weight:600;color:#9C918B;margin-top:1px}
+.uq-sum{text-align:right;font-size:12.5px;color:#9C918B;font-weight:600}
+.uq-sum b{display:block;font-family:var(--fd);font-size:18px;color:#A9531A;font-variant-numeric:tabular-nums}
 
 .uq-rail{display:flex;gap:14px;flex-wrap:wrap;padding-bottom:14px}
 
 /* -------- Thẻ phiếu order -------- */
 .uq-ticket{
-    position:relative;background:#fff;border:1px solid #F1E6D4;border-radius:14px;
+    position:relative;background:#fff;border:1px solid #EFE7DC;border-radius:14px;
     padding:15px 16px 14px;width:255px;flex:0 0 auto;display:flex;flex-direction:column;gap:11px;
     box-shadow:0 6px 16px -12px rgba(120,80,30,.4);
     transition:opacity .45s ease,transform .45s cubic-bezier(.4,0,.2,1),
@@ -43,7 +43,7 @@
 .uq-ticket:hover{box-shadow:0 12px 26px -14px rgba(120,80,30,.55);transform:translateY(-2px)}
 /* Vạch trạng thái nhiệt bên trái thẻ — leo màu theo độ chờ */
 .uq-ticket::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--status-done)}
-.uq-ticket.is-warm::before{background:#E08A00}
+.uq-ticket.is-warm::before{background:#A9531A}
 .uq-ticket.is-hot::before{background:var(--admin-red)}
 
 .uq-ticket-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -52,7 +52,7 @@
 .uq-wait{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
     padding:4px 9px;border-radius:20px;white-space:nowrap;font-variant-numeric:tabular-nums;
     background:rgba(42,92,56,.1);color:var(--status-done)}
-.uq-ticket.is-warm .uq-wait{background:rgba(224,138,0,.13);color:#B06A00}
+.uq-ticket.is-warm .uq-wait{background:rgba(224,138,0,.13);color:#A9531A}
 .uq-ticket.is-hot .uq-wait{background:rgba(217,83,79,.13);color:var(--admin-red)}
 
 .uq-body{display:flex;flex-direction:column;gap:4px}
@@ -69,17 +69,17 @@
 .uq-btn{flex:1;padding:10px 12px;border-radius:10px;font-weight:700;font-size:13.5px;font-family:var(--fb);
     cursor:pointer;border:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.18s}
 .uq-btn:disabled{opacity:.6;cursor:progress}
-.uq-btn-approve{background:#10B981;color:#fff;box-shadow:0 8px 16px -10px rgba(16,185,129,.9)}
-.uq-btn-approve:hover:not(:disabled){background:#0EA372;transform:translateY(-1px)}
-.uq-btn-cancel{flex:0 0 auto;width:78px;background:#F1F0EC;color:#5B5B54}
-.uq-btn-cancel:hover:not(:disabled){background:#E6E4DD}
+.uq-btn-approve{background:#2F7A4F;color:#fff;box-shadow:0 8px 16px -10px rgba(16,185,129,.9)}
+.uq-btn-approve:hover:not(:disabled){background:#276741;transform:translateY(-1px)}
+.uq-btn-cancel{flex:0 0 auto;width:78px;background:#FAF6F0;color:#6B615C}
+.uq-btn-cancel:hover:not(:disabled){background:#EFE7DC}
 
 /* Thẻ đang được xử lý xong: mờ + co lại rồi biến mất */
 .uq-ticket.removing{opacity:0;transform:scale(.9);width:0 !important;padding-left:0;padding-right:0;
     margin-left:-14px;pointer-events:none;box-shadow:none}
 
-.uq-more{width:100%;font-size:12.5px;color:#B0895A;font-weight:600;padding:2px 2px 12px}
-.uq-more a{color:#B5541F;font-weight:700;text-decoration:underline}
+.uq-more{width:100%;font-size:12.5px;color:#9C918B;font-weight:600;padding:2px 2px 12px}
+.uq-more a{color:#A9531A;font-weight:700;text-decoration:underline}
 
 /* Trạng thái rỗng — mọi đơn mới đã xử lý xong */
 .uq-empty{display:flex;align-items:center;gap:12px;padding:18px 20px 26px;color:var(--admin-primary);font-weight:700;font-size:15px}
@@ -95,7 +95,7 @@ a.uq-code{color:inherit;text-decoration:none;border-bottom:2px solid transparent
 a.uq-code:hover{border-color:var(--admin-gold)}
 .uq-detail-link{font-size:11.5px;font-weight:700;color:var(--admin-text-light);display:inline-flex;
     align-items:center;gap:4px;text-decoration:none;transition:color .15s}
-.uq-detail-link:hover{color:#B5541F}
+.uq-detail-link:hover{color:#A9531A}
 .uq-detail-link i{font-size:9px}
 
 /* ============================ BẢNG LỊCH SỬ ============================ */
@@ -107,7 +107,7 @@ a.uq-code:hover{border-color:var(--admin-gold)}
 .ord-date{color:var(--admin-text-light);font-size:13px;white-space:nowrap}
 
 .pay-ind{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--admin-text-light);white-space:nowrap}
-.pay-dot{width:7px;height:7px;border-radius:50%;background:#C7CFC9;flex-shrink:0}
+.pay-dot{width:7px;height:7px;border-radius:50%;background:#DCD2C6;flex-shrink:0}
 .pay-ind.is-paid{color:var(--status-done)}
 .pay-ind.is-paid .pay-dot{background:var(--status-done)}
 .pay-ind.is-flag{color:var(--admin-red)}
@@ -158,7 +158,7 @@ a.uq-code:hover{border-color:var(--admin-gold)}
 .ord-pager{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:22px}
 .ord-pager a,.ord-pager span{min-width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--admin-text)}
 .ord-pager a{background:var(--admin-bg)}
-.ord-pager a:hover{background:#EAF0E7}
+.ord-pager a:hover{background:#FAF6F0}
 .ord-pager span.current{background:var(--admin-primary);color:#fff}
 .ord-count{color:var(--admin-text-light);font-size:13px;font-weight:600;margin-bottom:14px}
 .ord-section-head{font-family:var(--fd);font-size:16px;font-weight:800;margin-bottom:16px;color:var(--admin-text);display:flex;align-items:center;gap:9px}

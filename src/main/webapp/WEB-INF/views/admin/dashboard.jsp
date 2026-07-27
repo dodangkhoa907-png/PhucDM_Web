@@ -7,202 +7,282 @@
 <jsp:include page="/WEB-INF/views/admin/layout/header.jsp" />
 
 <style>
-/* ===== KPI row ===== */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
-.kpi-card{background:var(--admin-surface);border-radius:18px;padding:22px;box-shadow:0 8px 22px -16px rgba(30,63,39,.2)}
-.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.kpi-ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.kpi-card.gold .kpi-ic{background:rgba(244,162,97,.16);color:#B96A2E}
-.kpi-card.green .kpi-ic{background:rgba(42,92,56,.12);color:var(--admin-primary)}
-.kpi-card.blue .kpi-ic{background:rgba(57,101,255,.12);color:#3965FF}
-.kpi-card.coral .kpi-ic{background:rgba(217,83,79,.12);color:var(--admin-red)}
-.kpi-trend{font-size:12px;font-weight:800;padding:5px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
-.kpi-trend.up{background:rgba(42,92,56,.1);color:var(--admin-primary)}
-.kpi-trend.down{background:rgba(217,83,79,.1);color:var(--admin-red)}
-.kpi-trend.flat{background:var(--admin-bg);color:var(--admin-text-light)}
-.kpi-label{font-size:12.5px;font-weight:700;color:var(--admin-text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.kpi-value{font-family:var(--fd);font-size:27px;font-weight:700;line-height:1.1}
-.kpi-sub{font-size:12px;color:var(--admin-text-light);font-weight:600;margin-top:4px}
-.kpi-bar-track{height:6px;border-radius:6px;background:var(--admin-bg);margin-top:12px;overflow:hidden}
-.kpi-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--admin-primary),#4C8B5B)}
+/* ═══ Lưới bento: hàng trên 3 khối, hàng dưới cột phụ + bảng ═══════════════ */
+.dash{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:start}
+.g-hero{grid-column:span 3}
+.g-stats{grid-column:span 4}
+.g-chart{grid-column:span 5}
+.g-side{grid-column:span 3}
+.g-table{grid-column:span 9}
+@media(max-width:1240px){
+  .g-hero{grid-column:span 5}.g-stats{grid-column:span 7}
+  .g-chart{grid-column:span 12}.g-side{grid-column:span 5}.g-table{grid-column:span 7}
+}
+@media(max-width:900px){
+  .g-hero,.g-stats,.g-chart,.g-side,.g-table{grid-column:span 12}
+}
 
-/* ===== middle row: chart + donut ===== */
-.mid-row{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px}
-.chart-card h3,.donut-card h3,.top-card h3{font-family:var(--fd);font-size:16.5px;margin-bottom:4px}
-.card-sub{font-size:12.5px;color:var(--admin-text-light);font-weight:600;margin-bottom:20px}
+.blk{background:var(--admin-soft);border-radius:var(--r-md);padding:20px}
+.blk-h{font-size:14.5px;font-weight:800;letter-spacing:-.02em;color:var(--admin-text)}
+.blk-sub{font-family:var(--fm);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--admin-text-light);margin-top:4px}
 
-.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;height:180px;padding:0 4px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;gap:8px}
-.bar-amt{font-size:10.5px;font-weight:700;color:var(--admin-text-light);opacity:0;transition:opacity .15s}
-.bar-col:hover .bar-amt{opacity:1}
-.bar-shape{width:26px;border-radius:13px 13px 6px 6px;background:linear-gradient(180deg,#8FBB9A,var(--admin-primary));min-height:6px;transition:height .5s cubic-bezier(.2,.8,.2,1)}
-.bar-col.today .bar-shape{background:linear-gradient(180deg,#F9C08A,var(--admin-gold))}
-.bar-lbl{font-size:12px;font-weight:700;color:var(--admin-text-light)}
-.bar-col.today .bar-lbl{color:#B96A2E}
+/* Nhãn nhỏ dạng datasheet — dùng lại ngôn ngữ chữ của khu khách hàng */
+.stat-lbl{font-family:var(--fm);font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--admin-text-light)}
+.stat-num{font-size:1.85rem;font-weight:800;letter-spacing:-.035em;color:var(--admin-text);line-height:1.05;margin-top:9px}
+.stat-foot{font-size:12px;color:var(--admin-text-light);margin-top:6px}
 
-.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
-.donut{width:150px;height:150px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--admin-border) 0 100%)}
-.donut::after{content:'';position:absolute;inset:20px;background:var(--admin-surface);border-radius:50%}
-.donut-center{position:relative;z-index:1;text-align:center}
-.donut-center b{display:block;font-family:var(--fd);font-size:18px}
-.donut-center span{font-size:10.5px;color:var(--admin-text-light);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.donut-legend{width:100%;display:flex;flex-direction:column;gap:11px}
-.donut-legend li{list-style:none;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.donut-legend .pct{margin-left:auto;font-weight:800;color:var(--admin-text-light)}
-.donut-empty{text-align:center;color:var(--admin-text-light);font-size:13.5px;padding:20px 0}
+/* Chip biến động */
+.delta{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px}
+.delta.up{background:#E7F3EC;color:#2F7A4F}
+.delta.down{background:#F9E9E6;color:#C2543F}
+.delta.flat{background:var(--admin-mist);color:var(--admin-text-light)}
 
-/* ===== bottom row: top products + recent orders ===== */
-.bottom-row{display:grid;grid-template-columns:1fr 1.7fr;gap:16px}
-.top-list{display:flex;flex-direction:column;gap:14px}
-.top-item{display:flex;align-items:center;gap:13px}
-.top-rank{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;font-size:13.5px;color:#fff;flex-shrink:0}
-.top-rank.r1{background:linear-gradient(135deg,var(--admin-gold),#E08A3E)}
-.top-rank.r2{background:linear-gradient(135deg,#9AB09F,#6D8873)}
-.top-rank.r3{background:linear-gradient(135deg,#C98A5A,#A66840)}
-.top-rank.rn{background:var(--admin-bg);color:var(--admin-text-light)}
-.top-info b{display:block;font-size:14px;font-weight:700}
-.top-info span{font-size:12px;color:var(--admin-text-light);font-weight:600}
+/* ── Khối doanh thu (hero) ─────────────────────────────────────────────── */
+.hero-card{background:var(--admin-soft);border-radius:var(--r-md);padding:22px;display:flex;flex-direction:column;gap:2px}
+.hero-num{font-size:clamp(1.7rem,3vw,2.15rem);font-weight:800;letter-spacing:-.04em;color:var(--admin-text);line-height:1.02;margin:12px 0 4px}
+.hero-num sup{font-size:.44em;font-weight:700;margin-left:2px;vertical-align:super}
+.hero-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.hero-actions .btn{padding:10px 17px;font-size:12.5px}
 
-@media(max-width:1100px){.mid-row,.bottom-row{grid-template-columns:1fr}}
-@media(max-width:900px){.kpi-row{grid-template-columns:1fr 1fr}}
+/* ── 4 ô số liệu (1 ô caramel làm điểm nhấn duy nhất) ──────────────────── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:100%}
+.stat-box{background:var(--admin-soft);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column}
+.stat-box.accent{background:var(--admin-primary);box-shadow:var(--sh-cta)}
+.stat-box.accent .stat-lbl{color:rgba(255,255,255,.72)}
+.stat-box.accent .stat-num{color:#fff}
+.stat-box.accent .stat-foot{color:rgba(255,255,255,.75)}
+.stat-ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:14px;background:var(--admin-surface);color:var(--admin-primary);margin-bottom:14px}
+.stat-box.accent .stat-ic{background:rgba(255,255,255,.2);color:#fff}
+
+/* Thanh tiến độ tỷ lệ thành công */
+.bar-track{height:6px;border-radius:999px;background:var(--admin-mist);margin-top:12px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;background:var(--admin-primary)}
+
+/* ── Biểu đồ cột doanh thu theo ngày ───────────────────────────────────── */
+.chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.legend{display:flex;align-items:center;gap:14px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--admin-text-light)}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;height:196px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:9px;min-width:0}
+.bar-amt{font-family:var(--fm);font-size:10px;font-weight:600;color:var(--admin-text-2);opacity:0;transition:opacity .18s var(--ease);white-space:nowrap}
+.bar-col:hover .bar-amt,.bar-col:focus-within .bar-amt{opacity:1}
+.bar-shape{width:100%;max-width:30px;border-radius:9px;background:var(--admin-primary-soft);min-height:5px;transition:height .55s var(--ease),background-color .2s var(--ease)}
+.bar-col:hover .bar-shape{background:var(--admin-gold)}
+.bar-col.today .bar-shape{background:var(--admin-primary)}
+.bar-lbl{font-family:var(--fm);font-size:10.5px;font-weight:500;color:var(--admin-text-light);letter-spacing:.06em}
+.bar-col.today .bar-lbl{color:var(--admin-primary);font-weight:600}
+
+/* ── Vòng cơ cấu doanh thu ─────────────────────────────────────────────── */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:16px}
+.donut{width:132px;height:132px;border-radius:50%;position:relative;display:grid;place-items:center;background:var(--admin-mist)}
+.donut::after{content:'';position:absolute;inset:19px;background:var(--admin-soft);border-radius:50%}
+.donut-c{position:relative;z-index:1;text-align:center}
+.donut-c b{display:block;font-size:19px;font-weight:800;color:var(--admin-text);letter-spacing:-.02em}
+.donut-c span{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--admin-text-light)}
+.legend-list{width:100%;display:flex;flex-direction:column;gap:9px;list-style:none}
+.legend-list li{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:500;color:var(--admin-text-2)}
+.legend-list .dot{width:9px;height:9px;border-radius:3px;flex:none}
+.legend-list .pct{margin-left:auto;font-family:var(--fm);font-size:11px;font-weight:600;color:var(--admin-text)}
+
+/* ── Top sản phẩm ──────────────────────────────────────────────────────── */
+.top-list{display:flex;flex-direction:column;gap:13px;margin-top:16px}
+.top-item{display:flex;align-items:center;gap:12px}
+.top-rank{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;font-family:var(--fm);font-weight:600;font-size:11.5px;flex:none;background:var(--admin-mist);color:var(--admin-text-2)}
+.top-item:first-child .top-rank{background:var(--admin-primary);color:#fff}
+.top-info b{display:block;font-size:13.2px;font-weight:700;color:var(--admin-text);line-height:1.3}
+.top-info span{font-family:var(--fm);font-size:10.5px;color:var(--admin-text-light);letter-spacing:.06em}
+
+/* ── Rỗng ──────────────────────────────────────────────────────────────── */
+.empty{text-align:center;padding:38px 16px;color:var(--admin-text-light)}
+.empty i{font-size:30px;opacity:.28;margin-bottom:11px;display:block}
+.empty p{font-size:13px}
 </style>
 
-<div class="kpi-row">
-  <div class="kpi-card gold">
-    <div class="kpi-top">
-      <div class="kpi-ic"><i class="fa-solid fa-sack-dollar"></i></div>
-      <c:choose>
-        <c:when test="${revenueChangePct == null}"><span class="kpi-trend flat">Mới</span></c:when>
-        <c:when test="${revenueChangePct >= 0}"><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> ${revenueChangePct}%</span></c:when>
-        <c:otherwise><span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> ${-revenueChangePct}%</span></c:otherwise>
-      </c:choose>
-    </div>
-    <div class="kpi-label">Doanh thu tuần này</div>
-    <div class="kpi-value"><fmt:formatNumber value="${revenueThisWeek}" type="number" groupingUsed="true"/> đ</div>
-    <div class="kpi-sub">so với tuần trước</div>
+<div class="page-head">
+  <div>
+    <h1><span id="greetWord">Xin chào</span>, <c:out value="${requestScope.adminUser.fullName}"/></h1>
+    <p>Theo dõi đơn hàng, doanh thu và những gì cần xử lý ngay hôm nay.</p>
   </div>
-
-  <div class="kpi-card blue">
-    <div class="kpi-top">
-      <div class="kpi-ic"><i class="fa-solid fa-cart-shopping"></i></div>
-      <c:choose>
-        <c:when test="${newOrdersChangePct == null}"><span class="kpi-trend flat">Mới</span></c:when>
-        <c:when test="${newOrdersChangePct >= 0}"><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> ${newOrdersChangePct}%</span></c:when>
-        <c:otherwise><span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> ${-newOrdersChangePct}%</span></c:otherwise>
-      </c:choose>
-    </div>
-    <div class="kpi-label">Đơn mới tuần này</div>
-    <div class="kpi-value">${newOrdersThisWeek}</div>
-    <div class="kpi-sub">so với tuần trước</div>
-  </div>
-
-  <div class="kpi-card coral">
-    <div class="kpi-top">
-      <div class="kpi-ic"><i class="fa-solid fa-hourglass-half"></i></div>
-      <c:choose>
-        <c:when test="${processingChangePct == null}"><span class="kpi-trend flat">Mới</span></c:when>
-        <c:when test="${processingChangePct <= 0}"><span class="kpi-trend up"><i class="fa-solid fa-arrow-down"></i> ${-processingChangePct}%</span></c:when>
-        <c:otherwise><span class="kpi-trend down"><i class="fa-solid fa-arrow-up"></i> ${processingChangePct}%</span></c:otherwise>
-      </c:choose>
-    </div>
-    <div class="kpi-label">Đang xử lý</div>
-    <div class="kpi-value">${processingNow}</div>
-    <div class="kpi-sub">đơn cần xử lý ngay</div>
-  </div>
-
-  <div class="kpi-card green">
-    <div class="kpi-top">
-      <div class="kpi-ic"><i class="fa-solid fa-circle-check"></i></div>
-    </div>
-    <div class="kpi-label">Tỷ lệ thành công</div>
-    <div class="kpi-value">${successRate}%</div>
-    <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:${successRate}%"></div></div>
+  <div class="page-head-actions">
+    <a href="${ctx}/admin/don-hang" class="btn btn-outline"><i class="fa-solid fa-list-check"></i> Tất cả đơn</a>
+    <a href="${ctx}/admin/san-pham" class="btn btn-primary"><i class="fa-solid fa-box"></i> Quản lý món</a>
   </div>
 </div>
 
-<div class="mid-row">
-  <div class="card chart-card">
-    <h3>Doanh thu theo ngày</h3>
-    <div class="card-sub">Tuần này (Thứ 2 – Chủ nhật)</div>
-    <div class="bars">
-      <c:forEach var="entry" items="${revenueByDay}">
-        <c:set var="pct" value="${maxDayRevenue > 0 ? (entry.value * 100) / maxDayRevenue : 0}"/>
-        <div class="bar-col ${entry.key == todayLabel ? 'today' : ''}">
-          <span class="bar-amt"><fmt:formatNumber value="${entry.value}" type="number" groupingUsed="true"/>đ</span>
-          <div class="bar-shape" style="height:${pct < 4 ? 4 : pct}%"></div>
-          <span class="bar-lbl">${entry.key}</span>
-        </div>
-      </c:forEach>
+<div class="dash">
+
+  <!-- ══ Doanh thu tuần này ══ -->
+  <div class="g-hero hero-card">
+    <span class="stat-lbl">Doanh thu tuần này</span>
+    <div class="hero-num tnum">
+      <fmt:formatNumber value="${revenueThisWeek}" type="number" groupingUsed="true"/><sup>đ</sup>
+    </div>
+    <div>
+      <c:choose>
+        <c:when test="${revenueChangePct == null}"><span class="delta flat">Tuần đầu tiên</span></c:when>
+        <c:when test="${revenueChangePct >= 0}"><span class="delta up"><i class="fa-solid fa-arrow-up"></i> ${revenueChangePct}%</span></c:when>
+        <c:otherwise><span class="delta down"><i class="fa-solid fa-arrow-down"></i> ${-revenueChangePct}%</span></c:otherwise>
+      </c:choose>
+      <span class="stat-foot" style="margin-left:7px">so với tuần trước</span>
+    </div>
+    <div class="hero-actions">
+      <a href="${ctx}/admin/don-hang" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i> Xem đơn hàng</a>
     </div>
   </div>
 
-  <div class="card donut-card">
-    <h3>Cơ cấu doanh thu</h3>
-    <div class="card-sub">Theo danh mục sản phẩm</div>
-    <c:choose>
-      <c:when test="${not empty categorySlices}">
-        <div class="donut-wrap">
-          <div class="donut" id="revenueDonut">
-            <div class="donut-center"><b>${fn:length(categorySlices)}</b><span>Danh mục</span></div>
-          </div>
-          <ul class="donut-legend">
-            <c:forEach var="s" items="${categorySlices}" varStatus="st">
-              <li>
-                <span class="dot" data-slice-color="${st.index}"></span>
-                <c:out value="${s.name}"/>
-                <span class="pct" data-slice-pct="${s.percent}">${s.percent}%</span>
-              </li>
-            </c:forEach>
-          </ul>
-        </div>
-      </c:when>
-      <c:otherwise>
-        <div class="donut-empty"><i class="fa-regular fa-chart-bar" style="font-size:26px;opacity:.3;display:block;margin-bottom:10px"></i>Chưa có doanh thu để thống kê.</div>
-      </c:otherwise>
-    </c:choose>
-  </div>
-</div>
+  <!-- ══ 4 ô số liệu · ô caramel là việc cần làm ngay ══ -->
+  <div class="g-stats">
+    <div class="stat-grid">
 
-<div class="bottom-row">
-  <div class="card top-card">
-    <h3>Top sản phẩm bán chạy</h3>
-    <div class="card-sub">Theo số lượng đã bán</div>
+      <%-- Ô nhấn duy nhất của trang. Cố ý KHÔNG dành cho doanh thu: người mở admin
+           buổi sáng cần biết "còn bao nhiêu đơn đang chờ mình" trước tiên, đó mới là
+           con số đòi hành động. Doanh thu quan trọng nhưng không cần thao tác ngay. --%>
+      <div class="stat-box accent">
+        <span class="stat-ic"><i class="fa-solid fa-hourglass-half"></i></span>
+        <span class="stat-lbl">Đang xử lý</span>
+        <span class="stat-num tnum">${processingNow}</span>
+        <span class="stat-foot">đơn cần xử lý ngay</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-ic"><i class="fa-solid fa-cart-shopping"></i></span>
+        <span class="stat-lbl">Đơn mới / tuần</span>
+        <span class="stat-num tnum">${newOrdersThisWeek}</span>
+        <span class="stat-foot">
+          <c:choose>
+            <c:when test="${newOrdersChangePct == null}">chưa có kỳ trước</c:when>
+            <c:when test="${newOrdersChangePct >= 0}">tăng ${newOrdersChangePct}% so tuần trước</c:when>
+            <c:otherwise>giảm ${-newOrdersChangePct}% so tuần trước</c:otherwise>
+          </c:choose>
+        </span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-ic"><i class="fa-solid fa-circle-check"></i></span>
+        <span class="stat-lbl">Tỷ lệ thành công</span>
+        <span class="stat-num tnum">${successRate}%</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${successRate}%"></div></div>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-ic"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="stat-lbl">Nhóm có doanh thu</span>
+        <span class="stat-num tnum">${fn:length(categorySlices)}</span>
+        <span class="stat-foot">nhóm món đang bán ra</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ Doanh thu theo ngày ══ -->
+  <div class="g-chart blk">
+    <div class="chart-head">
+      <div>
+        <div class="blk-h">Doanh thu theo ngày</div>
+        <div class="blk-sub">Tuần này · Thứ 2 → Chủ nhật</div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--admin-primary)"></i>Hôm nay</span>
+        <span><i style="background:var(--admin-primary-soft)"></i>Ngày khác</span>
+      </div>
+    </div>
     <c:choose>
-      <c:when test="${not empty topProducts}">
-        <div class="top-list">
-          <c:forEach var="p" items="${topProducts}" varStatus="st">
-            <div class="top-item">
-              <div class="top-rank ${st.index == 0 ? 'r1' : st.index == 1 ? 'r2' : st.index == 2 ? 'r3' : 'rn'}">${st.index + 1}</div>
-              <div class="top-info">
-                <b><c:out value="${p.name}"/></b>
-                <span>${p.quantity} ly đã bán</span>
-              </div>
+      <c:when test="${not empty revenueByDay}">
+        <div class="bars">
+          <c:forEach var="entry" items="${revenueByDay}">
+            <c:set var="pct" value="${maxDayRevenue > 0 ? (entry.value * 100) / maxDayRevenue : 0}"/>
+            <div class="bar-col ${entry.key == todayLabel ? 'today' : ''}" tabindex="0">
+              <span class="bar-amt"><fmt:formatNumber value="${entry.value}" type="number" groupingUsed="true"/>đ</span>
+              <div class="bar-shape" style="height:${pct < 3 ? 3 : pct}%"></div>
+              <span class="bar-lbl">${entry.key}</span>
             </div>
           </c:forEach>
         </div>
       </c:when>
       <c:otherwise>
-        <div class="dash-empty"><i class="fa-regular fa-lemon"></i><p>Chưa có sản phẩm nào được bán.</p></div>
+        <div class="empty"><i class="fa-regular fa-chart-bar"></i><p>Chưa có doanh thu trong tuần này.</p></div>
       </c:otherwise>
     </c:choose>
   </div>
 
-  <div class="card">
-    <h3 style="font-family:var(--fd);font-size:16.5px;margin-bottom:18px">Đơn hàng gần đây</h3>
+  <!-- ══ Cột phụ: cơ cấu + top món ══ -->
+  <div class="g-side">
+    <div class="blk" style="margin-bottom:16px">
+      <div class="blk-h">Cơ cấu doanh thu</div>
+      <div class="blk-sub">Theo nhóm sản phẩm</div>
+      <c:choose>
+        <c:when test="${not empty categorySlices}">
+          <div class="donut-wrap">
+            <div class="donut" id="revenueDonut">
+              <div class="donut-c"><b>${fn:length(categorySlices)}</b><span>Nhóm</span></div>
+            </div>
+            <ul class="legend-list">
+              <c:forEach var="s" items="${categorySlices}" varStatus="st">
+                <li>
+                  <span class="dot" data-slice-color="${st.index}"></span>
+                  <c:out value="${s.name}"/>
+                  <span class="pct" data-slice-pct="${s.percent}">${s.percent}%</span>
+                </li>
+              </c:forEach>
+            </ul>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div class="empty"><i class="fa-regular fa-chart-pie"></i><p>Chưa có doanh thu để thống kê.</p></div>
+        </c:otherwise>
+      </c:choose>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h">Món bán chạy</div>
+      <div class="blk-sub">Theo số ly đã bán</div>
+      <c:choose>
+        <c:when test="${not empty topProducts}">
+          <div class="top-list">
+            <c:forEach var="p" items="${topProducts}" varStatus="st">
+              <div class="top-item">
+                <span class="top-rank">${st.index + 1}</span>
+                <span class="top-info">
+                  <b><c:out value="${p.name}"/></b>
+                  <span>${p.quantity} ly</span>
+                </span>
+              </div>
+            </c:forEach>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div class="empty"><i class="fa-regular fa-lemon"></i><p>Chưa bán được món nào.</p></div>
+        </c:otherwise>
+      </c:choose>
+    </div>
+  </div>
+
+  <!-- ══ Đơn hàng gần đây ══ -->
+  <div class="g-table blk">
+    <div class="chart-head" style="margin-bottom:16px">
+      <div>
+        <div class="blk-h">Đơn hàng gần đây</div>
+        <div class="blk-sub">Cập nhật theo thời gian đặt</div>
+      </div>
+      <a href="${ctx}/admin/don-hang" class="btn btn-outline" style="padding:9px 16px;font-size:12.5px">
+        Xem tất cả <i class="fa-solid fa-arrow-right-long"></i>
+      </a>
+    </div>
     <c:choose>
       <c:when test="${not empty recentOrders}">
         <div class="table-responsive">
           <table class="admin-table">
-            <thead><tr><th>#</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày đặt</th></tr></thead>
+            <thead>
+              <tr><th>Mã đơn</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày đặt</th></tr>
+            </thead>
             <tbody>
               <c:forEach var="o" items="${recentOrders}">
                 <tr>
-                  <td>#${o.orderId}</td>
-                  <td><c:out value="${o.customerName}"/></td>
-                  <td><fmt:formatNumber value="${o.finalAmount}" type="number" groupingUsed="true"/> đ</td>
+                  <td><span class="tnum" style="font-family:var(--fm);font-size:12.5px;color:var(--admin-text)">#${o.orderId}</span></td>
+                  <td style="font-weight:600;color:var(--admin-text)"><c:out value="${o.customerName}"/></td>
+                  <td class="tnum" style="font-weight:700;color:var(--admin-text)"><fmt:formatNumber value="${o.finalAmount}" type="number" groupingUsed="true"/>đ</td>
                   <td><span class="badge badge-${o.orderStatus}"><c:out value="${o.orderStatusLabel}"/></span></td>
-                  <td><fmt:formatDate value="${o.createdAt}" pattern="HH:mm dd/MM/yyyy"/></td>
+                  <td class="tnum" style="font-family:var(--fm);font-size:12px"><fmt:formatDate value="${o.createdAt}" pattern="HH:mm dd/MM/yyyy"/></td>
                 </tr>
               </c:forEach>
             </tbody>
@@ -210,29 +290,21 @@
         </div>
       </c:when>
       <c:otherwise>
-        <div class="dash-empty">
-          <i class="fa-regular fa-folder-open"></i>
-          <p>Chưa có đơn hàng nào.</p>
-        </div>
+        <div class="empty"><i class="fa-regular fa-folder-open"></i><p>Chưa có đơn hàng nào.</p></div>
       </c:otherwise>
     </c:choose>
   </div>
-</div>
 
-<style>
-.dash-empty{text-align:center;padding:50px 20px;color:var(--admin-text-light)}
-.dash-empty i{font-size:36px;opacity:.3;margin-bottom:12px;display:block}
-</style>
+</div>
 
 <script>
 (function () {
   var donut = document.getElementById('revenueDonut');
   if (!donut) return;
-  var colors = ['var(--admin-primary)', 'var(--admin-gold)', 'var(--status-confirmed)', 'var(--status-shipping)', 'var(--admin-red)'];
-  var dots = document.querySelectorAll('[data-slice-color]');
-  var stops = [];
-  var cum = 0;
-  dots.forEach(function (dot, i) {
+  /* Dải màu ấm cùng họ caramel — thay bảng màu xanh lá của bản cũ. */
+  var colors = ['#D2691E', '#E08B45', '#8C5A2B', '#DFB77C', '#A9531A'];
+  var stops = [], cum = 0;
+  document.querySelectorAll('[data-slice-color]').forEach(function (dot, i) {
     var pctEl = dot.closest('li').querySelector('[data-slice-pct]');
     var pct = parseFloat(pctEl.getAttribute('data-slice-pct')) || 0;
     var color = colors[i % colors.length];

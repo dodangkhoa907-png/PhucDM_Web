@@ -247,7 +247,7 @@
         className: '',
         html: '<div style="position:relative;width:26px;height:39px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))">' +
               '<svg width="26" height="39" viewBox="0 0 30 45" xmlns="http://www.w3.org/2000/svg">' +
-              '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 30 15 30s15-18.75 15-30C30 6.7 23.3 0 15 0z" fill="#2A5C38"/>' +
+              '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 30 15 30s15-18.75 15-30C30 6.7 23.3 0 15 0z" fill="#D2691E"/>' +
               '<circle cx="15" cy="14" r="6" fill="#fff"/></svg></div>',
         iconSize: [26, 39],
         iconAnchor: [13, 39],
