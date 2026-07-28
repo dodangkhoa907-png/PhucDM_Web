@@ -70,7 +70,7 @@ public class OrderDaoImpl implements OrderDAO {
                 }
             }
 
-            String sqlDetail = "INSERT INTO OrderDetails (OrderID, VariantID, Quantity, UnitPrice, SubTotal) VALUES (?,?,?,?,?)";
+            String sqlDetail = "INSERT INTO OrderDetails (OrderID, VariantID, Quantity, UnitPrice, SubTotal, SugarLevel, IceLevel, DrinkNote) VALUES (?,?,?,?,?,?,?,?)";
             try (PreparedStatement psDetail = conn.prepareStatement(sqlDetail)) {
                 for (CartItem item : cartItems) {
                     psDetail.setInt(1, orderId);
@@ -78,6 +78,9 @@ public class OrderDaoImpl implements OrderDAO {
                     psDetail.setInt(3, item.getQuantity());
                     psDetail.setBigDecimal(4, item.getPrice());
                     psDetail.setBigDecimal(5, item.getTotalPrice());
+                    psDetail.setString(6, item.getSugarLevel());
+                    psDetail.setString(7, item.getIceLevel());
+                    psDetail.setString(8, item.getNote());
                     psDetail.addBatch();
                 }
                 psDetail.executeBatch();
@@ -184,6 +187,9 @@ public class OrderDaoImpl implements OrderDAO {
                             d.setSubTotal(rs.getBigDecimal("SubTotal"));
                             d.setProductName(rs.getNString("ProductName"));
                             d.setSize(rs.getString("Size"));
+                            d.setSugarLevel(rs.getString("SugarLevel"));
+                            d.setIceLevel(rs.getString("IceLevel"));
+                            d.setNote(rs.getString("DrinkNote"));
                             items.add(d);
                         }
                     }
@@ -769,7 +775,7 @@ public class OrderDaoImpl implements OrderDAO {
                 }
             }
 
-            String sqlDetail = "INSERT INTO OrderDetails (OrderID, VariantID, Quantity, UnitPrice, SubTotal) VALUES (?,?,?,?,?)";
+            String sqlDetail = "INSERT INTO OrderDetails (OrderID, VariantID, Quantity, UnitPrice, SubTotal, SugarLevel, IceLevel, DrinkNote) VALUES (?,?,?,?,?,?,?,?)";
             try (PreparedStatement psDetail = conn.prepareStatement(sqlDetail)) {
                 for (CartItem item : cartItems) {
                     psDetail.setInt(1, orderId);
@@ -777,6 +783,9 @@ public class OrderDaoImpl implements OrderDAO {
                     psDetail.setInt(3, item.getQuantity());
                     psDetail.setBigDecimal(4, item.getPrice());
                     psDetail.setBigDecimal(5, item.getTotalPrice());
+                    psDetail.setString(6, item.getSugarLevel());
+                    psDetail.setString(7, item.getIceLevel());
+                    psDetail.setString(8, item.getNote());
                     psDetail.addBatch();
                 }
                 psDetail.executeBatch();

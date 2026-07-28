@@ -69,7 +69,13 @@
      * gọi có thể chờ nhiều lần thêm — ví dụ trang chi tiết thêm size + nhiều topping cùng lúc
      * rồi mới mở khoá nút. Giá luôn do server tự tính, client chỉ gửi variantId + quantity.
      */
-    function addToCart(variantId, quantity, triggerBtn) {
+    /**
+     * @param {string|number} variantId
+     * @param {number} quantity
+     * @param {HTMLElement|null} triggerBtn
+     * @param {{sugar?: string, ice?: string, note?: string}} [customization]
+     */
+    function addToCart(variantId, quantity, triggerBtn, customization) {
         if (!variantId) return Promise.resolve();
 
         const originalHtml = triggerBtn ? triggerBtn.innerHTML : null;
@@ -82,6 +88,11 @@
         body.set('variantId', String(variantId));
         body.set('quantity', String(quantity || 1));
         body.set('_csrf', getCsrfToken());
+        if (customization) {
+            if (customization.sugar) body.set('sugar', customization.sugar);
+            if (customization.ice)   body.set('ice',   customization.ice);
+            if (customization.note)  body.set('note',  customization.note);
+        }
 
         return fetch(CONTEXT_PATH + '/cart/add', {
             method: 'POST',

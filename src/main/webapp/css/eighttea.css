@@ -4,10 +4,15 @@
    EIGHT TEA — Design System v2 (thay thế hoàn toàn da Nhiệt Đới Xanh)
    Nạp SAU style.css/product.css/account.css/menu.css → thắng ở cùng specificity.
 
-   Bảng màu chốt theo design brief:
-     · Canvas kem #FAF6F0 · Surface trắng #FFFFFF · Accent caramel #D2691E
-     · Dark section nâu đen ủ trà #120E0C · Text nâu xám #2B2625
+   Bảng màu chốt (v3 — hệ xanh lá, chỉ áp cho module CUSTOMER):
+     · Canvas #F4F6EF · Surface trắng #FFFFFF · Primary Fern Green #477023
+     · Dark section Dark Green #071E07 · Text #071E07 / #66705E
      · Chữ: Plus Jakarta Sans (thân) + IBM Plex Mono (nhãn thông số)
+
+   PHẠM VI: file này chỉ được nạp bởi các trang Customer (home, product-list,
+   product-detail, cart, checkout, payment-return, auth, account/*). Admin dùng
+   bộ token riêng --admin-* khai báo inline trong admin/layout/header.jsp và
+   KHÔNG nạp file này → đổi màu ở đây không chạm Admin/Manager/Staff.
 
    Hướng thiết kế: Minimalist Tech-Hardware Showcase — khối trắng nổi trên nền kem,
    nhãn monospace kiểu datasheet, dải tối cho bảng thông số.
@@ -16,45 +21,76 @@
 
 /* ── 1. TOKENS ───────────────────────────────────────────────────────────── */
 :root {
-    /* Canvas kem dịu + bề mặt trắng — phân tầng bằng nền, không viền */
-    --paper:        #FAF6F0;
-    --paper-2:      #F2EBE1;
-    --white:        #FFFFFF;
-    --mist:         #EFE7DC;
+    /* ---- LỚP 1: TOKEN GỐC --et-* (nguồn sự thật duy nhất) ---------------- */
+    /* Bảng màu khách hàng chốt: Reseda #6E8649 · Fern #477023 · Dark Moss
+       #2D531A · Pakistan #0D330E · Dark Green #071E07 + trung tính sáng. */
+    --et-primary:         #477023;
+    --et-primary-hover:   #2D531A;
+    --et-primary-active:  #0D330E;
+    --et-primary-soft:    #E9EEE1;
+    --et-accent-muted:    #6E8649;
+    --et-dark:            #071E07;
+    --et-dark-surface:    #0D330E;
+    --et-canvas:          #F4F6EF;
+    --et-surface:         #FFFFFF;
+    --et-surface-muted:   #E9EEE1;
+    --et-text:            #071E07;
+    --et-text-secondary:  #66705E;
 
-    /* Cam caramel — màu điểm nhấn / CTA */
-    --leaf:         #D2691E;
-    --leaf-deep:    #A9531A;
-    --leaf-bright:  #E08B45;
-    --leaf-wash:    #F7EADC;
+    /* Hai token trung tính DẪN XUẤT (không có trong brief nhưng bắt buộc phải
+       có: chữ mờ cấp 3 và đường phân cách). Lấy đúng tông xanh-xám của
+       #66705E để không sinh ra hệ màu thứ hai. */
+    --et-text-muted:      #8A9382;
+    --et-border:          #DDE5D2;
 
-    /* Mực & chữ — nâu xám đậm */
-    --ink:          #2B2625;
-    --ink-2:        #6B615C;
-    --muted:        #9C918B;
+    /* Kênh RGB của primary — dùng cho focus ring / shadow bán trong suốt,
+       tránh viết lại rgba() rời rạc khắp file. */
+    --et-primary-rgb:     71, 112, 35;
+    --et-dark-rgb:        7, 30, 7;
 
-    /* Dải tối — nâu đen ủ trà */
-    --dark:         #120E0C;
-    --dark-2:       #1C1614;
+    /* ---- LỚP 2: ALIAS NỘI BỘ eighttea.css -------------------------------- */
+    /* Canvas sáng + bề mặt trắng — phân tầng bằng nền, không viền */
+    --paper:        var(--et-canvas);
+    --paper-2:      var(--et-surface-muted);
+    --white:        var(--et-surface);
+    --mist:         var(--et-border);
 
-    /* Ánh xạ lại token cũ để 4 file CSS cũ tự đổi màu theo, không phải sửa tay */
-    --cream:        #FAF6F0;
-    --cream-dark:   #F2EBE1;
-    --cream-warm:   #F7EADC;
-    --green:        #D2691E;
-    --green-dark:   #A9531A;
-    --green-light:  #E08B45;
-    --gold:         #E08B45;
-    --gold-light:   #F7EADC;
-    --caramel:      #D2691E;
-    --caramel-deep: #A9531A;
-    --peach:        #E08B45;
-    --text-dark:    #2B2625;
-    --text-body:    #6B615C;
-    --text-muted:   #9C918B;
-    --border:       #EFE7DC;
-    --roast:        #120E0C;
-    --roast-soft:   #1C1614;
+    /* Xanh lá — màu điểm nhấn / CTA */
+    --leaf:         var(--et-primary);
+    --leaf-deep:    var(--et-primary-hover);
+    --leaf-bright:  var(--et-accent-muted);
+    --leaf-wash:    var(--et-primary-soft);
+
+    /* Mực & chữ */
+    --ink:          var(--et-text);
+    --ink-2:        var(--et-text-secondary);
+    --muted:        var(--et-text-muted);
+
+    /* Dải tối */
+    --dark:         var(--et-dark);
+    --dark-2:       var(--et-dark-surface);
+
+    /* ---- LỚP 3: ÁNH XẠ TOKEN LEGACY -------------------------------------- */
+    /* style.css/product.css/account.css/menu.css (nạp TRƯỚC file này) vẫn gọi
+       các tên cũ. Trỏ hết về --et-* để chúng đổi màu theo, không phải sửa tay
+       và không sinh ra hệ token trùng lặp. */
+    --cream:        var(--et-canvas);
+    --cream-dark:   var(--et-surface-muted);
+    --cream-warm:   var(--et-primary-soft);
+    --green:        var(--et-primary);
+    --green-dark:   var(--et-primary-hover);
+    --green-light:  var(--et-accent-muted);
+    --gold:         var(--et-accent-muted);
+    --gold-light:   var(--et-primary-soft);
+    --caramel:      var(--et-primary);
+    --caramel-deep: var(--et-primary-hover);
+    --peach:        var(--et-accent-muted);
+    --text-dark:    var(--et-text);
+    --text-body:    var(--et-text-secondary);
+    --text-muted:   var(--et-text-muted);
+    --border:       var(--et-border);
+    --roast:        var(--et-dark);
+    --roast-soft:   var(--et-dark-surface);
 
     --font:         'Plus Jakarta Sans', system-ui, sans-serif;
     --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -66,10 +102,10 @@
     --ease:         cubic-bezier(.22,1,.36,1);
     --transition:   all .25s cubic-bezier(.22,1,.36,1);
 
-    --shadow-sm:    0 1px 2px rgba(43,38,37,.04), 0 3px 10px rgba(43,38,37,.04);
-    --shadow:       0 2px 4px rgba(43,38,37,.04), 0 14px 32px -14px rgba(43,38,37,.16);
-    --shadow-lg:    0 4px 10px rgba(43,38,37,.05), 0 32px 64px -24px rgba(43,38,37,.24);
-    --shadow-cta:   0 8px 22px -8px rgba(210,105,30,.55);
+    --shadow-sm:    0 1px 2px rgba(var(--et-dark-rgb),.04), 0 3px 10px rgba(var(--et-dark-rgb),.04);
+    --shadow:       0 2px 4px rgba(var(--et-dark-rgb),.04), 0 14px 32px -14px rgba(var(--et-dark-rgb),.16);
+    --shadow-lg:    0 4px 10px rgba(var(--et-dark-rgb),.05), 0 32px 64px -24px rgba(var(--et-dark-rgb),.24);
+    --shadow-cta:   0 8px 22px -8px rgba(var(--et-primary-rgb),.55);
 }
 
 /* ── 2. NỀN TẢNG ─────────────────────────────────────────────────────────── */
@@ -129,10 +165,14 @@ h1, h2, h3, h4,
        hoà lẫn với ảnh nền phía sau tạo cảm giác "chìm", chữ mất tương phản.
        backdrop-filter: none bắt buộc phải khai báo tường minh — style.css (nạp trước)
        đã set blur(20px) cho cùng selector này, không khai báo lại thì giá trị cũ vẫn còn. */
-    background: #FAF6F0;
+    background: var(--et-canvas);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    box-shadow: 0 1px 0 rgba(43,38,37,.07), 0 16px 32px -22px rgba(43,38,37,.22);
+    /* style.css để lại border-bottom rgba(42,92,56,.08) (xanh cũ) — khai báo lại
+       bằng token để không còn ánh xanh lạc tông. Header KHÔNG chuyển nền tối khi
+       cuộn: canvas sáng + shadow mềm là ngôn ngữ đã chọn. */
+    border-bottom: 1px solid var(--et-border);
+    box-shadow: 0 1px 0 rgba(var(--et-dark-rgb),.07), 0 16px 32px -22px rgba(var(--et-dark-rgb),.22);
 }
 
 .navbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -153,12 +193,12 @@ h1, h2, h3, h4,
 .nav-links a {
     position: relative;
     font-family: var(--font); font-size: .875rem; font-weight: 500;
-    color: var(--ink-2); padding: 9px 17px; border-radius: 8px;
+    color: var(--et-text); padding: 9px 17px; border-radius: 8px;
     text-decoration: none; border: none;
     transition: background-color .2s var(--ease), color .2s var(--ease);
 }
-.nav-links a:hover { background: var(--paper-2); color: var(--ink); }
-.nav-links a.active { background: none; color: var(--leaf-deep); font-weight: 600; }
+.nav-links a:hover { background: var(--et-primary-soft); color: var(--et-primary); }
+.nav-links a.active { background: none; color: var(--et-primary-hover); font-weight: 600; }
 
 /* Gạch chân trượt mượt + quét sáng lấp lánh khi hover (chỉ áp cho link chữ, không
    áp cho nút giỏ hàng/tài khoản/CTA vốn đã có nền riêng). */
@@ -228,7 +268,20 @@ h1, h2, h3, h4,
 }
 .nav-cta:hover, .nav-user-trigger:hover,
 .nav-user-wrap.open .nav-user-trigger {
-    background: var(--leaf-deep) !important; transform: translateY(-1px);
+    background: var(--et-primary-hover) !important; transform: translateY(-1px);
+    /* !important bắt buộc ở ĐÚNG một chỗ này: style.css:233 đã đặt
+       `.nav-cta:hover { box-shadow: 0 8px 24px rgba(42,92,56,.4) !important }`
+       (xanh cũ) — không có !important thì bóng cũ vẫn thắng. */
+    box-shadow: 0 8px 24px -8px rgba(var(--et-primary-rgb),.42) !important;
+}
+.nav-cta:active, .nav-user-trigger:active,
+.nav-login-icon-trigger:active {
+    background: var(--et-primary-active) !important; transform: translateY(0);
+}
+.nav-cta:focus-visible, .nav-user-trigger:focus-visible,
+.nav-login-icon-trigger:focus-visible, .nav-login-submit:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(var(--et-primary-rgb),.18) !important;
 }
 .nav-user-wrap { position: relative; }
 .nav-user-caret { font-size: .62rem; transition: transform .25s var(--ease); }
@@ -248,10 +301,22 @@ h1, h2, h3, h4,
     font-family: var(--font); font-size: .875rem; color: var(--ink-2);
     text-align: left; cursor: pointer; text-decoration: none;
 }
-.nav-user-menu a:hover, .nav-user-menu button:hover { background: var(--paper); color: var(--leaf-deep); }
-.nav-user-menu i { width: 15px; color: var(--muted); }
-.nav-user-menu-divider { height: 1px; background: var(--mist); margin: 6px 4px; }
+.nav-user-menu a:hover, .nav-user-menu button:hover {
+    background: var(--et-primary-soft); color: var(--et-primary-hover);
+}
+.nav-user-menu a:hover i { color: var(--et-primary); }
+.nav-user-menu i { width: 15px; color: var(--et-text-muted); }
+.nav-user-menu-divider { height: 1px; background: var(--et-border); margin: 6px 4px; }
 .nav-user-logout-form { margin: 0; }
+
+/* Đăng xuất = hành động phá vỡ phiên → GIỮ semantic danger, không tô xanh
+   primary. Rule chung `.nav-user-menu button:hover` ở trên có cùng specificity
+   (0,2,1) và đứng trước, nên hai rule dưới đây thắng theo thứ tự khai báo. */
+.nav-user-logout-form button { color: #B4453F; }
+.nav-user-logout-form button i { color: #B4453F; }
+.nav-user-logout-form button:hover {
+    background: rgba(180,69,63,.09); color: #B4453F;
+}
 
 .nav-toggle { background: none; border: none; padding: 8px; cursor: pointer; }
 .nav-toggle span { display: block; width: 21px; height: 2px; background: var(--ink); border-radius: 2px; margin: 4px 0; }
@@ -274,11 +339,11 @@ h1, h2, h3, h4,
 .nav-login-panel-sub { display: block; font-size: .78rem; color: var(--muted); margin-top: 3px; }
 .nav-login-form { display: flex; flex-direction: column; gap: 10px; }
 .nav-login-field input {
-    width: 100%; background: var(--paper) !important; border: none !important;
+    width: 100%; background: var(--et-surface-muted) !important; border: none !important;
     border-radius: 12px; padding: 12px 14px; font-family: var(--font); font-size: .88rem; color: var(--ink);
     transition: box-shadow .2s var(--ease), background-color .2s var(--ease);
 }
-.nav-login-field input:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(210,105,30,.16) !important; outline: none; }
+.nav-login-field input:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(var(--et-primary-rgb),.16) !important; outline: none; }
 .nav-login-submit {
     background: var(--leaf) !important; color: #fff !important; border: none; border-radius: var(--radius-pill);
     padding: 12px; font-family: var(--font); font-weight: 700; font-size: .88rem; cursor: pointer;
@@ -315,10 +380,10 @@ h1, h2, h3, h4,
 .otp-mini-row { display: flex; gap: 7px; justify-content: space-between; margin: 4px 0 12px; }
 .otp-mini-box {
     width: 38px; height: 46px; text-align: center; border: none !important; border-radius: 10px;
-    background: var(--paper) !important; color: var(--ink); font-family: var(--font-mono);
+    background: var(--et-surface-muted) !important; color: var(--ink); font-family: var(--font-mono);
     font-size: 1.1rem; font-weight: 600; transition: box-shadow .2s var(--ease), background-color .2s var(--ease);
 }
-.otp-mini-box:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(210,105,30,.16) !important; outline: none; }
+.otp-mini-box:focus { background: var(--white) !important; box-shadow: 0 0 0 3px rgba(var(--et-primary-rgb),.16) !important; outline: none; }
 .otp-mini-meta { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: .68rem; color: var(--muted); margin-bottom: 12px; }
 .otp-mini-meta .time { color: var(--leaf-deep); font-weight: 600; }
 .otp-mini-resend { background: none; border: none; color: var(--leaf-deep); font-family: var(--font); font-weight: 700; font-size: .76rem; cursor: pointer; padding: 0; }
@@ -327,8 +392,13 @@ h1, h2, h3, h4,
 .mini-strength-track { display: flex; gap: 3px; margin-top: 7px; }
 .mini-strength-seg { flex: 1; height: 3px; border-radius: 99px; background: var(--mist); transition: background .3s; }
 .mini-match { font-family: var(--font); font-size: .72rem; font-weight: 600; margin-top: 5px; min-height: 14px; }
-.mini-match.ok { color: var(--leaf-deep); }
-.mini-match.bad { color: #BC5A24; }
+/* SUCCESS — cố ý KHÔNG dùng --et-primary: "mật khẩu khớp" là phản hồi trạng
+   thái, không phải hành động chính. Dùng đúng xanh success #187A43 (đã có sẵn
+   ở .auth-mini-alert.ok) để không lẫn với CTA Fern Green. */
+.mini-match.ok { color: #187A43; }
+/* "Mật khẩu không khớp" là LỖI validation → đỏ, không phải cam #BC5A24 (màu này
+   sinh ra từ bảng caramel cũ, nay đọc sai thành cảnh báo nhẹ). */
+.mini-match.bad { color: #8E1F1F; }
 
 /* Hiệu ứng rời trang khi bấm link có [data-transition] — fade + scale nhẹ,
    dùng chung cho cả navbar lẫn các trang auth độc lập. */
@@ -359,15 +429,29 @@ button, [type="button"], [type="submit"], [type="reset"] {
 .cart-checkout-btn:hover, .detail-add-cart:hover {
     background: var(--leaf-deep) !important; transform: translateY(-2px);
 }
+.btn-primary:active, .btn-shop-primary:active, .submit:active,
+.cart-checkout-btn:active, .detail-add-cart:active {
+    background: var(--et-primary-active) !important; transform: translateY(0);
+}
 .btn-secondary, .btn-shop-outline, .btn-shop-ghost {
-    background: var(--white) !important; color: var(--ink) !important; box-shadow: var(--shadow-sm);
+    background: var(--et-primary-soft) !important; color: var(--et-primary-hover) !important;
+    box-shadow: var(--shadow-sm);
 }
 .btn-secondary:hover, .btn-shop-outline:hover, .btn-shop-ghost:hover {
-    background: var(--paper-2) !important; transform: translateY(-2px);
+    background: var(--et-surface-muted) !important; color: var(--et-primary-active) !important;
+    transform: translateY(-2px);
+}
+/* Disabled — trung tính, tương phản THẤP có chủ đích. Đặt sau các rule màu ở
+   trên để thắng theo thứ tự khai báo, không cần nâng specificity. */
+.btn:disabled, .btn-primary:disabled, .btn-shop-primary:disabled,
+.submit:disabled, .cart-checkout-btn:disabled, .detail-add-cart:disabled,
+.nav-login-submit:disabled, .btn-secondary:disabled {
+    background: var(--et-surface-muted) !important; color: var(--et-text-muted) !important;
+    box-shadow: none; cursor: not-allowed; transform: none;
 }
 button:focus-visible, a:focus-visible, input:focus-visible,
 select:focus-visible, textarea:focus-visible {
-    outline: 3px solid rgba(210,105,30,.45); outline-offset: 3px;
+    outline: 3px solid rgba(var(--et-primary-rgb),.45); outline-offset: 3px;
 }
 
 /* ── 5. FORM — nền lõm thay cho viền ─────────────────────────────────────── */
@@ -375,7 +459,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="tel
 input[type="number"], input[type="search"], select, textarea,
 .form-control, .checkout-field input, .checkout-field select, .checkout-field textarea,
 .account-field input, .account-field select, .account-field textarea {
-    background: var(--paper) !important;
+    background: var(--et-surface-muted) !important;
     border: none !important; outline: none;
     border-radius: 13px; padding: 13px 16px;
     font-family: var(--font); font-size: .94rem; color: var(--ink);
@@ -385,7 +469,7 @@ input[type="number"], input[type="search"], select, textarea,
 }
 input:focus, select:focus, textarea:focus, .form-control:focus {
     background: var(--white) !important;
-    box-shadow: 0 0 0 3px rgba(210,105,30,.16) !important;
+    box-shadow: 0 0 0 3px rgba(var(--et-primary-rgb),.16) !important;
 }
 label { font-family: var(--font); font-size: .84rem; font-weight: 500; color: var(--ink-2); }
 
@@ -420,7 +504,7 @@ label { font-family: var(--font); font-size: .84rem; font-weight: 500; color: va
 }
 
 /* Thanh công cụ shop */
-.shop-toolbar { background: rgba(239,239,236,.92); backdrop-filter: blur(14px); border: none; box-shadow: var(--shadow-sm); }
+.shop-toolbar { background: rgba(244,246,239,.92); backdrop-filter: blur(14px); border: none; box-shadow: var(--shadow-sm); }
 .shop-cat-chip {
     background: var(--white); color: var(--ink-2); border: none !important;
     border-radius: var(--radius-pill); padding: 9px 18px;
@@ -461,6 +545,46 @@ label { font-family: var(--font); font-size: .84rem; font-weight: 500; color: va
 @media (prefers-reduced-motion: reduce) {
     .btn-go-back, .btn-go-back-icon, .btn-go-back-icon i { transition: none; }
     .btn-go-back:hover .btn-go-back-icon::after { animation: none; }
+}
+
+/* ── 6c. ACCOUNT SIDEBAR — fragment dùng chung cho toàn bộ /account/* ─────
+   account.css (nạp trước) tô mục active bằng viên xanh đặc `background:
+   var(--green); color:#fff`. Đổi sang "soft pill": nền --et-primary-soft, chữ
+   --et-primary-hover, icon --et-primary — nhẹ hơn, không biến sidebar thành
+   khối xanh đặc, và bỏ hẳn viền xanh cứng. Trạng thái active vẫn do JSP EL
+   (`accountTab`) quyết định — không đụng vào logic đó. ── */
+/* Chữ mục nghỉ: --et-text (account.css để --text-body/#66705E — nhạt hơn mức
+   brief yêu cầu). Phân cấp active/nghỉ vẫn rõ nhờ nền soft + font-weight 700
+   + chữ --et-primary-hover, nên nâng độ tương phản ở đây không làm mất thứ bậc. */
+.account-nav a, .account-nav button { color: var(--et-text); }
+.account-nav a i, .account-nav button i { color: var(--et-text-muted); }
+.account-nav a:hover, .account-nav button:hover {
+    background: var(--et-primary-soft); color: var(--et-primary-hover);
+}
+.account-nav a:hover i { color: var(--et-primary); }
+.account-nav a.active {
+    background: var(--et-primary-soft); color: var(--et-primary-hover);
+    font-weight: 700; box-shadow: var(--shadow-sm);
+}
+.account-nav a.active i { color: var(--et-primary); }
+.account-nav a.is-disabled,
+.account-nav a.is-disabled i { color: var(--et-text-muted); }
+
+/* Đăng xuất trong sidebar — GIỮ danger, không tô xanh. Đặt sau rule hover
+   chung ở trên để thắng ở cùng specificity. */
+.account-nav form button, .account-nav form button i { color: #B4453F; }
+.account-nav form button:hover { background: rgba(180,69,63,.09); color: #B4453F; }
+
+/* Mobile: cùng breakpoint 980px với account.css để ghi đè đúng viên pill ngang
+   (nếu lệch breakpoint sẽ có dải màn hình rơi lại nền xanh đặc + border xanh). */
+@media (max-width: 980px) {
+    /* Viên pill ngang: nền trắng + bóng mềm thay cho viền — đúng ràng buộc
+       "không viền" của design system, và bỏ border-color xanh cứng. */
+    .account-nav a { background: var(--et-surface); border: none; box-shadow: var(--shadow-sm); }
+    .account-nav a.active {
+        background: var(--et-primary-soft); color: var(--et-primary-hover);
+        border: none; font-weight: 700;
+    }
 }
 
 /* ── 7. FOOTER — dải tối khép trang ─────────────────────────────────────── */

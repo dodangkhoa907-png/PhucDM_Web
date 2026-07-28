@@ -471,7 +471,13 @@
         var resetSubmitBtn = document.getElementById('resetSubmitBtn');
         var resetMatch = document.getElementById('resetMatch');
         var segs = [document.getElementById('mseg0'), document.getElementById('mseg1'), document.getElementById('mseg2')];
-        var levelColors = ['#BC5A24', '#E08B45', '#A9531A'];
+        /* Ba mức độ mạnh mật khẩu phải PHÂN BIỆT ĐƯỢC, không cùng một sắc xanh:
+           yếu = đỏ lỗi, trung bình = cam cảnh báo, mạnh = Fern Green thương hiệu.
+           Chỉ mức "mạnh" đọc từ token --et-primary; hai mức còn lại là màu
+           semantic, cố ý không nằm trong bảng màu thương hiệu. */
+        var etPrimary = getComputedStyle(document.documentElement)
+                            .getPropertyValue('--et-primary').trim() || '#477023';
+        var levelColors = ['#B4453F', '#D98324', etPrimary];
 
         function pwRulesPass(v) { return /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v) && v.length >= 6; }
         if (resetPw) { resetPw.addEventListener('input', function(){ updateResetStateSafe(resetPw.value); }); }

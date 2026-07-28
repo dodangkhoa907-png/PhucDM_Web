@@ -35,7 +35,9 @@
         <c:otherwise>
           <%-- Chưa có ảnh: ly vẽ bằng CSS thay vì emoji (emoji thiếu glyph sẽ hiện ô vuông vỡ) --%>
           <span class="block w-[42%] aspect-[.72/1] relative transition duration-500 group-hover:scale-105"
-                style="background:linear-gradient(178deg,#E08B45,#B4661F);
+                <%-- Khung ly minh họa, không phải màu thật của món → dùng token thương hiệu.
+                     Đọc thẳng biến trên :root nên fragment này đổi màu đồng bộ ở mọi trang nhúng nó. --%>
+                style="background:linear-gradient(178deg,var(--et-accent-muted),var(--et-primary-hover));
                        clip-path:polygon(12% 0,88% 0,77% 100%,23% 100%);
                        border-radius:4px 4px 12px 12px;"
                 role="img" aria-label="${fn:escapeXml(p.name)}"></span>

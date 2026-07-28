@@ -33,22 +33,29 @@
     <script>
     // preflight:false — BẮT BUỘC. Trang này dùng chung style.css/product.css/eighttea.css
     // với các trang còn lại; bật preflight sẽ reset sạch các style đó và vỡ navbar/footer.
+    //
+    // MÀU: ánh xạ 1-1 sang token --et-* của eighttea.css nhưng ghi bằng hex, KHÔNG dùng
+    // var(--et-*). Lý do đã kiểm chứng: markup trang này dùng alpha modifier (bg-accent/15,
+    // text-accent/…); Tailwind phải tự tổng hợp rgba từ giá trị màu, việc nó không làm được
+    // với một chuỗi var(). Dạng 'rgb(var(--x) / <alpha-value>)' cũng không dùng được vì
+    // --et-primary-rgb là danh sách ngăn bằng dấu phẩy ("71, 112, 35") — ghép với cú pháp
+    // gạch chéo sẽ sinh ra CSS không hợp lệ. Hex chỉ xuất hiện tại đây, không lặp trong markup.
     tailwind.config = {
       corePlugins: { preflight: false },
       theme: { extend: {
         colors: {
-          canvas:'#FAF6F0', surface:'#FFFFFF', shade:'#EFEAE2',
-          accent:'#D2691E', 'accent-deep':'#A9531A',
-          dark:'#120E0C', 'dark-2':'#1C1614', ink:'#2B2625', 'ink-2':'#6B615C', muted:'#9C918B'
+          canvas:'#F4F6EF', surface:'#FFFFFF', shade:'#E9EEE1',
+          accent:'#477023', 'accent-deep':'#2D531A',
+          dark:'#071E07', 'dark-2':'#0D330E', ink:'#071E07', 'ink-2':'#66705E', muted:'#8A9382'
         },
         fontFamily: {
           sans:['Plus Jakarta Sans','system-ui','sans-serif'],
           mono:['IBM Plex Mono','ui-monospace','monospace']
         },
         boxShadow: {
-          soft:'0 1px 2px rgba(43,38,37,.04), 0 4px 14px rgba(43,38,37,.04)',
-          card:'0 2px 4px rgba(43,38,37,.03), 0 14px 34px -12px rgba(43,38,37,.14)',
-          cta:'0 12px 26px -10px rgba(210,105,30,.65)'
+          soft:'0 1px 2px rgba(7,30,7,.04), 0 4px 14px rgba(7,30,7,.04)',
+          card:'0 2px 4px rgba(7,30,7,.03), 0 14px 34px -12px rgba(7,30,7,.14)',
+          cta:'0 12px 26px -10px rgba(71,112,35,.55)'
         }
       }}
     }
@@ -57,11 +64,14 @@
     <style>
       html { scroll-behavior: smooth; }
 
-      /* Navbar đặc ngay từ khung hình đầu — không đợi JS gắn class "scrolled". */
+      /* Navbar đặc ngay từ khung hình đầu — không đợi JS gắn class "scrolled".
+         Chỉ ghi đè nền/đệm/bóng cho khớp .navbar.scrolled trong eighttea.css; KHÔNG
+         đụng tới màu chữ, trạng thái active/hover hay nút tài khoản (đã chuẩn hóa ở
+         bước trước) nên header trước và sau khi cuộn không đổi màu. */
       body.hp #navbar {
-        background:#FAF6F0 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+        background:var(--et-canvas) !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
         padding:13px 0 !important;
-        box-shadow:0 1px 0 rgba(43,38,37,.07), 0 16px 32px -22px rgba(43,38,37,.22);
+        box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.07), 0 16px 32px -22px rgba(var(--et-dark-rgb),.22);
       }
 
       /* Không viền — phân tầng bằng nền + bóng, đồng bộ với phần còn lại của site. */
@@ -110,8 +120,8 @@
       }
 
       /* Chấm chỉ vị trí: chấm đang xem kéo dài thành gạch */
-      .hs-dot { width:8px; height:8px; border-radius:999px; background:#D6CCC0; transition:width .3s ease, background-color .3s ease; }
-      .hs-dot.is-on { width:32px; background:#D2691E; }
+      .hs-dot { width:8px; height:8px; border-radius:999px; background:var(--et-border); transition:width .3s ease, background-color .3s ease; }
+      .hs-dot.is-on { width:32px; background:var(--et-primary); }
 
       /* Mũi tên kính mờ */
       .hs-arrow {
@@ -152,7 +162,7 @@
 
       /* Quầng sáng bám theo con trỏ */
       .hs-glow {
-        background: radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(210,105,30,.12), transparent 40%);
+        background: radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(var(--et-primary-rgb),.14), transparent 40%);
       }
 
       /* Ô tìm kiếm — eighttea.css đặt `input[type="text"] { padding; border-radius;
@@ -162,12 +172,13 @@
         padding: 14px 20px 14px 48px !important;
         border-radius: 999px !important;
         background: rgba(255,255,255,.78) !important;
-        box-shadow: 0 1px 2px rgba(43,38,37,.05), 0 6px 18px -6px rgba(43,38,37,.12) !important;
+        box-shadow: 0 1px 2px rgba(var(--et-dark-rgb),.05), 0 6px 18px -6px rgba(var(--et-dark-rgb),.12) !important;
         font-size: .9rem;
       }
+      /* Khi gõ: nền trắng + vòng sáng xanh thương hiệu thay cho bóng nâu cũ. */
       .hp-scope .hs-search input[type="text"]:focus {
-        background: #fff !important;
-        box-shadow: 0 2px 6px rgba(43,38,37,.06), 0 16px 34px -14px rgba(43,38,37,.22) !important;
+        background: var(--et-surface) !important;
+        box-shadow: 0 0 0 3px rgba(var(--et-primary-rgb),.28), 0 16px 34px -14px rgba(var(--et-dark-rgb),.22) !important;
       }
 
       /* ── Khối kể chuyện (Section 3) ─────────────────────────────────────
@@ -180,11 +191,35 @@
          nên để tương phản rất thấp và aria-hidden ở phần HTML. */
       .hp-scope .st-ghost {
         font-family: 'UVN Mot Moi', 'Baloo 2', system-ui, sans-serif;
-        line-height: .78; color: #E3D7C6; user-select: none;
+        line-height: .78; color: var(--et-border); user-select: none;
       }
 
       .hp-scope a:focus-visible, .hp-scope button:focus-visible, .hp-scope input:focus-visible {
-        outline:3px solid rgba(210,105,30,.5); outline-offset:3px;
+        outline:3px solid rgba(var(--et-primary-rgb),.55); outline-offset:3px;
+      }
+
+      /* Nhãn nhấn trong khối nền tối. --et-primary (#477023) đặt trên --et-dark
+         (#071E07) chỉ đạt ~1.6:1 — không đọc được, mà đây lại là chữ nhỏ in hoa.
+         Dùng một biến thể sáng của --et-accent-muted, khai báo đúng MỘT chỗ và
+         phủ lên utility .text-accent bằng độ ưu tiên id (1,1,0) > class (0,1,0),
+         nên không phải sửa rải rác trong markup. Nền tối vẫn giữ nguyên token.
+         Không áp dụng cho .bg-accent/15 (mảng nền mờ, không phải chữ). */
+      .hp-scope { --et-accent-on-dark: #A9C285; }
+      #thong-so .text-accent,
+      .hp-scope footer .text-accent { color: var(--et-accent-on-dark); }
+
+      /* Thẻ thông số trong khối nền tối. Trước đây mỗi thẻ lặp lại một chuỗi
+         shadow-[...] rất dài của Tailwind; gom về một class để đọc được token
+         --et-* (arbitrary value của Tailwind Play CDN không đọc biến CSS ổn định)
+         và để đổi màu một chỗ thay vì bốn chỗ. */
+      .hp-scope .hp-spec-card { transition: transform .3s ease, background-color .3s ease, box-shadow .3s ease; }
+      .hp-scope .hp-spec-card:hover {
+        transform: translateY(-4px);
+        /* Sáng lên một chút so với nền thẻ (giống hiệu ứng cũ) bằng cách phủ một lớp
+           xanh rất mờ lên chính token nền — không cần thêm hex ngoài bảng màu. */
+        background: linear-gradient(rgba(var(--et-primary-rgb),.14), rgba(var(--et-primary-rgb),.14)), var(--et-dark-surface);
+        box-shadow: inset 0 0 0 1.5px rgba(var(--et-primary-rgb),.75),
+                    0 22px 46px -22px rgba(var(--et-primary-rgb),.45);
       }
 
       /* Chấm "đang mở" ở banner chốt đơn (Section 4) — vòng sóng giãn ra rồi mờ dần,
@@ -220,8 +255,8 @@
     <%-- Nền mềm: dùng gradient toả nên không lộ mép tròn cứng như khối đặc --%>
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true"
          style="background:
-           radial-gradient(520px circle at 4% 14%, #EFEAE2 0%, transparent 66%),
-           radial-gradient(420px circle at 26% 98%, #EFEAE2 0%, transparent 68%);"></div>
+           radial-gradient(520px circle at 4% 14%, var(--et-surface-muted) 0%, transparent 66%),
+           radial-gradient(420px circle at 26% 98%, var(--et-surface-muted) 0%, transparent 68%);"></div>
 
     <%-- Cột điểm nhấn tối bên phải — ly trà sẽ đè lên đúng đường ranh giới này.
          Bo cong lớn theo trục dọc để tạo đường cong mềm thay vì mép bo nhỏ cứng. --%>
@@ -485,7 +520,7 @@
             <c:set var="isTop" value="${s.first}"/>
             <div class="${isTop ? 'sm:order-2' : (s.index == 1 ? 'sm:order-1' : 'sm:order-3')}">
               <div class="group relative bg-surface rounded-[26px] text-center transition-all duration-300
-                          hover:-translate-y-1.5 hover:shadow-[0_26px_52px_-24px_rgba(43,38,37,.3)]
+                          hover:-translate-y-1.5 hover:shadow-[0_26px_52px_-24px_rgba(7,30,7,.3)]
                           ${isTop ? 'shadow-card px-6 pt-9 pb-7' : 'shadow-soft px-5 pt-6 pb-6'}">
 
                 <span class="absolute top-4 left-4 font-mono text-[.62rem] font-semibold tracking-[.12em] tnum
@@ -566,7 +601,7 @@
             </p>
             <div class="flex justify-center lg:justify-start gap-0.5 mb-2" aria-hidden="true">
               <c:forEach begin="1" end="5" var="i">
-                <svg class="w-4 h-4 ${i <= feedbackStars ? 'text-accent' : 'text-[#DCD2C6]'}" viewBox="0 0 24 24" fill="currentColor">
+                <svg class="w-4 h-4 ${i <= feedbackStars ? 'text-accent' : 'text-[#DDE5D2]'}" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
                 </svg>
               </c:forEach>
@@ -581,7 +616,7 @@
               <figure class="m-0">
                 <div class="flex gap-0.5 mb-2.5" aria-label="${fb.rating} trên 5 sao">
                   <c:forEach begin="1" end="5" var="i">
-                    <svg class="w-3 h-3 ${i <= fb.rating ? 'text-accent' : 'text-[#DCD2C6]'}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <svg class="w-3 h-3 ${i <= fb.rating ? 'text-accent' : 'text-[#DDE5D2]'}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
                     </svg>
                   </c:forEach>
@@ -610,8 +645,8 @@
     <%-- Nền toả mềm, cùng thủ pháp với hero để hai section liền mạch --%>
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true"
          style="background:
-           radial-gradient(560px circle at 92% 8%, #EFEAE2 0%, transparent 62%),
-           radial-gradient(460px circle at 4% 82%, #EFEAE2 0%, transparent 64%);"></div>
+           radial-gradient(560px circle at 92% 8%, var(--et-surface-muted) 0%, transparent 62%),
+           radial-gradient(460px circle at 4% 82%, var(--et-surface-muted) 0%, transparent 64%);"></div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
 
@@ -694,7 +729,9 @@
               </defs>
 
               <%-- Vạch tốc độ: gợi ý chuyển động giao nhanh --%>
-              <g stroke="#D2691E" stroke-width="8" stroke-linecap="round" opacity=".55">
+              <%-- Vạch trang trí (không phải màu thật của đồ uống) → dùng màu thương hiệu.
+                   Ghi qua style vì thuộc tính trình bày của SVG không nhận var(). --%>
+              <g style="stroke:var(--et-primary)" stroke-width="8" stroke-linecap="round" opacity=".55">
                 <path d="M20,214 H72"/>
                 <path d="M4,252 H50"/>
                 <path d="M24,290 H64"/>
@@ -715,7 +752,7 @@
               <rect x="50" y="120" width="200" height="9"  rx="4.5" fill="#ffffff" opacity=".7"/>
 
               <%-- Tem ép màng vắt qua mép nắp — dấu hiệu "chống tràn / niêm phong" --%>
-              <rect x="84" y="132" width="132" height="34" rx="11" fill="#D2691E"/>
+              <rect x="84" y="132" width="132" height="34" rx="11" style="fill:var(--et-primary)"/>
               <text x="150" y="155" text-anchor="middle"
                     font-family="'IBM Plex Mono', ui-monospace, monospace"
                     font-size="14" font-weight="600" letter-spacing="2.5" fill="#ffffff">SEALED</text>
@@ -770,21 +807,21 @@
        mang qua nguyên bộ (specs + banner + footer) vì home.jsp chưa có footer
        riêng. Mở bằng cặp số/nhãn 04 để giữ đúng nhịp cuộn 02 → 03 → 04 của các
        section phía trên; nhãn ở đây đổi sang tông sáng-trên-nền-tối cho hợp mắt. -->
-  <section id="thong-so" class="bg-dark text-[#A79C95] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
+  <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
       <div class="flex items-center gap-4 mb-10 lg:mb-12">
-        <span class="font-mono text-[.7rem] font-semibold tracking-[.2em] text-[#6E655F] tnum">04</span>
+        <span class="font-mono text-[.7rem] font-semibold tracking-[.2em] text-[rgba(255,255,255,.55)] tnum">04</span>
         <span class="font-mono text-[.62rem] font-semibold tracking-[.16em] uppercase text-accent bg-white/[.06] px-4 py-2 rounded-full">
           Bảng thông số
         </span>
       </div>
 
       <div class="max-w-2xl mb-12 lg:mb-16">
-        <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-[#F5EFE7] mb-4">
+        <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-white mb-4">
           Một ly trà,<br>đọc như một chiếc máy.
         </h2>
-        <p class="text-[.98rem] leading-[1.65] text-[#8A7F79]">
+        <p class="text-[.98rem] leading-[1.65] text-[rgba(255,255,255,.74)]">
           Đồ uống ngon là thứ đo đếm được: nhiệt độ chiết xuất, vòng đời mẻ trà, dung tích ly.
           Tất cả nằm ở đây — không chữ nhỏ.
         </p>
@@ -794,21 +831,21 @@
         <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
              KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
              bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group bg-dark-2 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-[#221A15] hover:shadow-[inset_0_0_0_1.5px_rgba(210,105,30,.6),0_22px_46px_-22px_rgba(210,105,30,.45)]">
+        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
           <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 3a2 2 0 0 0-2 2v9.3a4 4 0 1 0 4 0V5a2 2 0 0 0-2-2z"/><line x1="12" y1="9" x2="12" y2="14.5"/>
             </svg>
           </span>
           <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Nhiệt độ chiết xuất</h3>
-          <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
-          <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
+          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
+          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
         </div>
 
         <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
              KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
              bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group bg-dark-2 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-[#221A15] hover:shadow-[inset_0_0_0_1.5px_rgba(210,105,30,.6),0_22px_46px_-22px_rgba(210,105,30,.45)]">
+        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
           <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="2" x2="12" y2="5"/>
@@ -816,36 +853,36 @@
             </svg>
           </span>
           <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Thời gian lưu hương</h3>
-          <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
-          <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
+          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
+          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
         </div>
 
         <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
              KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
              bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group bg-dark-2 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-[#221A15] hover:shadow-[inset_0_0_0_1.5px_rgba(210,105,30,.6),0_22px_46px_-22px_rgba(210,105,30,.45)]">
+        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
           <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2.5c2.4 3 4.2 5.4 4.2 9a4.2 4.2 0 0 1-8.4 0c0-1.2.4-2.2 1.1-3.1-.2 2 .8 3.1 2 3.1s2-1 2-2.2c0-2.1-1.1-3.3-.9-6.8z"/>
             </svg>
           </span>
           <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Hàm lượng calo</h3>
-          <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
-          <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
+          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
+          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
         </div>
 
         <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
              KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
              bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group bg-dark-2 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-[#221A15] hover:shadow-[inset_0_0_0_1.5px_rgba(210,105,30,.6),0_22px_46px_-22px_rgba(210,105,30,.45)]">
+        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
           <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
             <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 7.5l-9-4.5-9 4.5 9 4.5 9-4.5z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><polyline points="8.8 11.8 10.6 13.6 15 9.2"/>
             </svg>
           </span>
           <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Quy chuẩn bao bì</h3>
-          <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
-          <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
+          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
+          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
         </div>
       </div>
 
@@ -854,7 +891,7 @@
            thay vì chữ tĩnh. Tắt nhấp nháy khi prefers-reduced-motion (xem <style>). --%>
       <div class="relative overflow-hidden bg-dark-2 rounded-[28px] mt-5 lg:mt-6 px-6 sm:px-10 py-12 lg:py-16 text-center">
         <div class="absolute inset-0 pointer-events-none"
-             style="background:radial-gradient(60% 100% at 50% 0%, rgba(210,105,30,.20) 0%, transparent 70%);"></div>
+             style="background:radial-gradient(60% 100% at 50% 0%, rgba(var(--et-primary-rgb),.22) 0%, transparent 70%);"></div>
         <div class="relative">
           <span class="inline-flex items-center gap-2 bg-white/[.06] rounded-full pl-2.5 pr-3.5 py-1.5 mb-6">
             <span class="relative flex h-2 w-2">
@@ -863,10 +900,10 @@
             </span>
             <span class="font-mono text-[.62rem] tracking-[.14em] uppercase text-[#EBE3DB]">Đang nhận đơn · Mở đến 22:00</span>
           </span>
-          <h2 class="font-extrabold text-[#F5EFE7] tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
+          <h2 class="font-extrabold text-white tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
             Ly trà kế tiếp cách bạn 15 phút
           </h2>
-          <p class="text-[.98rem] leading-relaxed text-[#8A7F79] max-w-[46ch] mx-auto mb-8">
+          <p class="text-[.98rem] leading-relaxed text-[rgba(255,255,255,.74)] max-w-[46ch] mx-auto mb-8">
             Chọn size, chỉnh đường và đá theo khẩu vị — phần còn lại để quầy lo.
           </p>
           <div class="flex flex-wrap gap-3 justify-center">
@@ -889,35 +926,37 @@
 
       <!-- ═══════════════ FOOTER ═══════════════ -->
       <footer class="mt-14 lg:mt-20 pb-10">
-        <div class="pt-10" style="box-shadow:0 -1px 0 rgba(245,239,231,.08);">
+        <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
 
             <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
               <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
-              <span class="font-extrabold text-[#F5EFE7] tracking-tight">Eight Tea</span>
+              <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
             </a>
 
             <div class="flex items-center gap-2.5">
               <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
               <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
               <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
             </div>
 
             <%-- Địa chỉ + hotline: tín hiệu "quán local có thật" cho mô hình D2C.
                  Để chìm (cỡ nhỏ, màu mờ) nên không tranh chấp với logo bên trái. --%>
             <div class="text-center sm:text-right">
-              <p class="flex items-center justify-center sm:justify-end gap-1.5 text-[.72rem] leading-relaxed text-[#8A7F79] m-0 mb-1.5">
-                <svg class="w-3 h-3 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <p class="flex items-center justify-center sm:justify-end gap-1.5 text-[.72rem] leading-relaxed text-[rgba(255,255,255,.74)] m-0 mb-1.5">
+                <%-- Trên nền tối phải dùng sắc Reseda sáng hơn; --et-primary đặt trên
+                     --et-dark gần như không đọc được. --%>
+                <svg class="w-3 h-3 shrink-0 text-[#6E8649]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
                 139 Võ Văn Kiệt, P. Tam Long, TP. Bà Rịa
               </p>
-              <p class="font-mono text-[.62rem] tracking-[.08em] text-[#6E655F] m-0">
-                <a href="tel:0364523553" class="text-[#8A7F79] hover:text-accent transition no-underline">0364 523 553</a>
-                <span class="mx-1.5 text-[#4A423D]">·</span>
+              <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
+                <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0364 523 553</a>
+                <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
                 © 2026 Eight Tea
               </p>
             </div>

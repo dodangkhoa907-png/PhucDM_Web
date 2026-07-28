@@ -14,6 +14,9 @@ public class OrderDetail {
     // Bổ sung cho UI
     private String productName;
     private String size;
+    private String sugarLevel;
+    private String iceLevel;
+    private String note;
 
     public OrderDetail() {}
 
@@ -40,4 +43,13 @@ public class OrderDetail {
 
     public String getSize() { return size; }
     public void setSize(String size) { this.size = size; }
+
+    public String getSugarLevel() { return sugarLevel; }
+    public void setSugarLevel(String sugarLevel) { this.sugarLevel = sugarLevel; }
+
+    public String getIceLevel() { return iceLevel; }
+    public void setIceLevel(String iceLevel) { this.iceLevel = iceLevel; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 }

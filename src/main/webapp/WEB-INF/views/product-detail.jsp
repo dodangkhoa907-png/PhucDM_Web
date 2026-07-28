@@ -27,23 +27,28 @@
     <script>
     // preflight:false — BẮT BUỘC, giống các trang còn lại. Bật preflight sẽ reset sạch
     // style.css/product.css/eighttea.css và làm vỡ navbar dùng chung.
+    // MÀU: ánh xạ 1-1 sang token --et-* của eighttea.css, ghi bằng hex chứ không dùng
+    // var(--et-*) — markup dùng alpha modifier (bg-accent/10), thứ Tailwind chỉ tổng hợp
+    // được từ giá trị màu thật chứ không từ chuỗi var(); còn --et-primary-rgb ngăn bằng
+    // dấu phẩy nên dạng 'rgb(var(--x) / <alpha-value>)' sẽ sinh CSS không hợp lệ.
+    // Hex chỉ nằm ở đây, không lặp lại trong markup.
     tailwind.config = {
       corePlugins: { preflight: false },
       theme: { extend: {
         colors: {
-          canvas:'#FAF6F0', surface:'#FFFFFF', accent:'#D2691E', 'accent-deep':'#A9531A',
-          dark:'#120E0C', 'dark-2':'#1C1614', ink:'#2B2625', 'ink-2':'#6B615C',
-          muted:'#9C918B', mist:'#EFE7DC'
+          canvas:'#F4F6EF', surface:'#FFFFFF', accent:'#477023', 'accent-deep':'#2D531A',
+          dark:'#071E07', 'dark-2':'#0D330E', ink:'#071E07', 'ink-2':'#66705E',
+          muted:'#8A9382', mist:'#DDE5D2'
         },
         fontFamily: {
           sans:['Plus Jakarta Sans','system-ui','sans-serif'],
           mono:['IBM Plex Mono','ui-monospace','monospace']
         },
         boxShadow: {
-          soft:'0 1px 2px rgba(43,38,37,.04), 0 4px 14px rgba(43,38,37,.04)',
-          card:'0 2px 4px rgba(43,38,37,.03), 0 14px 34px -12px rgba(43,38,37,.14)',
-          float:'0 6px 12px rgba(43,38,37,.04), 0 34px 68px -24px rgba(43,38,37,.26)',
-          cta:'0 10px 24px -8px rgba(210,105,30,.55)'
+          soft:'0 1px 2px rgba(7,30,7,.04), 0 4px 14px rgba(7,30,7,.04)',
+          card:'0 2px 4px rgba(7,30,7,.03), 0 14px 34px -12px rgba(7,30,7,.14)',
+          float:'0 6px 12px rgba(7,30,7,.04), 0 34px 68px -24px rgba(7,30,7,.26)',
+          cta:'0 10px 24px -8px rgba(71,112,35,.55)'
         }
       }}
     }
@@ -55,9 +60,9 @@
       /* Navbar đặc ngay khung hình đầu — trang này không có hero tối nhưng vẫn giữ
          cùng hành vi với các trang khác để thanh điều hướng không "nhấp nháy" khi chuyển trang. */
       body.pd-body #navbar {
-        background:#FAF6F0 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+        background:var(--et-canvas) !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
         padding:13px 0 !important;
-        box-shadow:0 1px 0 rgba(43,38,37,.07), 0 16px 32px -22px rgba(43,38,37,.22);
+        box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.07), 0 16px 32px -22px rgba(var(--et-dark-rgb),.22);
       }
 
       /* Ràng buộc borderless của design system — giới hạn trong khu nội dung để không đụng navbar chung */
@@ -65,13 +70,13 @@
       .pd .tnum { font-variant-numeric: tabular-nums; }
       .pd .pd-mono { font-family:'IBM Plex Mono', ui-monospace, monospace; }
       .pd a:focus-visible, .pd button:focus-visible, .pd input:focus-visible, .pd textarea:focus-visible {
-        box-shadow:0 0 0 3px rgba(210,105,30,.45); outline:none;
+        box-shadow:0 0 0 3px rgba(var(--et-primary-rgb),.45); outline:none;
       }
       /* Input thật của radio/checkbox bị ẩn bằng opacity (không phải display:none) nên vẫn
          nhận được focus bàn phím — quầng focus được chuyển sang phần nhìn kế bên. */
       .pd .pd-size input:focus-visible ~ .pd-size-box,
       .pd .pd-chip input:focus-visible ~ .pd-chip-box,
-      .pd .pd-top input:focus-visible ~ .pd-top-wrap { box-shadow:0 0 0 3px rgba(210,105,30,.45); }
+      .pd .pd-top input:focus-visible ~ .pd-top-wrap { box-shadow:0 0 0 3px rgba(var(--et-primary-rgb),.45); }
 
       /* ── BỐ CỤC 2 CỘT ────────────────────────────────────────────────────
          Thứ tự DOM (đầu trang → cuối): thông tin món → ly minh hoạ → khối cấu hình.
@@ -97,8 +102,8 @@
       /* ── CỘT TRÁI ────────────────────────────────────────────────────── */
       .pd-cup-card {
         border-radius:28px; padding:18px 16px 20px; display:grid; place-items:center;
-        background:linear-gradient(170deg,#FFFFFF 0%,#EFEAE2 100%);
-        box-shadow:0 2px 4px rgba(43,38,37,.03), 0 14px 34px -12px rgba(43,38,37,.14);
+        background:linear-gradient(170deg,#FFFFFF 0%,var(--et-surface-muted) 100%);
+        box-shadow:0 2px 4px rgba(var(--et-dark-rgb),.03), 0 14px 34px -12px rgba(var(--et-dark-rgb),.14);
       }
       .pd-cup { width:min(188px, 50vw); }
       @media (min-width:1024px) { .pd-cup { width:200px; } }
@@ -107,7 +112,7 @@
       .pd .pd-layer { transition: opacity .35s ease; }
       .pd-hint {
         display:flex; align-items:flex-start; justify-content:center; gap:6px;
-        margin-top:6px; font-size:.7rem; line-height:1.4; color:#9C918B;
+        margin-top:6px; font-size:.7rem; line-height:1.4; color:var(--et-text-muted);
       }
 
       /* ── KHỐI CẤU HÌNH ───────────────────────────────────────────────
@@ -119,7 +124,7 @@
       .pd-card {
         background:#FFFFFF; border-radius:26px; padding:22px;
         display:grid; gap:20px; align-content:start;
-        box-shadow:0 2px 4px rgba(43,38,37,.03), 0 14px 34px -12px rgba(43,38,37,.14);
+        box-shadow:0 2px 4px rgba(var(--et-dark-rgb),.03), 0 14px 34px -12px rgba(var(--et-dark-rgb),.14);
       }
       @media (min-width:640px) { .pd-card { padding:24px 26px; } }
       @media (min-width:768px) and (max-width:1199.98px) {
@@ -141,24 +146,24 @@
       .pd-step { min-width:0; }
       /* Tiêu đề nhóm: một dòng ngắn, không mô tả phụ, không letter-spacing lớn */
       .pd-step-head { display:flex; align-items:baseline; margin-bottom:8px; }
-      .pd-step-title { font-size:.85rem; font-weight:700; color:#120E0C; letter-spacing:-.01em; }
+      .pd-step-title { font-size:.85rem; font-weight:700; color:var(--et-text); letter-spacing:-.01em; }
 
       /* Size — một hàng: chữ cái size bên trái, giá bên phải. Trạng thái chọn
-         thể hiện bằng nền cam, không cần dấu tick lớn. */
+         thể hiện bằng nền xanh thương hiệu, không cần dấu tick lớn. */
       .pd-sizes { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); }
       .pd-size { position:relative; display:block; cursor:pointer; }
       .pd-size input { position:absolute; inset:0; width:100%; height:100%; opacity:0; margin:0; cursor:pointer; }
       .pd-size-box {
         display:flex; align-items:center; justify-content:space-between; gap:10px;
-        background:#EFEAE2; border-radius:16px; padding:0 14px; min-height:48px;
+        background:var(--et-surface-muted); border-radius:16px; padding:0 14px; min-height:48px;
         transition:background-color .2s ease, box-shadow .2s ease, transform .2s ease;
       }
-      .pd-size:hover .pd-size-box { background:#E7DFD4; transform:translateY(-1px); }
-      .pd-size-name  { font-size:.86rem; font-weight:700; color:#120E0C; line-height:1.2; }
+      .pd-size:hover .pd-size-box { background:var(--et-border); transform:translateY(-1px); }
+      .pd-size-name  { font-size:.86rem; font-weight:700; color:var(--et-text); line-height:1.2; }
       .pd-size-price { font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:.8rem;
-                       font-weight:600; color:#6B615C; white-space:nowrap; }
+                       font-weight:600; color:var(--et-text-secondary); white-space:nowrap; }
       .pd-size input:checked ~ .pd-size-box {
-        background:#D2691E; box-shadow:0 10px 24px -10px rgba(210,105,30,.6);
+        background:var(--et-primary); box-shadow:0 10px 24px -10px rgba(var(--et-primary-rgb),.6);
       }
       .pd-size input:checked ~ .pd-size-box .pd-size-name { color:#FFFFFF; }
       .pd-size input:checked ~ .pd-size-box .pd-size-price { color:rgba(255,255,255,.88); }
@@ -169,12 +174,12 @@
       .pd-chip input { position:absolute; inset:0; width:100%; height:100%; opacity:0; margin:0; cursor:pointer; }
       .pd-chip-box {
         display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0 17px;
-        border-radius:999px; background:#EFEAE2; color:#3C3532; font-size:.84rem; font-weight:600;
+        border-radius:999px; background:var(--et-surface-muted); color:var(--et-text); font-size:.84rem; font-weight:600;
         transition:background-color .2s ease, color .2s ease, box-shadow .2s ease;
       }
-      .pd-chip:hover .pd-chip-box { background:#E7DFD4; }
+      .pd-chip:hover .pd-chip-box { background:var(--et-border); }
       .pd-chip input:checked ~ .pd-chip-box {
-        background:#D2691E; color:#FFFFFF; box-shadow:0 10px 24px -10px rgba(210,105,30,.6);
+        background:var(--et-primary); color:#FFFFFF; box-shadow:0 10px 24px -10px rgba(var(--et-primary-rgb),.6);
       }
       /* Đường 4 lựa chọn / đá 3 lựa chọn chia đều một hàng, cao bằng nhau */
       .pd-chips-4, .pd-chips-3 { display:grid; gap:8px; }
@@ -194,33 +199,41 @@
       .pd .pd-top[hidden] { display:none !important; }
       .pd .pd-top input { position:absolute; opacity:0; width:1px; height:1px; }
       .pd .pd-top-wrap {
-        display:flex; align-items:center; gap:8px; background:#FAF6F0; min-height:46px;
+        display:flex; align-items:center; gap:8px; background:var(--et-surface-muted); min-height:46px;
         border-radius:14px; padding:0 12px;
         transition:background-color .2s ease, box-shadow .2s ease;
       }
-      .pd .pd-top:hover .pd-top-wrap { background:#EFEAE2; }
+      /* Hover phải khác hẳn nền nghỉ, nên dùng sắc xanh rất nhạt chứ không phải
+         --et-surface-muted (giờ đã là nền nghỉ) — nếu không sẽ mất hoàn toàn phản hồi hover. */
+      .pd .pd-top:hover .pd-top-wrap { background:rgba(var(--et-primary-rgb),.08); }
       /* Tên không xuống dòng trên desktop: cắt bằng ellipsis, tên đầy đủ ở tooltip */
       .pd-top-name {
-        flex:1 1 auto; min-width:0; font-size:.84rem; color:#120E0C; line-height:1.25;
+        flex:1 1 auto; min-width:0; font-size:.84rem; color:var(--et-text); line-height:1.25;
         white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
       }
-      .pd-top-price { flex:none; font-size:.72rem; color:#9C918B; white-space:nowrap; }
+      .pd-top-price { flex:none; font-size:.72rem; color:var(--et-text-muted); white-space:nowrap; }
       /* Chấm nhỏ thay cho ô checkbox trắng lớn */
       .pd-top-dot {
         flex:none; width:8px; height:8px; border-radius:999px;
-        background:rgba(18,14,12,.14); transition:background-color .2s ease;
+        background:rgba(var(--et-dark-rgb),.18); transition:background-color .2s ease;
       }
+      /* Đã chọn: sắc xanh rõ hơn hẳn nền chưa chọn. Không dùng --et-primary-soft ở đây vì
+         nó (#E9EEE1) gần như trùng với --et-canvas (#F4F6EF) của trạng thái chưa chọn —
+         nhìn ra không biết đã chọn hay chưa. Vẫn là nền nhạt nên chữ đen giữ tương phản,
+         và chấm tròn đổi sang xanh đậm nên trạng thái không chỉ được báo bằng màu nền. */
       .pd .pd-top input:checked ~ .pd-top-wrap {
-        background:#F7EADC; box-shadow:0 6px 16px -10px rgba(210,105,30,.55);
+        background:rgba(var(--et-primary-rgb),.16); box-shadow:0 6px 16px -10px rgba(var(--et-primary-rgb),.55);
       }
-      .pd .pd-top input:checked ~ .pd-top-wrap .pd-top-dot { background:#D2691E; }
-      .pd .pd-top input:checked ~ .pd-top-wrap .pd-top-price { color:#6B615C; }
+      .pd .pd-top input:checked ~ .pd-top-wrap .pd-top-dot { background:var(--et-primary); }
+      <%-- Trên nền xanh nhạt, --et-text-secondary (#66705E) chỉ đạt ~4.1:1 với cỡ chữ .72rem
+           → chưa đủ 4.5:1. Dùng --et-text cho dòng giá khi đã chọn. --%>
+      .pd .pd-top input:checked ~ .pd-top-wrap .pd-top-price { color:var(--et-text); }
       .pd-top-more {
-        margin-top:8px; min-height:40px; padding:0 16px; border-radius:999px; background:#EFEAE2;
-        color:#120E0C; font-size:.78rem; font-weight:600; cursor:pointer;
+        margin-top:8px; min-height:40px; padding:0 16px; border-radius:999px; background:var(--et-surface-muted);
+        color:var(--et-text); font-size:.78rem; font-weight:600; cursor:pointer;
         display:inline-flex; align-items:center; gap:7px; transition:background-color .2s ease;
       }
-      .pd-top-more:hover { background:#E7DFD4; }
+      .pd-top-more:hover { background:var(--et-border); }
 
       /* Ô ghi chú — cao gần bằng khối topping bên cạnh, bộ đếm ký tự nằm góc dưới.
          eighttea.css đặt background !important cho textarea nên khai báo lại tường minh. */
@@ -228,31 +241,31 @@
       .pd-note-wrap { position:relative; display:flex; flex:1 1 auto; min-height:0; }
       .pd #pdNote {
         flex:1 1 auto; width:100%;
-        background:#EFEAE2 !important; border-radius:16px !important;
+        background:var(--et-surface-muted) !important; border-radius:16px !important;
         padding:11px 13px 24px !important; font-size:.85rem; line-height:1.45; resize:none;
         min-height:100px; overflow-y:auto;
       }
       @media (min-width:1200px) { .pd #pdNote { min-height:106px; } }
-      .pd #pdNote:focus { background:#FFFFFF !important; box-shadow:0 0 0 3px rgba(210,105,30,.35) !important; }
+      .pd #pdNote:focus { background:#FFFFFF !important; box-shadow:0 0 0 3px rgba(var(--et-primary-rgb),.35) !important; }
       /* Bộ đếm ký tự chỉ xuất hiện khi focus hoặc đã nhập nội dung */
       .pd-note-count {
-        position:absolute; right:12px; bottom:7px; font-size:.7rem; color:#9C918B;
+        position:absolute; right:12px; bottom:7px; font-size:.7rem; color:var(--et-text-muted);
         pointer-events:none; opacity:0; transition:opacity .18s ease;
       }
       .pd-note-wrap:focus-within .pd-note-count,
       .pd-note-count.is-on { opacity:1; }
 
       /* Số lượng */
-      .pd-qty { display:inline-flex; align-items:center; gap:2px; background:#EFEAE2; border-radius:999px; padding:4px; }
+      .pd-qty { display:inline-flex; align-items:center; gap:2px; background:var(--et-surface-muted); border-radius:999px; padding:4px; }
       .pd-qty button {
-        width:40px; height:40px; border-radius:999px; background:transparent; color:#120E0C;
+        width:40px; height:40px; border-radius:999px; background:transparent; color:var(--et-text);
         font-size:1.15rem; line-height:1; display:grid; place-items:center; cursor:pointer;
         transition:background-color .2s ease, opacity .2s ease;
       }
       .pd-qty button:hover:not(:disabled) { background:#FFFFFF; }
       .pd-qty button:disabled { opacity:.35; cursor:not-allowed; }
       .pd #pdQty {
-        width:46px; text-align:center; font-weight:700; font-size:.95rem; color:#120E0C;
+        width:46px; text-align:center; font-weight:700; font-size:.95rem; color:var(--et-text);
         background:transparent !important; box-shadow:none !important; padding:0 !important;
       }
 
@@ -262,7 +275,7 @@
         .pd-purchase { grid-template-columns:auto minmax(0,1fr); align-items:center; gap:16px; }
       }
       .pd-buy {
-        background:#FAF6F0; border-radius:20px; padding:12px 16px;
+        background:var(--et-canvas); border-radius:20px; padding:12px 16px;
         display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px;
       }
       @media (min-width:768px) {
@@ -274,19 +287,19 @@
       .pd-buy-info { flex:1 1 auto; min-width:0; }
       .pd-buy-total {
         display:block; font-family:'IBM Plex Mono', ui-monospace, monospace;
-        font-size:1.35rem; font-weight:600; letter-spacing:-.02em; color:#120E0C; line-height:1.15;
+        font-size:1.35rem; font-weight:600; letter-spacing:-.02em; color:var(--et-text); line-height:1.15;
       }
       .pd-buy-sum {
-        display:block; margin-top:2px; font-size:.72rem; line-height:1.35; color:#6B615C;
+        display:block; margin-top:2px; font-size:.72rem; line-height:1.35; color:var(--et-text-secondary);
       }
       .pd-cta {
         flex:1 1 100%; min-height:54px; padding:0 24px; border-radius:999px;
         display:inline-flex; align-items:center; justify-content:center; gap:9px;
-        background:#D2691E; color:#FFFFFF; font-size:.94rem; font-weight:700; cursor:pointer;
-        box-shadow:0 10px 24px -8px rgba(210,105,30,.55);
+        background:var(--et-primary); color:#FFFFFF; font-size:.94rem; font-weight:700; cursor:pointer;
+        box-shadow:0 10px 24px -8px rgba(var(--et-primary-rgb),.55);
         transition:background-color .2s ease, transform .2s ease, opacity .2s ease;
       }
-      .pd-cta:hover:not(:disabled) { background:#A9531A; transform:translateY(-1px); }
+      .pd-cta:hover:not(:disabled) { background:var(--et-primary-hover); transform:translateY(-1px); }
       .pd-cta:active:not(:disabled) { transform:translateY(0); }
       .pd-cta:disabled { opacity:.62; cursor:progress; transform:none; box-shadow:none; }
       @media (min-width:768px) { .pd-cta { flex:none; width:100%; } }
@@ -300,7 +313,7 @@
           position:fixed; left:0; right:0; bottom:0; z-index:40; margin:0;
           border-radius:20px 20px 0 0; background:#FFFFFF; flex-wrap:nowrap;
           padding:11px 16px calc(11px + env(safe-area-inset-bottom));
-          box-shadow:0 -1px 0 rgba(43,38,37,.06), 0 -18px 40px -24px rgba(43,38,37,.35);
+          box-shadow:0 -1px 0 rgba(var(--et-dark-rgb),.06), 0 -18px 40px -24px rgba(var(--et-dark-rgb),.35);
         }
         .pd-buy-sum { display:none; }
         .pd-buy-total { font-size:1.2rem; }
@@ -413,7 +426,10 @@
                 </span>
               </c:when>
               <c:otherwise>
-                <span class="font-mono text-[.6rem] font-semibold tracking-[.12em] uppercase text-[#9A5B2A] bg-[#F7EADC] px-3.5 py-1.5 rounded-full">Tạm hết</span>
+                <%-- Trạng thái "không dùng được" → màu trung tính xám-xanh nhạt, KHÔNG dùng
+                     xanh thương hiệu (sẽ bị đọc nhầm thành "đang bán") và cũng không giữ
+                     sắc cam cũ vốn là màu nhấn thương hiệu. --%>
+                <span class="font-mono text-[.6rem] font-semibold tracking-[.12em] uppercase text-muted bg-[#E9EEE1] px-3.5 py-1.5 rounded-full">Tạm hết</span>
               </c:otherwise>
             </c:choose>
           </div>
@@ -698,18 +714,18 @@
   <section class="pb-4">
     <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
       <div class="bg-surface shadow-soft rounded-[26px] overflow-hidden">
-        <div class="px-6 sm:px-8 py-5" style="box-shadow:0 1px 0 rgba(43,38,37,.06);">
+        <div class="px-6 sm:px-8 py-5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.06);">
           <h2 class="font-mono text-[.62rem] font-semibold tracking-[.18em] uppercase text-accent m-0">Thông số</h2>
         </div>
         <dl class="m-0 px-6 sm:px-8 py-2">
           <c:if test="${not empty product.categoryName}">
-            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(43,38,37,.05);">
+            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
               <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Nhóm món</dt>
               <dd class="flex-1 text-[.88rem] text-ink m-0"><c:out value="${product.categoryName}"/></dd>
             </div>
           </c:if>
           <c:if test="${not empty product.variants}">
-            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(43,38,37,.05);">
+            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
               <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Dung tích</dt>
               <dd class="flex-1 text-[.88rem] text-ink m-0">
                 <c:forEach var="v" items="${product.variants}" varStatus="vs"><c:out value="${v.sizeLabel}"/><c:if test="${!vs.last}"> · </c:if></c:forEach>
@@ -717,12 +733,12 @@
             </div>
           </c:if>
           <c:if test="${fn:containsIgnoreCase(product.categoryName,'trà')}">
-            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(43,38,37,.05);">
+            <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
               <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Nhiệt độ ủ trà</dt>
               <dd class="flex-1 text-[.88rem] text-ink m-0 tnum">92–95°C · ủ mẻ nhỏ, dùng tối đa 4 giờ</dd>
             </div>
           </c:if>
-          <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(43,38,37,.05);">
+          <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
             <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Bao bì</dt>
             <dd class="flex-1 text-[.88rem] text-ink m-0">Ly PP an toàn thực phẩm, ép màng kín trước khi giao</dd>
           </div>
@@ -1033,7 +1049,17 @@
         var qty = clampQty(qtyInput.value);
         setBusy(true);
 
-        var jobs = [NhietDoiXanhCart.addToCart(size.value, qty, null)];
+        // Đọc tuỳ chỉnh đồ uống — gửi kèm đơn hàng chính, topping không có đường/đá/ghi chú.
+        var sugarEl = checkedInput('pdSugar');
+        var iceEl   = checkedInput('pdIce');
+        var noteVal = noteInput ? noteInput.value.trim() : '';
+        var customization = {
+          sugar: sugarEl ? sugarEl.value : '',
+          ice:   iceEl   ? iceEl.value   : '',
+          note:  noteVal
+        };
+
+        var jobs = [NhietDoiXanhCart.addToCart(size.value, qty, null, customization)];
         checkedToppings().forEach(function (t) {
           jobs.push(NhietDoiXanhCart.addToCart(t.dataset.variantId, qty, null));
         });
