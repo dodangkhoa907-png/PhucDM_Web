@@ -1,7 +1,7 @@
 package com.eighttea.dao;
 
+import com.eighttea.config.Database;
 import com.eighttea.model.Testimonial;
-import com.eighttea.util.DBContext;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,21 +12,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object cho bảng Testimonials.
- * Thực hiện các thao tác CRUD lên Database SQL Server.
- */
 public class TestimonialDAO {
 
-    /**
-     * Lấy toàn bộ phản hồi từ database, sắp xếp theo thời gian tạo mới nhất.
-     */
     public List<Testimonial> getAllTestimonials() {
         List<Testimonial> list = new ArrayList<>();
         String sql = "SELECT TestimonialId, CustomerName, DrinkName, Rating, AvatarUrl, FeedbackText, CreatedDate "
                    + "FROM Testimonials ORDER BY CreatedDate DESC, TestimonialId DESC";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -58,7 +51,7 @@ public class TestimonialDAO {
         String sql = "INSERT INTO Testimonials (CustomerName, DrinkName, Rating, AvatarUrl, FeedbackText, CreatedDate) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, t.getCustomerName());
@@ -86,7 +79,7 @@ public class TestimonialDAO {
         String sql = "UPDATE Testimonials SET CustomerName = ?, DrinkName = ?, Rating = ?, AvatarUrl = ?, FeedbackText = ? "
                    + "WHERE TestimonialId = ?";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, t.getCustomerName());
@@ -111,7 +104,7 @@ public class TestimonialDAO {
     public boolean deleteTestimonial(int id) {
         String sql = "DELETE FROM Testimonials WHERE TestimonialId = ?";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);

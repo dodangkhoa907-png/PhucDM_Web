@@ -1,0 +1,30 @@
+# ================================================
+# Eight Tea — Database Configuration (EXAMPLE)
+# Copy file này thành db.properties, điền giá trị thật và KHÔNG commit db.properties.
+# ================================================
+
+# JDBC URL cho SQL Server (local dev)
+db.url=jdbc:sqlserver://localhost:1433;databaseName=EightTea_DB;encrypt=true;trustServerCertificate=true
+db.username=YOUR_DB_USERNAME
+db.password=YOUR_DB_PASSWORD
+db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+# ================================================
+# Email SMTP (gửi OTP quên mật khẩu) — để trống nếu chưa dùng
+# ================================================
+mail.smtp.host=smtp.gmail.com
+mail.smtp.port=587
+mail.smtp.username=
+mail.smtp.password=
+
+# ================================================
+# PayOS (thanh toán VietQR) — lấy từ dashboard.payos.vn
+# Ưu tiên đặt qua biến môi trường khi deploy (PAYOS_CLIENT_ID, PAYOS_API_KEY, ...).
+# Để trống → PayOS bị ẩn ở checkout, COD vẫn hoạt động.
+# ================================================
+payos.client_id=
+payos.api_key=
+payos.checksum_key=
+payos.return_url=
+payos.cancel_url=
+payos.webhook_url=
