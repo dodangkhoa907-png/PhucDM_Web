@@ -1049,7 +1049,17 @@
         var qty = clampQty(qtyInput.value);
         setBusy(true);
 
-        var jobs = [NhietDoiXanhCart.addToCart(size.value, qty, null)];
+        // Đọc tuỳ chỉnh đồ uống — gửi kèm đơn hàng chính, topping không có đường/đá/ghi chú.
+        var sugarEl = checkedInput('pdSugar');
+        var iceEl   = checkedInput('pdIce');
+        var noteVal = noteInput ? noteInput.value.trim() : '';
+        var customization = {
+          sugar: sugarEl ? sugarEl.value : '',
+          ice:   iceEl   ? iceEl.value   : '',
+          note:  noteVal
+        };
+
+        var jobs = [NhietDoiXanhCart.addToCart(size.value, qty, null, customization)];
         checkedToppings().forEach(function (t) {
           jobs.push(NhietDoiXanhCart.addToCart(t.dataset.variantId, qty, null));
         });

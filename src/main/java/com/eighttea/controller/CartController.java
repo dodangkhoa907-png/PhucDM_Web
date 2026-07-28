@@ -146,6 +146,11 @@ public class CartController extends HttpServlet {
             return;
         }
 
+        // Tuỳ chỉnh đồ uống — null nếu không có (topping, v.v.)
+        String sugar = sanitizeSugar(req.getParameter("sugar"));
+        String ice   = sanitizeIce(req.getParameter("ice"));
+        String note  = sanitizeNote(req.getParameter("note"));
+
         // Đọc lại variant thật từ DB — không tin bất kỳ giá/trạng thái nào từ client.
         Optional<ProductVariant> variantOpt = productVariantDao.findById(variantId);
         if (variantOpt.isEmpty()) {
@@ -158,7 +163,7 @@ public class CartController extends HttpServlet {
             return;
         }
 
-        cartItemDao.addOrIncrease(userId, variantId, quantity);
+        cartItemDao.addOrIncrease(userId, variantId, quantity, sugar, ice, note);
         int cartCount = cartItemDao.countQuantityByUserId(userId);
         session.setAttribute("cartCount", cartCount);
 
@@ -273,6 +278,30 @@ public class CartController extends HttpServlet {
     }
 
     // ===== Helpers =====
+
+    private static final java.util.Set<String> SUGAR_VALUES = new java.util.HashSet<>(
+            java.util.Arrays.asList("0%", "30%", "70%", "100%"));
+    private static final java.util.Set<String> ICE_VALUES = new java.util.HashSet<>(
+            java.util.Arrays.asList("Nóng / Ít đá", "50% đá", "100% đá"));
+
+    /** null nếu không có hoặc không nằm trong whitelist. */
+    private static String sanitizeSugar(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String v = raw.trim();
+        return SUGAR_VALUES.contains(v) ? v : null;
+    }
+
+    private static String sanitizeIce(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String v = raw.trim();
+        return ICE_VALUES.contains(v) ? v : null;
+    }
+
+    private static String sanitizeNote(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String v = raw.trim();
+        return v.length() > 200 ? v.substring(0, 200) : v;
+    }
 
     private Integer parsePositiveInt(String raw) {
         if (raw == null || raw.isBlank()) return null;

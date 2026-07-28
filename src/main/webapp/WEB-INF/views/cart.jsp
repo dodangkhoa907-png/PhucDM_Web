@@ -97,7 +97,16 @@
                                                 <span><c:out value="${item.categoryName}"/></span>
                                             </c:if>
                                             <span class="${not empty item.categoryName ? 'dot' : ''}"><c:out value="${item.sizeLabel}"/></span>
+                                            <c:if test="${not empty item.sugarLevel}">
+                                                <span class="dot cart-item-custom"><c:out value="${item.sugarLevel}"/> đường</span>
+                                            </c:if>
+                                            <c:if test="${not empty item.iceLevel}">
+                                                <span class="dot cart-item-custom"><c:out value="${item.iceLevel}"/></span>
+                                            </c:if>
                                         </div>
+                                        <c:if test="${not empty item.note}">
+                                            <div class="cart-item-note">Ghi chú: <c:out value="${item.note}"/></div>
+                                        </c:if>
                                         <div class="cart-item-unit-price">${item.formattedUnitPrice}đ / sản phẩm</div>
                                         <c:if test="${item.unavailable}">
                                             <span class="cart-item-unavailable-badge">Ngừng kinh doanh</span>

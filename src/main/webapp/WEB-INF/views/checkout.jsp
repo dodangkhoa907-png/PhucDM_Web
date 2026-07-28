@@ -279,7 +279,16 @@
                                             </c:choose> ·
                                         </c:if>
                                         SL: ${item.quantity} × ${item.formattedPrice}đ
+                                        <c:if test="${not empty item.sugarLevel}">
+                                            · <c:out value="${item.sugarLevel}"/> đường
+                                        </c:if>
+                                        <c:if test="${not empty item.iceLevel}">
+                                            · <c:out value="${item.iceLevel}"/>
+                                        </c:if>
                                     </div>
+                                    <c:if test="${not empty item.note}">
+                                        <div class="checkout-item-note">Ghi chú: <c:out value="${item.note}"/></div>
+                                    </c:if>
                                 </div>
                                 <div class="checkout-summary-item-subtotal">${item.formattedTotalPrice}đ</div>
                             </div>
