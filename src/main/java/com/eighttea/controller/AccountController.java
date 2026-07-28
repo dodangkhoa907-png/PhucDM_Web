@@ -12,7 +12,6 @@ import com.eighttea.model.Order;
 import com.eighttea.model.OrderDetail;
 import com.eighttea.model.User;
 import com.eighttea.util.AuditLogger;
-import com.eighttea.util.MemberTierService;
 import com.eighttea.util.OrderStatuses;
 import com.eighttea.util.PaymentStatuses;
 
@@ -25,7 +24,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -102,19 +100,11 @@ public class AccountController extends HttpServlet {
         int processingOrders = orderDao.countProcessingOrdersByUserId(userId);
         BigDecimal totalSpent = orderDao.sumDoneAmountByUserId(userId);
 
-        MemberTierService.Tier tier = MemberTierService.resolve(totalSpent);
-        MemberTierService.Tier nextTier = MemberTierService.nextTier(totalSpent);
-        BigDecimal amountToNext = MemberTierService.amountToNextTier(totalSpent);
-
         req.setAttribute("user", user);
         req.setAttribute("totalOrders", totalOrders);
         req.setAttribute("doneOrders", doneOrders);
         req.setAttribute("processingOrders", processingOrders);
         req.setAttribute("totalSpent", totalSpent);
-        req.setAttribute("tier", tier);
-        req.setAttribute("nextTier", nextTier);
-        req.setAttribute("amountToNext", amountToNext);
-        req.setAttribute("tierProgressPercent", tierProgressPercent(tier, nextTier, totalSpent));
         req.setAttribute("currentPage", "account");
         req.setAttribute("accountTab", "overview");
         consumeFlash(req);
@@ -293,20 +283,6 @@ public class AccountController extends HttpServlet {
     // =========================================================================================
     // Helpers
     // =========================================================================================
-
-    /**
-     * % tiến độ trong khoảng [hạng hiện tại, hạng kế tiếp) — tính ở Java để tránh chia BigDecimal
-     * trong JSP EL (có thể ném ArithmeticException với số thập phân vô hạn tuần hoàn).
-     */
-    private int tierProgressPercent(MemberTierService.Tier tier, MemberTierService.Tier nextTier, BigDecimal totalSpent) {
-        if (nextTier == null) return 100;
-        BigDecimal from = tier.getMinSpend();
-        BigDecimal range = nextTier.getMinSpend().subtract(from);
-        if (range.signum() <= 0) return 100;
-        BigDecimal progressed = (totalSpent != null ? totalSpent : BigDecimal.ZERO).subtract(from);
-        int pct = progressed.multiply(BigDecimal.valueOf(100)).divide(range, 0, RoundingMode.HALF_UP).intValue();
-        return Math.max(0, Math.min(100, pct));
-    }
 
     /** userId luôn lấy từ session — AuthFilter đảm bảo session "user" tồn tại trước khi tới đây. */
     private int currentUserId(HttpServletRequest req) {

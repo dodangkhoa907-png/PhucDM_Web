@@ -1,6 +1,7 @@
 package com.eighttea.dao.impl;
 
 import com.eighttea.config.Database;
+import com.eighttea.config.DbRetry;
 import com.eighttea.dao.CartItemDao;
 import com.eighttea.model.CartItem;
 import com.eighttea.model.CartLineItemDto;
@@ -119,7 +120,6 @@ public class CartItemDaoImpl implements CartItemDao {
 
     @Override
     public List<CartItem> findByUserId(int userId) {
-        List<CartItem> list = new ArrayList<>();
         String sql = "SELECT c.*, p.ProductName, v.Size, v.Price, v.IsActive AS VariantActive, p.ImageURL " +
                      "FROM CartItems c " +
                      "JOIN ProductVariants v ON c.VariantID = v.VariantID " +
@@ -127,19 +127,21 @@ public class CartItemDaoImpl implements CartItemDao {
                      "WHERE c.UserID = ? " +
                      "ORDER BY c.CreatedAt DESC";
 
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(mapRow(rs));
+        return DbRetry.read(() -> {
+            List<CartItem> list = new ArrayList<>();
+            try (Connection conn = Database.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(mapRow(rs));
+                    }
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException("CartItemDao.findByUserId thất bại", e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+            return list;
+        });
     }
 
     @Override
@@ -162,17 +164,18 @@ public class CartItemDaoImpl implements CartItemDao {
     @Override
     public int countItems(int userId) {
         String sql = "SELECT COALESCE(SUM(Quantity), 0) AS Cnt FROM CartItems WHERE UserID = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt("Cnt");
+        return DbRetry.read(() -> {
+            try (Connection conn = Database.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return rs.getInt("Cnt");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("CartItemDao.countItems thất bại", e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
+            return 0;
+        });
     }
 
     @Override
@@ -207,41 +210,45 @@ public class CartItemDaoImpl implements CartItemDao {
     @Override
     public Optional<CartItem> findByIdAndUserId(int cartItemId, int userId) {
         String sql = SELECT_WITH_JOIN + "WHERE c.CartItemID = ? AND c.UserID = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, cartItemId);
-            ps.setInt(2, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return Optional.of(mapRow(rs));
+        return DbRetry.read(() -> {
+            try (Connection conn = Database.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, cartItemId);
+                ps.setInt(2, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return Optional.of(mapRow(rs));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("CartItemDao.findByIdAndUserId thất bại", e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+            return Optional.<CartItem>empty();
+        });
     }
 
     @Override
     public List<CartItem> findSelectedByIdsAndUserId(List<Integer> cartItemIds, int userId) {
-        List<CartItem> list = new ArrayList<>();
-        if (cartItemIds == null || cartItemIds.isEmpty()) return list;
+        if (cartItemIds == null || cartItemIds.isEmpty()) return new ArrayList<>();
 
         String placeholders = String.join(",", Collections.nCopies(cartItemIds.size(), "?"));
         String sql = SELECT_WITH_JOIN + "WHERE c.UserID = ? AND c.CartItemID IN (" + placeholders + ")";
 
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            int idx = 1;
-            ps.setInt(idx++, userId);
-            for (Integer id : cartItemIds) {
-                ps.setInt(idx++, id);
+        return DbRetry.read(() -> {
+            List<CartItem> list = new ArrayList<>();
+            try (Connection conn = Database.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                int idx = 1;
+                ps.setInt(idx++, userId);
+                for (Integer id : cartItemIds) {
+                    ps.setInt(idx++, id);
+                }
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) list.add(mapRow(rs));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("CartItemDao.findSelectedByIdsAndUserId thất bại", e);
             }
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+            return list;
+        });
     }
 
     @Override
@@ -284,17 +291,24 @@ public class CartItemDaoImpl implements CartItemDao {
 
     @Override
     public List<CartLineItemDto> findLineItemsByUserId(int userId) {
-        List<CartLineItemDto> list = new ArrayList<>();
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(LINE_ITEM_SELECT)) {
-            ps.setInt(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapLineItem(rs));
+        // Trang /cart — retry 1 lần nếu gặp lỗi kết nối thoáng qua tới SQL Server ở xa (xem
+        // DbRetry). BẮT BUỘC: trước đây hàm này tự nuốt SQLException rồi trả list rỗng, khiến
+        // một lần mạng chớp tắt hiện ra y hệt "giỏ hàng trống" dù dữ liệu thật vẫn còn nguyên —
+        // trong khi badge trên navbar (đọc từ session, không query lại) vẫn hiện đúng số cũ,
+        // tạo ra nghịch lý "badge báo 1 nhưng mở ra trống".
+        return DbRetry.read(() -> {
+            List<CartLineItemDto> list = new ArrayList<>();
+            try (Connection conn = Database.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(LINE_ITEM_SELECT)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) list.add(mapLineItem(rs));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("CartItemDao.findLineItemsByUserId thất bại", e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+            return list;
+        });
     }
 
     @Override

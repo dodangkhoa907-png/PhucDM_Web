@@ -1,15 +1,23 @@
 /* ================================================================
-   Nhiệt Đới Xanh — Migration: Customization cho giỏ hàng và đơn hàng
-   SQL Server · database BanNuoc_Truc
+   Eight Tea — Migration: Customization cho giỏ hàng và đơn hàng
+   SQL Server · database EightTea_DB
    File IDEMPOTENT: chạy lại nhiều lần không lỗi, không drop dữ liệu.
 
    Mục tiêu:
    Lưu lại lựa chọn Đường / Đá / Ghi chú của khách khi "Thêm vào giỏ"
    và sao chụp (snapshot) vào OrderDetails tại thời điểm đặt hàng.
    NULL = không chọn / không áp dụng (ví dụ: Topping không có Đường/Đá).
+
+   LƯU Ý: file gốc (copy từ project "Nhiệt Đới Xanh") ghi nhầm
+   "USE BanNuoc_Truc" — đó là database của project khác (Trúc), không phải
+   database thật của Eight Tea. Vì ghi nhầm tên nên script này CHƯA TỪNG
+   chạy đúng chỗ trên EightTea_DB — đây chính là nguyên nhân code Java
+   (CartItemDaoImpl) đọc/ghi SugarLevel/IceLevel/DrinkNote nhưng cột đó
+   không tồn tại, khiến /cart báo lỗi "Invalid column name 'SugarLevel'".
+   Đã sửa lại đúng tên database bên dưới.
    ================================================================ */
 
-USE BanNuoc_Truc;
+USE EightTea_DB;
 GO
 
 

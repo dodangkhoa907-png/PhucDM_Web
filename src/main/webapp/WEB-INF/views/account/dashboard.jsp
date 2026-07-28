@@ -59,7 +59,6 @@
                             <c:if test="${not empty user.nickname}">
                                 <div class="account-profile-nickname">@<c:out value="${user.nickname}"/></div>
                             </c:if>
-                            <div class="account-tier-badge"><i class="fa-solid fa-seedling"></i> <c:out value="${tier.label}"/></div>
 
                             <div class="account-profile-meta">
                                 <span><i class="fa-solid fa-envelope"></i> <c:out value="${user.email}"/></span>
@@ -68,19 +67,10 @@
                                 </c:if>
                                 <span><i class="fa-solid fa-calendar"></i> Tham gia <fmt:formatDate value="${user.createdAt}" pattern="dd/MM/yyyy"/></span>
                             </div>
-
-                            <c:if test="${not empty nextTier}">
-                                <div class="account-tier-progress">
-                                    <div class="account-tier-progress-track">
-                                        <div class="account-tier-progress-fill" style="width:${tierProgressPercent}%"></div>
-                                    </div>
-                                    <div class="account-tier-progress-text">
-                                        Chi thêm <fmt:formatNumber value="${amountToNext}" type="number" groupingUsed="true"/>đ để lên hạng
-                                        <c:out value="${nextTier.label}"/>
-                                    </div>
-                                </div>
-                            </c:if>
                         </div>
+                        <a href="${pageContext.request.contextPath}/account/profile" class="btn-shop btn-shop-outline" style="flex-shrink:0;">
+                            <i class="fa-solid fa-pen"></i> Chỉnh sửa hồ sơ
+                        </a>
                     </div>
 
                     <div class="account-stats">
