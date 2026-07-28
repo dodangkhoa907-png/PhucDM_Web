@@ -251,10 +251,7 @@
         var loginWrap = document.getElementById('navLoginWrap');
         var loginTrigger = document.getElementById('navLoginTrigger');
         if (loginWrap && loginTrigger) {
-            var loginCloseTimer = null;
-
             function openLoginPanel() {
-                clearTimeout(loginCloseTimer);
                 loginWrap.classList.add('open');
                 loginTrigger.setAttribute('aria-expanded', 'true');
             }
@@ -262,11 +259,6 @@
                 loginWrap.classList.remove('open');
                 loginTrigger.setAttribute('aria-expanded', 'false');
             }
-            function scheduleClose() {
-                clearTimeout(loginCloseTimer);
-                loginCloseTimer = setTimeout(closeLoginPanel, 260);
-            }
-
             loginTrigger.onclick = function (e) {
                 e.stopPropagation();
                 if (loginWrap.classList.contains('open')) {
@@ -277,10 +269,7 @@
                     if (firstField) setTimeout(function () { firstField.focus(); }, 180);
                 }
             };
-            /* Hover: di chuột vào icon mở panel ngay, rời chuột đóng lại sau một nhịp
-               ngắn (để có thể trượt chuột từ icon sang panel mà không bị đóng giữa chừng). */
-            loginWrap.addEventListener('mouseenter', openLoginPanel);
-            loginWrap.addEventListener('mouseleave', scheduleClose);
+            /* Chỉ mở bằng CLICK vào icon — không mở khi rê chuột ngang qua. */
 
             document.addEventListener('click', function (e) {
                 if (!loginWrap.contains(e.target)) closeLoginPanel();

@@ -1,0 +1,17 @@
+# `docker build` đọc thẳng từ ổ đĩa, KHÔNG qua .gitignore của git — nên dù
+# db.properties (mật khẩu DB/mail thật) đã bị .gitignore chặn không lên Git,
+# nó vẫn tồn tại trên máy và sẽ bị COPY nhầm vào image nếu build local mà
+# thiếu file này. Dockerfile hiện tại chỉ COPY pom.xml + src/ nên vốn đã an
+# toàn, nhưng khai báo tường minh để không ai lỡ tay COPY toàn bộ context sau này.
+db.properties
+**/db.properties
+src/main/resources/db.properties
+
+.git
+.idea
+.smarttomcat
+target
+*.md
+
+.dockerignore
+Dockerfile

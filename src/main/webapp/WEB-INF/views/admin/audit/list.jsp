@@ -59,7 +59,7 @@
 .al-pager a,.al-pager span{min-width:38px;height:38px;display:flex;align-items:center;justify-content:center;
     border-radius:10px;font-weight:700;font-size:13.5px;color:var(--admin-text)}
 .al-pager a{background:var(--admin-bg)}
-.al-pager a:hover{background:#EAF0E7}
+.al-pager a:hover{background:#FAF6F0}
 .al-pager span.current{background:var(--admin-primary);color:#fff}
 .btn-sm{padding:8px 14px;font-size:12.5px;border-radius:9px}
 </style>
