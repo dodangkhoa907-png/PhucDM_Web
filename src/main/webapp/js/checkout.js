@@ -13,12 +13,14 @@
     let addrMap = null;
     let addrMarker = null;
 
+    var _pinColor = (getComputedStyle(document.documentElement).getPropertyValue('--et-primary') || '').trim() || '#477023';
+
     function buildPinIcon() {
         return L.divIcon({
             className: '',
             html: '<div style="position:relative;width:28px;height:42px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35));transition:transform .3s cubic-bezier(.34,1.56,.64,1)">' +
                   '<svg width="28" height="42" viewBox="0 0 30 45" xmlns="http://www.w3.org/2000/svg">' +
-                  '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 30 15 30s15-18.75 15-30C30 6.7 23.3 0 15 0z" fill="#2A5C38"/>' +
+                  '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 30 15 30s15-18.75 15-30C30 6.7 23.3 0 15 0z" fill="' + _pinColor + '"/>' +
                   '<circle cx="15" cy="14" r="6" fill="#fff"/></svg></div>',
             iconSize: [28, 42],
             iconAnchor: [14, 42],
