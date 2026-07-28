@@ -898,11 +898,11 @@
             </a>
 
             <div class="flex items-center gap-2.5">
-              <a href="https://www.facebook.com/share/1EMX9PdG2D/" target="_blank" rel="noopener" aria-label="Facebook"
+              <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
                  class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
-              <a href="https://www.instagram.com/nhietdoixanh_05?igsh=dTR0dmgzcWg3aWV3" target="_blank" rel="noopener" aria-label="Instagram"
+              <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
                  class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
-              <a href="https://tiktok.com/@nuocepnhietdoixanh_05" target="_blank" rel="noopener" aria-label="TikTok"
+              <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
                  class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
             </div>
 

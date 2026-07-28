@@ -2235,7 +2235,7 @@
               <div class="platform-info">
                 <div class="platform-text">
                   <h4>Facebook</h4>
-                  <a href="https://www.facebook.com/share/1EMX9PdG2D/" target="_blank" class="platform-link">facebook.com/share/1EMX9PdG2D/</a>
+                  <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" class="platform-link">facebook.com/share/1BZV5Ap9xB/</a>
                 </div>
                 <span class="status-connected">● Đã kết nối</span>
               </div>
@@ -2246,7 +2246,7 @@
               <div class="platform-info">
                 <div class="platform-text">
                   <h4>Instagram</h4>
-                  <a href="https://www.instagram.com/nhietdoixanh_05?igsh=dTR0dmgzcWg3aWV3" target="_blank" class="platform-link">@nhietdoixanh_05</a>
+                  <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" class="platform-link">@eight.tea</a>
                 </div>
                 <span class="status-connected">● Đã kết nối</span>
               </div>
@@ -2257,7 +2257,7 @@
               <div class="platform-info">
                 <div class="platform-text">
                   <h4>TikTok</h4>
-                  <a href="https://tiktok.com/@nuocepnhietdoixanh_05" target="_blank" class="platform-link">@nuocepnhietdoixanh_05</a>
+                  <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" class="platform-link">@eight.tea</a>
                 </div>
                 <span class="status-connected">● Đã kết nối</span>
               </div>
