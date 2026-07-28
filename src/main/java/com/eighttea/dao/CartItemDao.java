@@ -6,16 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartItemDao {
-    int insertOrUpdate(int userId, int variantId, int quantity);
+    int insertOrUpdate(int userId, int variantId, int quantity, String sugarLevel, String iceLevel, String note);
     List<CartItem> findByUserId(int userId);
     void updateQuantity(int cartItemId, int userId, int quantity);
     int countItems(int userId);
     void delete(int cartItemId, int userId);
     void clearCart(int userId);
 
-    /** Alias rõ nghĩa hơn cho insertOrUpdate — dùng cho "Thêm vào giỏ". */
+    /** Thêm vào giỏ với đầy đủ tuỳ chỉnh đồ uống. */
+    default int addOrIncrease(int userId, int variantId, int quantity,
+                              String sugarLevel, String iceLevel, String note) {
+        return insertOrUpdate(userId, variantId, quantity, sugarLevel, iceLevel, note);
+    }
+
+    /** Thêm vào giỏ không có tuỳ chỉnh (topping, v.v.). */
     default int addOrIncrease(int userId, int variantId, int quantity) {
-        return insertOrUpdate(userId, variantId, quantity);
+        return insertOrUpdate(userId, variantId, quantity, null, null, null);
     }
 
     /** Kiểm tra ownership: chỉ trả về item nếu thuộc đúng userId. */

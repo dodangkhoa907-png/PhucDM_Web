@@ -20,7 +20,7 @@ public class CartItemDaoImpl implements CartItemDao {
             "JOIN Products p ON v.ProductID = p.ProductID ";
 
     private static final String LINE_ITEM_SELECT =
-            "SELECT c.CartItemID, c.Quantity, " +
+            "SELECT c.CartItemID, c.Quantity, c.SugarLevel, c.IceLevel, c.DrinkNote, " +
             "       p.ProductID, p.ProductName, p.ImageURL, p.IsActive AS ProductActive, " +
             "       cat.CategoryName, " +
             "       v.VariantID, v.Size, v.Price, v.IsActive AS VariantActive " +
@@ -37,34 +37,49 @@ public class CartItemDaoImpl implements CartItemDao {
     private static final int SQLSTATE_UNIQUE_VIOLATION_2627 = 2627;
 
     @Override
-    public int insertOrUpdate(int userId, int variantId, int quantity) {
+    public int insertOrUpdate(int userId, int variantId, int quantity,
+                              String sugarLevel, String iceLevel, String note) {
         // Atomic UPDATE trước (row-level lock nằm trong chính câu UPDATE, không tách riêng
         // SELECT rồi UPDATE) — đóng race "2 request cùng cộng dồn Quantity" (lost update) khi
         // user bấm thêm giỏ liên tục hoặc mở 2 tab. Cap 99 ngay trong SQL bằng CASE.
-        String updateSql = "UPDATE CartItems SET Quantity = CASE WHEN Quantity + ? > 99 THEN 99 ELSE Quantity + ? END " +
+        // Khi UPDATE thành công cũng cập nhật SugarLevel/IceLevel/DrinkNote — sở thích lần sau
+        // ghi đè sở thích lần trước (UX: khách đổi ý thì giỏ cập nhật theo).
+        String updateSql =
+                "UPDATE CartItems SET " +
+                "  Quantity   = CASE WHEN Quantity + ? > 99 THEN 99 ELSE Quantity + ? END, " +
+                "  SugarLevel = ?, " +
+                "  IceLevel   = ?, " +
+                "  DrinkNote  = ? " +
                 "WHERE UserID = ? AND VariantID = ?";
         String selectIdSql = "SELECT CartItemID FROM CartItems WHERE UserID = ? AND VariantID = ?";
-        String insertSql = "INSERT INTO CartItems (UserID, VariantID, Quantity) VALUES (?, ?, ?)";
+        String insertSql =
+                "INSERT INTO CartItems (UserID, VariantID, Quantity, SugarLevel, IceLevel, DrinkNote) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection()) {
             try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
                 updatePs.setInt(1, quantity);
                 updatePs.setInt(2, quantity);
-                updatePs.setInt(3, userId);
-                updatePs.setInt(4, variantId);
+                updatePs.setString(3, sugarLevel);
+                updatePs.setString(4, iceLevel);
+                updatePs.setString(5, note);
+                updatePs.setInt(6, userId);
+                updatePs.setInt(7, variantId);
                 if (updatePs.executeUpdate() > 0) {
                     return findCartItemId(conn, selectIdSql, userId, variantId);
                 }
             }
 
             // Chưa có dòng nào — thử INSERT. Nếu đúng lúc này có request khác vừa INSERT trước
-            // (race giữa lúc UPDATE báo 0 dòng và lúc ta INSERT), unique index UX_CartItems_User_Variant
-            // (xem sql/migration_cart_unique_index.sql) sẽ chặn trùng — bắt lỗi đó rồi quay lại UPDATE,
-            // không để tạo 2 dòng CartItems cho cùng 1 variant.
+            // (race giữa lúc UPDATE báo 0 dòng và lúc ta INSERT), unique index UQ_CartItems_User_Variant
+            // sẽ chặn trùng — bắt lỗi đó rồi quay lại UPDATE, không để tạo 2 dòng cùng variant.
             try (PreparedStatement insertPs = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
                 insertPs.setInt(1, userId);
                 insertPs.setInt(2, variantId);
                 insertPs.setInt(3, Math.min(quantity, 99));
+                insertPs.setString(4, sugarLevel);
+                insertPs.setString(5, iceLevel);
+                insertPs.setString(6, note);
                 insertPs.executeUpdate();
                 try (ResultSet insertRs = insertPs.getGeneratedKeys()) {
                     if (insertRs.next()) return insertRs.getInt(1);
@@ -77,8 +92,11 @@ public class CartItemDaoImpl implements CartItemDao {
                 try (PreparedStatement retryUpdatePs = conn.prepareStatement(updateSql)) {
                     retryUpdatePs.setInt(1, quantity);
                     retryUpdatePs.setInt(2, quantity);
-                    retryUpdatePs.setInt(3, userId);
-                    retryUpdatePs.setInt(4, variantId);
+                    retryUpdatePs.setString(3, sugarLevel);
+                    retryUpdatePs.setString(4, iceLevel);
+                    retryUpdatePs.setString(5, note);
+                    retryUpdatePs.setInt(6, userId);
+                    retryUpdatePs.setInt(7, variantId);
                     retryUpdatePs.executeUpdate();
                 }
                 return findCartItemId(conn, selectIdSql, userId, variantId);
@@ -115,20 +133,7 @@ public class CartItemDaoImpl implements CartItemDao {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    CartItem item = new CartItem();
-                    item.setCartItemId(rs.getInt("CartItemID"));
-                    item.setUserId(rs.getInt("UserID"));
-                    item.setVariantId(rs.getInt("VariantID"));
-                    item.setQuantity(rs.getInt("Quantity"));
-                    item.setCreatedAt(rs.getTimestamp("CreatedAt"));
-
-                    item.setProductName(rs.getNString("ProductName"));
-                    item.setSize(rs.getString("Size"));
-                    item.setPrice(rs.getBigDecimal("Price"));
-                    item.setImageUrl(rs.getString("ImageURL"));
-                    item.setVariantActive(rs.getBoolean("VariantActive"));
-
-                    list.add(item);
+                    list.add(mapRow(rs));
                 }
             }
         } catch (SQLException e) {
@@ -271,6 +276,9 @@ public class CartItemDaoImpl implements CartItemDao {
         item.setPrice(rs.getBigDecimal("Price"));
         item.setImageUrl(rs.getString("ImageURL"));
         item.setVariantActive(rs.getBoolean("VariantActive"));
+        item.setSugarLevel(rs.getString("SugarLevel"));
+        item.setIceLevel(rs.getString("IceLevel"));
+        item.setNote(rs.getString("DrinkNote"));
         return item;
     }
 
@@ -352,6 +360,9 @@ public class CartItemDaoImpl implements CartItemDao {
         dto.setSize(rs.getString("Size"));
         dto.setUnitPrice(rs.getBigDecimal("Price"));
         dto.setVariantActive(rs.getBoolean("VariantActive"));
+        dto.setSugarLevel(rs.getString("SugarLevel"));
+        dto.setIceLevel(rs.getString("IceLevel"));
+        dto.setNote(rs.getString("DrinkNote"));
         return dto;
     }
 }

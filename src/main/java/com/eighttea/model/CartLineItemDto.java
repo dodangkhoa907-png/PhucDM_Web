@@ -21,6 +21,9 @@ public class CartLineItemDto {
     private int quantity;
     private boolean productActive;
     private boolean variantActive;
+    private String sugarLevel;
+    private String iceLevel;
+    private String note;
 
     public CartLineItemDto() {}
 
@@ -56,6 +59,15 @@ public class CartLineItemDto {
 
     public boolean isVariantActive() { return variantActive; }
     public void setVariantActive(boolean variantActive) { this.variantActive = variantActive; }
+
+    public String getSugarLevel() { return sugarLevel; }
+    public void setSugarLevel(String sugarLevel) { this.sugarLevel = sugarLevel; }
+
+    public String getIceLevel() { return iceLevel; }
+    public void setIceLevel(String iceLevel) { this.iceLevel = iceLevel; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 
     /** true nếu sản phẩm hoặc biến thể đã ngừng bán — không được phép chọn để checkout. */
     public boolean isUnavailable() {

@@ -18,6 +18,11 @@ public class CartItem {
     private String imageUrl;
     private boolean variantActive;
 
+    // Tuỳ chỉnh đồ uống
+    private String sugarLevel;
+    private String iceLevel;
+    private String note;
+
     public CartItem() {}
 
     public int getCartItemId() { return cartItemId; }
@@ -49,6 +54,15 @@ public class CartItem {
 
     public boolean isVariantActive() { return variantActive; }
     public void setVariantActive(boolean variantActive) { this.variantActive = variantActive; }
+
+    public String getSugarLevel() { return sugarLevel; }
+    public void setSugarLevel(String sugarLevel) { this.sugarLevel = sugarLevel; }
+
+    public String getIceLevel() { return iceLevel; }
+    public void setIceLevel(String iceLevel) { this.iceLevel = iceLevel; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 
     public BigDecimal getTotalPrice() {
         if (price != null) {
