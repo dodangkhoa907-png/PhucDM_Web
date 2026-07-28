@@ -28,23 +28,28 @@
     <script>
     // preflight:false — BẮT BUỘC. Trang này dùng chung style.css/product.css/eighttea.css
     // với các trang còn lại; bật preflight sẽ reset sạch các style đó và vỡ navbar/footer.
+    // MÀU: ánh xạ 1-1 sang token --et-* của eighttea.css, ghi bằng hex chứ không dùng
+    // var(--et-*) — markup dùng alpha modifier (bg-accent/…), thứ Tailwind chỉ tổng hợp
+    // được từ giá trị màu thật, không từ chuỗi var(); còn --et-primary-rgb lại ngăn bằng
+    // dấu phẩy nên dạng 'rgb(var(--x) / <alpha-value>)' sẽ sinh CSS không hợp lệ.
+    // Hex chỉ nằm ở đây, không lặp lại trong markup.
     tailwind.config = {
       corePlugins: { preflight: false },
       theme: { extend: {
         colors: {
-          canvas:'#FAF6F0', surface:'#FFFFFF', accent:'#D2691E', 'accent-deep':'#A9531A',
-          dark:'#120E0C', 'dark-2':'#1C1614', ink:'#2B2625', 'ink-2':'#6B615C',
-          muted:'#9C918B', mist:'#EFE7DC'
+          canvas:'#F4F6EF', surface:'#FFFFFF', accent:'#477023', 'accent-deep':'#2D531A',
+          dark:'#071E07', 'dark-2':'#0D330E', ink:'#071E07', 'ink-2':'#66705E',
+          muted:'#8A9382', mist:'#DDE5D2'
         },
         fontFamily: {
           sans:['Plus Jakarta Sans','system-ui','sans-serif'],
           mono:['IBM Plex Mono','ui-monospace','monospace']
         },
         boxShadow: {
-          soft:'0 1px 2px rgba(43,38,37,.04), 0 4px 14px rgba(43,38,37,.04)',
-          card:'0 2px 4px rgba(43,38,37,.03), 0 14px 34px -12px rgba(43,38,37,.14)',
-          float:'0 6px 12px rgba(43,38,37,.04), 0 34px 68px -24px rgba(43,38,37,.26)',
-          cta:'0 10px 24px -8px rgba(210,105,30,.55)'
+          soft:'0 1px 2px rgba(7,30,7,.04), 0 4px 14px rgba(7,30,7,.04)',
+          card:'0 2px 4px rgba(7,30,7,.03), 0 14px 34px -12px rgba(7,30,7,.14)',
+          float:'0 6px 12px rgba(7,30,7,.04), 0 34px 68px -24px rgba(7,30,7,.26)',
+          cta:'0 10px 24px -8px rgba(71,112,35,.55)'
         }
       }}
     }
@@ -55,11 +60,14 @@
       /* Navbar luôn đặc ngay từ khung hình đầu tiên trên trang này — hero tối cần độ
          tương phản đủ mạnh mọi lúc, không thể đợi JS thêm class "scrolled" sau khi tải
          xong (có thể trễ vài khung hình, đủ để lộ navbar trong suốt đè lên nền tối). */
+      /* Chỉ ghi đè nền/bóng/đệm cho khớp .navbar.scrolled trong eighttea.css — không
+         chạm màu chữ, trạng thái active/hover hay nút tài khoản, nên header giữ nguyên
+         nền sáng + chữ tối + link active xanh cả trước lẫn sau khi cuộn (không nháy màu). */
       body.has-dark-hero #navbar {
-        background: #FAF6F0 !important;
+        background: var(--et-canvas) !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
-        box-shadow: 0 1px 0 rgba(43,38,37,.07), 0 16px 32px -22px rgba(43,38,37,.22);
+        box-shadow: 0 1px 0 rgba(var(--et-dark-rgb),.07), 0 16px 32px -22px rgba(var(--et-dark-rgb),.22);
         padding: 13px 0 !important;
       }
       /* Ràng buộc borderless — giới hạn trong khu nội dung Tailwind để không đụng navbar/footer chung */
@@ -68,20 +76,50 @@
       .lp .no-bar { scrollbar-width: none; }
       .lp .no-bar::-webkit-scrollbar { display: none; }
       .lp a:focus-visible, .lp button:focus-visible, .lp input:focus-visible, .lp select:focus-visible {
-        box-shadow:0 0 0 3px rgba(210,105,30,.45);
+        box-shadow:0 0 0 3px rgba(var(--et-primary-rgb),.5);
         outline: none;
       }
       @media (prefers-reduced-motion: reduce) {
         .lp * { transition-duration:.01ms !important; animation-duration:.01ms !important; }
       }
-      /* Thanh menu lọc nổi (sticky) — trạng thái mặc định/đang xem */
-      .lp .cat-tab { background:#FFFFFF; color:#6B615C; box-shadow:0 1px 2px rgba(43,38,37,.04), 0 4px 14px rgba(43,38,37,.04); }
-      .lp .cat-tab.is-active { background:#D2691E; color:#FFFFFF; box-shadow:0 10px 24px -8px rgba(210,105,30,.55); }
+      /* Ly vẽ CSS thay cho ảnh sản phẩm hỏng. Trước đây JS gán thẳng gradient cam vào
+         style của phần tử; giờ toàn bộ nằm ở đây để JS chỉ việc gắn class. Đây là hình
+         minh họa khung ly (không phải màu thật của một món cụ thể) nên dùng sắc xanh. */
+      .lp .et-cup-fallback {
+        background: linear-gradient(178deg, var(--et-accent-muted), var(--et-primary-hover));
+        clip-path: polygon(12% 0, 88% 0, 77% 100%, 23% 100%);
+        border-radius: 4px 4px 12px 12px;
+      }
 
-      /* ── HERO "ESPRESSO" — nền tối chuyển hổ phách, ly trà vẽ tay ─────────── */
+      /* Nhãn nhấn nằm trong khối nền tối: --et-primary (#477023) trên --et-dark (#071E07)
+         chỉ ~1.6:1, không đọc được với chữ nhỏ in hoa. Dùng một biến thể sáng của
+         --et-accent-muted, khai báo một chỗ rồi phủ lên utility .text-accent bằng độ ưu
+         tiên id (1,1,0) > class (0,1,0). Không đụng .bg-accent/15 (mảng nền mờ). */
+      .lp { --et-accent-on-dark: #A9C285; }
+      #thong-so .text-accent,
+      .lp footer .text-accent { color: var(--et-accent-on-dark); }
+
+      /* Thanh menu lọc nổi (sticky) — trạng thái mặc định/đang xem */
+      /* Chưa chọn: nền xanh nhạt + chữ xanh đậm (không dùng viền cứng).
+         Đang xem: nền xanh thương hiệu + chữ trắng — khác biệt bằng nền, không chỉ bằng màu chữ. */
+      .lp .cat-tab {
+        background:var(--et-primary-soft); color:var(--et-primary-hover);
+        box-shadow:0 1px 2px rgba(var(--et-dark-rgb),.04), 0 4px 14px rgba(var(--et-dark-rgb),.04);
+        transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+      }
+      .lp .cat-tab:hover { background:var(--et-accent-muted); color:var(--et-surface); }
+      .lp .cat-tab.is-active { background:var(--et-primary); color:var(--et-surface); box-shadow:0 10px 24px -8px rgba(var(--et-primary-rgb),.55); }
+      .lp .cat-tab.is-active:hover { background:var(--et-primary-hover); }
+
+      /* ── HERO — nền xanh chuyển sắc Reseda→Pakistan, ly trà vẽ tay ─────────── */
+      /* Giữ nguyên hình dạng gradient cũ (cùng tâm, cùng các mốc dừng), chỉ thay dải màu
+         hổ phách/nâu bằng dải xanh của bảng màu: Reseda → Fern → Dark Moss → Pakistan.
+         Vẫn tối dần về rìa nên chữ trắng trên hero giữ được tương phản, và hero vẫn tách
+         bạch hẳn với nền canvas sáng của phần còn lại. */
       .lp .hero-espresso {
         background:
-          radial-gradient(115% 85% at 76% 26%, #C8801E 0%, #96591A 30%, #3A2312 62%, #120E0C 100%);
+          radial-gradient(115% 85% at 76% 26%,
+            var(--et-accent-muted) 0%, var(--et-primary) 30%, var(--et-primary-hover) 62%, var(--et-dark) 100%);
       }
       @keyframes etSpin   { to { transform: rotate(360deg); } }
       @keyframes etDrift  { 0% { transform:translateY(10px) rotate(0);   opacity:0; }
@@ -92,19 +130,19 @@
       @keyframes etBubble { 0% { transform:translateY(0); opacity:0; }
                            25% { opacity:.6; }
                           100% { transform:translateY(-78px); opacity:0; } }
-      /* Nút "Xem ngay" — nền tối, phát sáng cam khi hover, sparkle xoay/phóng to */
+      /* Nút "Xem ngay" — nền tối, phát sáng xanh thương hiệu khi hover, sparkle xoay/phóng to */
       .lp .et-view-btn {
         display:inline-flex; align-items:center; justify-content:center; gap:12px;
         width:100%; max-width:230px; height:64px; border-radius:999px;
-        background:#1C1A1C; cursor:pointer; text-decoration:none;
+        background:var(--et-dark); cursor:pointer; text-decoration:none;
         transition: all .45s ease-in-out;
       }
       .lp .et-view-sparkle { fill:#AAAAAA; transition: all .8s ease; }
       .lp .et-view-text { font-family:var(--font); font-weight:600; color:#AAAAAA; font-size:1rem; }
       .lp .et-view-btn:hover {
-        background: linear-gradient(0deg,#C8801E,#D2691E);
+        background: linear-gradient(0deg,var(--et-primary-hover),var(--et-primary));
         box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -4px 0 rgba(0,0,0,.2),
-                    0 0 0 4px rgba(255,255,255,.18), 0 0 90px 0 rgba(232,163,61,.65);
+                    0 0 0 4px rgba(255,255,255,.18), 0 0 90px 0 rgba(var(--et-primary-rgb),.55);
         transform: translateY(-2px);
       }
       .lp .et-view-btn:hover .et-view-text { color:#fff; }
@@ -132,7 +170,7 @@
 
       <%-- Quầng sáng ấm hắt sau ly + vệt tối đáy để chữ ở dải thông tin luôn đọc được --%>
       <div class="absolute inset-0 pointer-events-none"
-           style="background:radial-gradient(38% 34% at 72% 42%, rgba(255,196,110,.34) 0%, transparent 68%);"></div>
+           style="background:radial-gradient(38% 34% at 72% 42%, rgba(255,255,255,.12) 0%, transparent 68%);"></div>
       <div class="absolute inset-x-0 bottom-0 h-52 pointer-events-none"
            style="background:linear-gradient(180deg, transparent, rgba(11,7,5,.72));"></div>
 
@@ -153,13 +191,13 @@
 
             <!-- ── Chữ ── -->
             <div class="lg:col-span-6">
-              <p class="et-in font-mono text-[.66rem] font-medium tracking-[.22em] uppercase text-[#F0B461] mb-6" style="animation-delay:.05s">
+              <p class="et-in font-mono text-[.66rem] font-medium tracking-[.22em] uppercase text-[#A9C285] mb-6" style="animation-delay:.05s">
                 Eight Tea · Thực đơn
               </p>
-              <h1 class="et-in font-extrabold tracking-[-.04em] leading-[.98] text-[clamp(2.6rem,7vw,4.6rem)] text-[#FBF6EF] mb-6" style="animation-delay:.15s">
-                Đậm vị trà,<br><span class="text-[#E8A33D]">nhanh tận nhà.</span>
+              <h1 class="et-in font-extrabold tracking-[-.04em] leading-[.98] text-[clamp(2.6rem,7vw,4.6rem)] text-white mb-6" style="animation-delay:.15s">
+                Đậm vị trà,<br><span class="text-[#A9C285]">nhanh tận nhà.</span>
               </h1>
-              <p class="et-in text-[1rem] leading-[1.75] text-[#D8C6B3] max-w-md mb-8" style="animation-delay:.25s">
+              <p class="et-in text-[1rem] leading-[1.75] text-[rgba(255,255,255,.78)] max-w-md mb-8" style="animation-delay:.25s">
                 <c:out value="${fn:length(products)}"/> món pha theo đơn. Chọn size, chỉnh đường và đá
                 theo khẩu vị — quầy bắt đầu pha ngay khi bạn đặt.
               </p>
@@ -179,7 +217,7 @@
                   <path id="etArcPath" fill="none"
                         d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/>
                 </defs>
-                <text fill="#F0B461" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="500" letter-spacing="1.6">
+                <text fill="#A9C285" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="500" letter-spacing="1.6">
                   <textPath href="#etArcPath" startOffset="0">TRÀ MỘC CẦU ĐẤT • Ủ LẠNH 8 TIẾNG • PHA THEO ĐƠN • </textPath>
                 </text>
               </svg>
@@ -247,15 +285,15 @@
       <%-- Dải thông tin đáy: toàn số liệu thật, không phải nhãn trang trí --%>
       <div class="relative z-10 w-full" style="box-shadow:0 -1px 0 rgba(251,246,239,.12);">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-wrap items-center gap-x-8 gap-y-3">
-          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[#C9B49C]">
-            <strong class="text-[#FBF6EF] font-semibold"><c:out value="${fn:length(products)}"/></strong> món ·
-            <strong class="text-[#FBF6EF] font-semibold"><c:out value="${fn:length(categories)}"/></strong> nhóm
+          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">
+            <strong class="text-white font-semibold"><c:out value="${fn:length(products)}"/></strong> món ·
+            <strong class="text-white font-semibold"><c:out value="${fn:length(categories)}"/></strong> nhóm
           </span>
-          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[#C9B49C]">Size M 700ml · L 900ml</span>
-          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[#C9B49C]">Giao 20–30 phút · TP. Bà Rịa</span>
-          <a href="#san-pham-grid" class="ml-auto inline-flex items-center gap-2.5 font-mono text-[.64rem] tracking-[.14em] uppercase text-[#F0B461] hover:text-[#FBF6EF] transition no-underline">
+          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Size M 700ml · L 900ml</span>
+          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Giao 20–30 phút · TP. Bà Rịa</span>
+          <a href="#san-pham-grid" class="ml-auto inline-flex items-center gap-2.5 font-mono text-[.64rem] tracking-[.14em] uppercase text-[#A9C285] hover:text-white transition no-underline">
             Xem thực đơn
-            <span class="w-8 h-8 rounded-full grid place-items-center" style="background:rgba(232,163,61,.16);">
+            <span class="w-8 h-8 rounded-full grid place-items-center" style="background:rgba(255,255,255,.14);">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="4" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/>
               </svg>
@@ -289,7 +327,7 @@
 
       <!-- Thanh menu lọc nổi — sticky theo cuộn, bấm để trượt mượt đến đúng khu vực.
            Luôn render (kể cả 0 kết quả) để khách luôn có đường sửa lại tìm kiếm. -->
-      <div class="sticky top-[64px] z-40 py-3 mb-10 bg-canvas/95 backdrop-blur-sm" style="box-shadow:0 1px 0 rgba(43,38,37,.06);">
+      <div class="sticky top-[64px] z-40 py-3 mb-10 bg-canvas/95 backdrop-blur-sm" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.06);">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row gap-3 sm:items-center">
           <div class="flex gap-2 overflow-x-auto no-bar flex-1">
             <a href="#san-pham-grid" data-cat-anchor="san-pham-grid"
@@ -521,15 +559,15 @@
     </section>
 
     <!-- ═══════════════ TECH SPECS — Dark Mode ═══════════════ -->
-    <section id="thong-so" class="bg-dark text-[#A79C95] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
+    <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
         <div class="max-w-2xl mb-12 lg:mb-16">
           <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Bảng thông số</p>
-          <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-[#F5EFE7] mb-4">
+          <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-white mb-4">
             Một ly trà,<br>đọc như một chiếc máy.
           </h2>
-          <p class="text-[.98rem] leading-[1.65] text-[#8A7F79]">
+          <p class="text-[.98rem] leading-[1.65] text-[rgba(255,255,255,.74)]">
             Đồ uống ngon là thứ đo đếm được: nhiệt độ chiết xuất, vòng đời mẻ trà, dung tích ly.
             Tất cả nằm ở đây — không chữ nhỏ.
           </p>
@@ -543,8 +581,8 @@
               </svg>
             </span>
             <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Nhiệt độ chiết xuất</h3>
-            <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
-            <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
+            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
+            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
           </div>
 
           <div class="bg-dark-2 rounded-3xl p-6">
@@ -555,8 +593,8 @@
               </svg>
             </span>
             <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Thời gian lưu hương</h3>
-            <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
-            <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
+            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
+            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
           </div>
 
           <div class="bg-dark-2 rounded-3xl p-6">
@@ -566,8 +604,8 @@
               </svg>
             </span>
             <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Hàm lượng calo</h3>
-            <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
-            <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
+            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
+            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
           </div>
 
           <div class="bg-dark-2 rounded-3xl p-6">
@@ -577,19 +615,19 @@
               </svg>
             </span>
             <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Quy chuẩn bao bì</h3>
-            <p class="font-extrabold text-[#F5EFE7] text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
-            <p class="text-[.85rem] leading-relaxed text-[#8A7F79]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
+            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
+            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
           </div>
         </div>
 
         <div class="relative overflow-hidden bg-dark-2 rounded-[28px] mt-5 lg:mt-6 px-6 sm:px-10 py-12 lg:py-16 text-center">
           <div class="absolute inset-0 pointer-events-none"
-               style="background:radial-gradient(60% 100% at 50% 0%, rgba(210,105,30,.20) 0%, transparent 70%);"></div>
+               style="background:radial-gradient(60% 100% at 50% 0%, rgba(var(--et-primary-rgb),.22) 0%, transparent 70%);"></div>
           <div class="relative">
-            <h2 class="font-extrabold text-[#F5EFE7] tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
+            <h2 class="font-extrabold text-white tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
               Ly trà kế tiếp cách bạn 15 phút
             </h2>
-            <p class="text-[.98rem] leading-relaxed text-[#8A7F79] max-w-[46ch] mx-auto mb-8">
+            <p class="text-[.98rem] leading-relaxed text-[rgba(255,255,255,.74)] max-w-[46ch] mx-auto mb-8">
               Chọn size, chỉnh đường và đá theo khẩu vị — phần còn lại để quầy lo.
             </p>
             <div class="flex flex-wrap gap-3 justify-center">
@@ -610,24 +648,24 @@
 
         <!-- ═══════════════ FOOTER ═══════════════ -->
         <footer class="mt-14 lg:mt-20 pb-10">
-          <div class="pt-10" style="box-shadow:0 -1px 0 rgba(245,239,231,.08);">
+          <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
 
               <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
                 <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
-                <span class="font-extrabold text-[#F5EFE7] tracking-tight">Eight Tea</span>
+                <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
               </a>
 
               <div class="flex items-center gap-2.5">
                 <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
+                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
                 <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
+                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
                 <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[#B3A79F] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
+                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
               </div>
 
-              <p class="font-mono text-[.62rem] tracking-[.08em] text-[#6E655F] text-center sm:text-right m-0">
+              <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
                 © 2026 Eight Tea. Trà mộc Cầu Đất.
               </p>
             </div>
@@ -709,12 +747,11 @@
       /* ══════════════ FALLBACK ẢNH — thêm một lớp an toàn phía client ══════════════
          JSTL đã chọn sẵn ảnh khớp tên hoặc ly vẽ CSS ở server; nếu ảnh thật vẫn lỗi khi
          tải (link hỏng, 404...), thay bằng ly vẽ CSS thay vì để lộ icon ảnh vỡ. */
+      // Hình dáng và màu ly nằm hết trong class .et-cup-fallback (xem <style> ở <head>)
+      // nên JS không còn giữ mã màu nào — đổi theme chỉ phải sửa CSS.
       function cupFallback(name) {
         var span = document.createElement('span');
-        span.className = 'block w-[42%] aspect-[.72/1] relative transition duration-500 group-hover:scale-105';
-        span.style.background = 'linear-gradient(178deg,#E08B45,#B4661F)';
-        span.style.clipPath = 'polygon(12% 0,88% 0,77% 100%,23% 100%)';
-        span.style.borderRadius = '4px 4px 12px 12px';
+        span.className = 'et-cup-fallback block w-[42%] aspect-[.72/1] relative transition duration-500 group-hover:scale-105';
         span.setAttribute('role', 'img');
         span.setAttribute('aria-label', name || '');
         return span;
