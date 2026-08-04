@@ -735,10 +735,10 @@
             </h3>
 
             <p class="text-[.95rem] leading-relaxed text-ink-2 max-w-xl mb-9">
-              Eight Tea nói <strong class="font-bold text-ink">KHÔNG</strong> hoàn toàn với si-rô công nghiệp
-              hay hương liệu tạo mùi giả. Chúng tớ chọn những búp trà Ô Long nướng được thu hái thủ công tại
-              cao nguyên Cầu Đất, ủ chuẩn nhiệt độ 92°C trong đúng 12 phút. Kết quả là cốt trà đậm đà,
-              chát nhẹ tinh tế và đọng lại hậu vị ngọt thanh tự nhiên.
+              Eight Tea chỉ <strong class="font-bold text-ink">CÓ</strong> một nguyên tắc duy nhất: cốt trà
+              nguyên bản, tuyệt đối không si-rô công nghiệp hay hương liệu tạo mùi giả. Chúng tớ chọn những búp
+              trà Ô Long nướng được thu hái thủ công tại cao nguyên Cầu Đất, ủ chuẩn nhiệt độ 92°C trong đúng
+              12 phút. Kết quả là cốt trà đậm đà, chát nhẹ tinh tế và đọng lại hậu vị ngọt thanh tự nhiên.
             </p>
 
             <ul class="grid sm:grid-cols-3 gap-7 sm:gap-6 max-w-xl">
