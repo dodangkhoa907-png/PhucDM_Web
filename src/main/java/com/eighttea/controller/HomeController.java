@@ -32,14 +32,16 @@ import java.util.List;
 @WebServlet(name = "HomeController", urlPatterns = {"/index.jsp"})
 public class HomeController extends HttpServlet {
 
-    private static final int SLIDE_COUNT = 3;
+    /** Đang chỉ giới thiệu 1 món ở đầu trang. Tăng số này lên là khu trình chiếu tự
+     *  bật lại mũi tên + chấm chuyển slide (JSP đã kiểm tra theo số lượng thực tế). */
+    private static final int SLIDE_COUNT = 1;
 
     /**
      * Món muốn đẩy lên khu trình chiếu, theo thứ tự ưu tiên. Khớp theo tên (không dấu
      * hoa/thường) để đổi tên nhẹ trong DB không làm vỡ trang; thiếu món nào thì lấp
      * bằng món active bất kỳ.
      */
-    private static final String[] SHOWCASE_PREFERENCE = {"ô long", "trà tắc", "đào cam sả"};
+    private static final String[] SHOWCASE_PREFERENCE = {"trái cây nhiệt đới"};
 
     /** Số món cho khu "Món tủ của quán" (Section 2). */
     private static final int HIGHLIGHT_COUNT = 3;
@@ -50,6 +52,15 @@ public class HomeController extends HttpServlet {
      * còn nhóm thì ổn định hơn.
      */
     private static final String[] HIGHLIGHT_CATEGORIES = {"Latte", "Soda", "Sữa Chua & Sữa Tươi"};
+
+    /**
+     * Ba món cố định cho Section 2, đúng thứ tự hạng 01 → 02 → 03 (hạng 01 đứng giữa,
+     * gắn nhãn "Quán chọn"). Khớp theo tên (không phân biệt hoa/thường); nếu tên trong DB
+     * đổi và không tìm thấy, các ô còn thiếu sẽ lấp bằng logic theo nhóm bên dưới.
+     */
+    private static final String[] HIGHLIGHT_NAMES = {
+            "Trà Trái Cây Nhiệt Đới", "Trà Sữa Thái Xanh", "Sữa Dâu Lắc Phô Mai"
+    };
 
     /**
      * Lấy rộng feedback công khai để tính điểm trung bình + tổng số trên cùng một tập dữ
@@ -111,6 +122,15 @@ public class HomeController extends HttpServlet {
         }
 
         List<Product> picked = new ArrayList<>();
+        for (String name : HIGHLIGHT_NAMES) {
+            if (picked.size() >= HIGHLIGHT_COUNT) break;
+            for (Product p : pool) {
+                if (name.equalsIgnoreCase(p.getName()) && !picked.contains(p)) {
+                    picked.add(p);
+                    break;
+                }
+            }
+        }
         for (String cat : HIGHLIGHT_CATEGORIES) {
             for (Product p : pool) {
                 if (picked.size() >= HIGHLIGHT_COUNT) break;

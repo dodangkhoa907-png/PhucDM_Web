@@ -497,7 +497,7 @@
 
         <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 lg:mb-28">
           <div class="rounded-[28px] overflow-hidden shadow-card bg-gradient-to-br from-canvas to-mist aspect-[4/3] grid place-items-center p-10">
-            <img src="${ctx}/images/story.png" alt="Búp trà mộc vùng Cầu Đất" loading="lazy" class="w-4/5 h-4/5 object-contain">
+            <img src="${ctx}/images/story.jpg" alt="Búp trà mộc vùng Cầu Đất" loading="lazy" class="w-4/5 h-4/5 object-contain">
           </div>
           <div>
             <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Nguồn trà</p>

@@ -14,6 +14,48 @@
     <meta name="description" content="Eight Tea — trà sữa, trà trái cây và latte pha theo đơn. Trà mộc Cầu Đất, giao 20–30 phút tại TP. Bà Rịa.">
     <meta name="csrf-token" content="${sessionScope._csrf}">
 
+    <%-- SEO: thẻ chia sẻ mạng xã hội. Khi dán link lên Facebook/Zalo/Messenger sẽ hiện
+         đúng tên quán, mô tả và ảnh logo thay vì link trần. --%>
+    <c:set var="siteUrl" value="${pageContext.request.scheme}://${header.host}${ctx}"/>
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="Eight Tea">
+    <meta property="og:locale"      content="vi_VN">
+    <meta property="og:title"       content="Eight Tea — Đậm vị trà, nhanh tận nhà">
+    <meta property="og:description" content="Trà sữa, trà trái cây và latte pha theo đơn. Giao 20–30 phút tại TP. Bà Rịa.">
+    <meta property="og:url"         content="${siteUrl}/">
+    <meta property="og:image"       content="${siteUrl}/images/logo-full.jpg">
+    <meta name="twitter:card"       content="summary_large_image">
+    <link rel="canonical" href="${siteUrl}/">
+
+    <%-- SEO: dữ liệu có cấu trúc cho Google hiểu đây là quán ăn uống có địa chỉ thật.
+         Chỉ khai báo thông tin đã xác thực (địa chỉ + hotline đang hiển thị ở chân trang);
+         KHÔNG khai báo giờ mở cửa vì chưa xác nhận lại giờ hiện hành. --%>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CafeOrCoffeeShop",
+      "name": "Eight Tea",
+      "description": "Trà sữa, trà trái cây và latte pha theo đơn tại TP. Bà Rịa.",
+      "url": "${siteUrl}/",
+      "image": "${siteUrl}/images/logo-full.jpg",
+      "telephone": "+84364523553",
+      "servesCuisine": "Trà sữa",
+      "priceRange": "15.000₫ - 42.000₫",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "139 Võ Văn Kiệt, P. Tam Long",
+        "addressLocality": "TP. Bà Rịa",
+        "addressRegion": "Bà Rịa - Vũng Tàu",
+        "addressCountry": "VN"
+      },
+      "sameAs": [
+        "https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr",
+        "https://www.instagram.com/eight.tea",
+        "https://www.tiktok.com/@eight.tea"
+      ]
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <%-- Bổ sung trục nghiêng (italic) + nét mảnh cho Plus Jakarta Sans: bản nạp trong
@@ -361,7 +403,18 @@
 
                 <!-- ── Cột phải: ly trà đè lên ranh giới sáng/tối ── -->
                 <div class="order-1 lg:order-2 flex justify-center lg:justify-start lg:pl-4">
-                  <svg class="w-[148px] sm:w-[240px] lg:w-[375px] h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]"
+                  <c:choose>
+                  <c:when test="${not empty p.imageUrl}">
+                    <%-- Ảnh chụp thật. width/height khai báo sẵn để trình duyệt giữ chỗ đúng
+                         tỉ lệ ngay từ đầu, tránh nội dung nhảy khi ảnh tải xong (CLS).
+                         KHÔNG lazy-load: đây là ảnh lớn nhất trong khung nhìn đầu tiên,
+                         hoãn tải sẽ làm chậm chính chỉ số LCP. --%>
+                    <img src="${ctx}${p.imageUrl}" alt="${fn:escapeXml(p.name)}"
+                         width="600" height="770" decoding="async" fetchpriority="high"
+                         class="w-[220px] sm:w-[340px] lg:w-[480px] h-auto object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
+                  </c:when>
+                  <c:otherwise>
+                  <svg class="w-[220px] sm:w-[340px] lg:w-[480px] h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]"
                        viewBox="0 0 300 430" fill="none" xmlns="http://www.w3.org/2000/svg"
                        role="img" aria-label="Ly ${fn:escapeXml(p.name)}">
                     <defs>
@@ -417,6 +470,8 @@
                     <rect x="50" y="120" width="200" height="26" rx="9" fill="#FBF3E9"/>
                     <rect x="50" y="120" width="200" height="9"  rx="4.5" fill="#ffffff" opacity=".7"/>
                   </svg>
+                  </c:otherwise>
+                  </c:choose>
                 </div>
 
               </div>
@@ -425,7 +480,9 @@
         </div>
 
         <%-- Hàng điều khiển: chấm vị trí + mũi tên (mũi tên ở đây dùng cho màn < xl,
-             nơi lề ngoài khung nội dung quá hẹp để đặt mũi tên nổi mà không đè tiêu đề). --%>
+             nơi lề ngoài khung nội dung quá hẹp để đặt mũi tên nổi mà không đè tiêu đề).
+             Chỉ hiện khi có từ 2 món trở lên — 1 món thì nút chuyển slide vô nghĩa. --%>
+        <c:if test="${fn:length(heroSlides) > 1}">
         <div class="flex items-center gap-5 shrink-0 pt-3 lg:pt-6">
           <div class="flex items-center gap-2" id="hsDots">
             <c:forEach var="p" items="${heroSlides}" varStatus="s">
@@ -444,6 +501,7 @@
             </button>
           </div>
         </div>
+        </c:if>
 
         </c:otherwise>
       </c:choose>
@@ -452,7 +510,7 @@
     <%-- Mũi tên nổi hai mép màn hình — chỉ bật từ 2xl (≥1536px). Ở 1280px lề ngoài khung
          nội dung chỉ còn 64px, nút 48px đặt vào đó chỉ cách tiêu đề 2px → quá sát, dễ chạm
          nhau khi đổi font/hiện thanh cuộn. Dưới ngưỡng này dùng mũi tên trong hàng điều khiển. --%>
-    <c:if test="${not empty heroSlides}">
+    <c:if test="${fn:length(heroSlides) > 1}">
       <button type="button" aria-label="Món trước"
               class="hs-prev hs-arrow hidden 2xl:grid place-items-center absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full text-dark z-20">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 5 8 12 15 19"/></svg>
@@ -673,7 +731,7 @@
 
             <h3 class="st-title text-dark uppercase leading-[1.02] tracking-[.03em] text-[clamp(1.9rem,4.2vw,3.1rem)] mb-5"
                 style="text-wrap:balance;">
-              100% Trà Mộc Cầu Đất — Đậm Vị Từ Lần Nhấp Đầu Tiên
+              100% Trà Lài — Đậm Vị Từ Lần Nhấp Đầu Tiên
             </h3>
 
             <p class="text-[.95rem] leading-relaxed text-ink-2 max-w-xl mb-9">
@@ -702,7 +760,7 @@
 
         <div class="order-1 lg:order-2 flex justify-center">
           <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-shade">
-            <img src="${ctx}/images/story.png" alt="Ly trà trái cây Eight Tea pha theo đơn, bày cùng trái cây tươi"
+            <img src="${ctx}/images/story.jpg" alt="Ly trà trái cây Eight Tea pha theo đơn, bày cùng trái cây tươi"
                  loading="lazy" decoding="async"
                  class="w-full h-full object-cover">
           </div>
@@ -715,48 +773,9 @@
         <%-- Ảnh bên trái ở khổ lớn (đảo so với khối 01), nhưng trên mobile vẫn
              đứng trước chữ để nhịp đọc mỗi khối giống nhau. --%>
         <div class="order-1 flex justify-center">
-          <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-dark grid place-items-center">
-            <svg class="w-[62%] h-auto" viewBox="0 0 300 430" fill="none" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-label="Ly trà Eight Tea ép màng niêm phong, đang được giao nhanh">
-              <defs>
-                <linearGradient id="stCup" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%"   stop-color="#E9CBA4"/>
-                  <stop offset="100%" stop-color="#A9611B"/>
-                </linearGradient>
-                <clipPath id="stClip">
-                  <path d="M67,146 L100,372 Q102,384 113,384 L187,384 Q198,384 200,372 L233,146 Z"/>
-                </clipPath>
-              </defs>
-
-              <%-- Vạch tốc độ: gợi ý chuyển động giao nhanh --%>
-              <%-- Vạch trang trí (không phải màu thật của đồ uống) → dùng màu thương hiệu.
-                   Ghi qua style vì thuộc tính trình bày của SVG không nhận var(). --%>
-              <g style="stroke:var(--et-primary)" stroke-width="8" stroke-linecap="round" opacity=".55">
-                <path d="M20,214 H72"/>
-                <path d="M4,252 H50"/>
-                <path d="M24,290 H64"/>
-              </g>
-
-              <%-- Ống hút --%>
-              <path d="M178,112 L216,24" stroke="#7A4318" stroke-width="18" stroke-linecap="round"/>
-              <path d="M178,112 L216,24" stroke="#E8A33D" stroke-width="9"  stroke-linecap="round"/>
-
-              <g clip-path="url(#stClip)">
-                <rect x="50" y="138" width="200" height="260" fill="url(#stCup)"/>
-                <path d="M78,140 L106,384 L122,384 L94,140 Z" fill="#ffffff" opacity=".12"/>
-              </g>
-
-              <%-- Nắp ly --%>
-              <path d="M58,124 Q150,78 242,124 Z" fill="#EFE3D4"/>
-              <rect x="50" y="120" width="200" height="26" rx="9" fill="#FBF3E9"/>
-              <rect x="50" y="120" width="200" height="9"  rx="4.5" fill="#ffffff" opacity=".7"/>
-
-              <%-- Tem ép màng vắt qua mép nắp — dấu hiệu "chống tràn / niêm phong" --%>
-              <rect x="84" y="132" width="132" height="34" rx="11" style="fill:var(--et-primary)"/>
-              <text x="150" y="155" text-anchor="middle"
-                    font-family="'IBM Plex Mono', ui-monospace, monospace"
-                    font-size="14" font-weight="600" letter-spacing="2.5" fill="#ffffff">SEALED</text>
-            </svg>
+          <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-dark grid place-items-center overflow-hidden">
+            <img src="${ctx}/TaiNguyen/giaohang.jpg" alt="Ly trà Eight Tea đang được giao nhanh"
+                 loading="lazy" decoding="async" class="w-full h-full object-cover">
           </div>
         </div>
 
@@ -771,7 +790,7 @@
 
             <h3 class="st-title text-dark uppercase leading-[1.02] tracking-[.03em] text-[clamp(1.9rem,4.2vw,3.1rem)] mb-5"
                 style="text-wrap:balance;">
-              Giao Hàng Trực Tiếp — Giá Chuẩn Sinh Viên, Không Phí App
+              Giao Hàng Trực Tiếp — Giá Chuẩn Sinh Viên, Phí App
             </h3>
 
             <p class="text-[.95rem] leading-relaxed text-ink-2 max-w-xl mb-9">
@@ -788,7 +807,7 @@
               </li>
               <li>
                 <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5">Leak-Proof</p>
-                <p class="text-[.82rem] leading-relaxed text-ink-2">Ép màng nắp ly chống tràn 100% an toàn khi di chuyển.</p>
+                <p class="text-[.82rem] leading-relaxed text-ink-2">Xài nắp ly chống tràn 100% an toàn khi di chuyển.</p>
               </li>
               <li>
                 <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5">Direct Support</p>
@@ -802,130 +821,63 @@
     </div>
   </section>
 
-  <!-- ══════════════ SECTION 4 — BẢNG THÔNG SỐ & CHỐT ĐƠN ══════════════
-       Dải tối khép trang — cùng khuôn "thong-so" đang dùng ở trang Sản phẩm,
-       mang qua nguyên bộ (specs + banner + footer) vì home.jsp chưa có footer
-       riêng. Mở bằng cặp số/nhãn 04 để giữ đúng nhịp cuộn 02 → 03 → 04 của các
-       section phía trên; nhãn ở đây đổi sang tông sáng-trên-nền-tối cho hợp mắt. -->
-  <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+  <!-- ══════════════ SECTION 4 — EIGHT TEA TRÊN MẠNG XÃ HỘI ══════════════
+       Ảnh chụp bài đăng & phản hồi thật từ trang Facebook của quán. Đây là bằng chứng
+       xã hội (social proof) có thật, không phải ảnh minh hoạ — nên để nguyên dạng
+       ảnh chụp màn hình thay vì cắt ghép lại thành testimonial giả. -->
+  <section id="section-4" class="relative overflow-hidden py-24 lg:py-32 bg-shade">
 
-      <div class="flex items-center gap-4 mb-10 lg:mb-12">
-        <span class="font-mono text-[.7rem] font-semibold tracking-[.2em] text-[rgba(255,255,255,.55)] tnum">04</span>
-        <span class="font-mono text-[.62rem] font-semibold tracking-[.16em] uppercase text-accent bg-white/[.06] px-4 py-2 rounded-full">
-          Bảng thông số
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+
+      <div class="flex items-center gap-4 mb-8">
+        <span class="font-mono text-[.7rem] font-semibold tracking-[.2em] text-muted tnum">04</span>
+        <span class="font-mono text-[.62rem] font-semibold tracking-[.16em] uppercase text-accent bg-surface shadow-soft px-4 py-2 rounded-full">
+          Khách hàng nói gì
         </span>
       </div>
 
-      <div class="max-w-2xl mb-12 lg:mb-16">
-        <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-white mb-4">
-          Một ly trà,<br>đọc như một chiếc máy.
-        </h2>
-        <p class="text-[.98rem] leading-[1.65] text-[rgba(255,255,255,.74)]">
-          Đồ uống ngon là thứ đo đếm được: nhiệt độ chiết xuất, vòng đời mẻ trà, dung tích ly.
-          Tất cả nằm ở đây — không chữ nhỏ.
-        </p>
+      <h3 class="st-title text-dark uppercase leading-[1.02] tracking-[.03em] text-[clamp(1.9rem,4.2vw,3.1rem)] mb-5 max-w-3xl"
+          style="text-wrap:balance;">
+        Những Ngày Đầu Tiên Của Một Quán Nhỏ
+      </h3>
+
+      <p class="text-[.95rem] leading-relaxed text-ink-2 max-w-2xl mb-14">
+        Ảnh chụp trực tiếp từ trang Facebook Eight Tea — feedback thật của khách,
+        những buổi pha chế đầu tiên và tấm menu mới nhất của quán.
+      </p>
+
+      <%-- Cột masonry: ảnh cao thấp khác nhau nên xếp theo cột để không bị khoảng trắng lệch.
+           Toàn bộ lazy-load + khai báo sẵn width/height → không nhảy layout khi tải. --%>
+      <div class="columns-1 sm:columns-2 lg:columns-3 gap-5 [column-fill:_balance]">
+        <%-- fn:split thay vì list literal EL 3.0: chạy được trên mọi phiên bản JSTL --%>
+        <c:forEach var="seo" items="${fn:split('2,1,3,5,4,6', ',')}">
+          <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener"
+             class="group block mb-5 break-inside-avoid rounded-[20px] overflow-hidden bg-surface shadow-soft hover:shadow-card transition no-underline">
+            <img src="${ctx}/images/story/seo-${seo}.jpg"
+                 alt="Bài đăng và phản hồi khách hàng trên Facebook Eight Tea"
+                 loading="lazy" decoding="async" width="880" height="900"
+                 class="w-full h-auto block group-hover:scale-[1.02] transition duration-500">
+          </a>
+        </c:forEach>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-        <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
-             KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
-             bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
-          <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
-            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3a2 2 0 0 0-2 2v9.3a4 4 0 1 0 4 0V5a2 2 0 0 0-2-2z"/><line x1="12" y1="9" x2="12" y2="14.5"/>
-            </svg>
-          </span>
-          <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Nhiệt độ chiết xuất</h3>
-          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
-          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
-        </div>
-
-        <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
-             KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
-             bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
-          <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
-            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="2" x2="12" y2="5"/>
-              <circle cx="12" cy="14" r="8"/><polyline points="12 10 12 14 15 16"/>
-            </svg>
-          </span>
-          <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Thời gian lưu hương</h3>
-          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
-          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
-        </div>
-
-        <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
-             KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
-             bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
-          <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
-            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2.5c2.4 3 4.2 5.4 4.2 9a4.2 4.2 0 0 1-8.4 0c0-1.2.4-2.2 1.1-3.1-.2 2 .8 3.1 2 3.1s2-1 2-2.2c0-2.1-1.1-3.3-.9-6.8z"/>
-            </svg>
-          </span>
-          <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Hàm lượng calo</h3>
-          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
-          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
-        </div>
-
-        <%-- Hover: nhấc thẻ lên + sáng "viền" cam. Viền ở đây là box-shadow inset chứ
-             KHÔNG phải border — .hp-scope đặt `border:0 !important` nên mọi border đều
-             bị nuốt; inset shadow cho đúng hiệu ứng mà vẫn giữ luật "không viền". --%>
-        <div class="group hp-spec-card bg-dark-2 rounded-3xl p-6">
-          <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5 transition-transform duration-300 group-hover:scale-110">
-            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 7.5l-9-4.5-9 4.5 9 4.5 9-4.5z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><polyline points="8.8 11.8 10.6 13.6 15 9.2"/>
-            </svg>
-          </span>
-          <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Quy chuẩn bao bì</h3>
-          <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
-          <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
-        </div>
+      <div class="mt-10 flex justify-center">
+        <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-2.5 bg-accent text-white font-bold text-[.88rem] tracking-wide uppercase px-8 py-3.5 rounded-full shadow-cta hover:brightness-110 transition no-underline">
+          <i class="fa-brands fa-facebook-f text-[15px]"></i>
+          Xem thêm trên Facebook
+        </a>
       </div>
 
-      <%-- Banner chốt đơn — điểm nhấn duy nhất của khối: chấm "đang mở" nhấp nháy
-           nhẹ ngay trên tiêu đề, biến lời hứa "15 phút" thành một tín hiệu sống
-           thay vì chữ tĩnh. Tắt nhấp nháy khi prefers-reduced-motion (xem <style>). --%>
-      <div class="relative overflow-hidden bg-dark-2 rounded-[28px] mt-5 lg:mt-6 px-6 sm:px-10 py-12 lg:py-16 text-center">
-        <div class="absolute inset-0 pointer-events-none"
-             style="background:radial-gradient(60% 100% at 50% 0%, rgba(var(--et-primary-rgb),.22) 0%, transparent 70%);"></div>
-        <div class="relative">
-          <span class="inline-flex items-center gap-2 bg-white/[.06] rounded-full pl-2.5 pr-3.5 py-1.5 mb-6">
-            <span class="relative flex h-2 w-2">
-              <span class="hp-pulse absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-            </span>
-            <span class="font-mono text-[.62rem] tracking-[.14em] uppercase text-[#EBE3DB]">Đang nhận đơn · Mở đến 22:00</span>
-          </span>
-          <h2 class="font-extrabold text-white tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
-            Ly trà kế tiếp cách bạn 15 phút
-          </h2>
-          <p class="text-[.98rem] leading-relaxed text-[rgba(255,255,255,.74)] max-w-[46ch] mx-auto mb-8">
-            Chọn size, chỉnh đường và đá theo khẩu vị — phần còn lại để quầy lo.
-          </p>
-          <div class="flex flex-wrap gap-3 justify-center">
-            <%-- Neo trong trang: html{scroll-behavior:smooth} đã bật sẵn nên trình duyệt
-                 tự cuộn mượt lên khu thực đơn, không cần JS. --%>
-            <a href="#section-2" class="inline-flex items-center gap-2.5 bg-accent text-white font-semibold text-[.95rem]
-                      px-7 py-4 rounded-full shadow-cta hover:bg-accent-deep hover:-translate-y-0.5 transition no-underline">
-              <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6.5 8h11l1 12.2a2 2 0 0 1-2 2.1H7.5a2 2 0 0 1-2-2.1L6.5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>
-              </svg> Đặt hàng ngay
-            </a>
-            <a href="${ctx}${empty sessionScope.user ? '/login' : '/account/orders'}"
-               class="inline-flex items-center gap-2.5 bg-white/10 text-[#EBE3DB] font-semibold text-[.95rem]
-                      px-7 py-4 rounded-full hover:bg-white/20 hover:-translate-y-0.5 transition no-underline">
-              ${empty sessionScope.user ? 'Đăng nhập' : 'Đơn của tôi'}
-            </a>
-          </div>
-        </div>
-      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER SECTION — dải tối khép trang ══════════════ -->
+  <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-8 lg:pt-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
       <!-- ═══════════════ FOOTER ═══════════════ -->
-      <footer class="mt-14 lg:mt-20 pb-10">
+      <footer class="pb-10">
         <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
 

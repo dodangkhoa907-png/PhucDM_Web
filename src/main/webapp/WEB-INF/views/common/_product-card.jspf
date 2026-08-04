@@ -26,11 +26,11 @@
         <c:out value="${p.categoryName}"/>
       </span>
     </c:if>
-    <div class="w-full h-full grid place-items-center p-7">
+    <div class="w-full h-full grid place-items-center<c:if test="${empty imgSrc}"> p-7</c:if>">
       <c:choose>
         <c:when test="${not empty imgSrc}">
           <img src="${imgSrc}" alt="${fn:escapeXml(p.name)}" loading="lazy"
-               class="product-card-img w-4/5 h-4/5 object-contain transition duration-500 group-hover:scale-105">
+               class="product-card-img w-full h-full object-cover transition duration-500 group-hover:scale-105">
         </c:when>
         <c:otherwise>
           <%-- Chưa có ảnh: ly vẽ bằng CSS thay vì emoji (emoji thiếu glyph sẽ hiện ô vuông vỡ) --%>

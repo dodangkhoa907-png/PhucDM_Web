@@ -235,14 +235,48 @@ public class ProductDaoImpl implements ProductDao {
         }
     }
 
+    /**
+     * Nạp biến thể cho CẢ danh sách bằng ĐÚNG MỘT truy vấn.
+     *
+     * Trước đây hàm này lặp từng sản phẩm và gọi loadVariants() riêng (N+1). Database đặt
+     * trên máy chủ từ xa nên mỗi lượt gọi tốn ~25-30ms chỉ để đi–về mạng; với ~33 sản phẩm
+     * là gần 1 giây chờ thuần tuý, chiếm gần như toàn bộ thời gian dựng trang
+     * (đo được: trang JSP ~950ms trong khi file tĩnh chỉ 7ms).
+     * Gộp thành một câu IN (...) rồi nhóm lại trong bộ nhớ → còn đúng 1 lượt mạng.
+     */
     private void attachVariants(List<Product> products) {
         if (products.isEmpty()) return;
-        try (Connection con = Database.getConnection()) {
-            for (Product p : products) {
-                p.setVariants(loadVariants(con, p.getProductId()));
+
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < products.size(); i++) placeholders.append(i == 0 ? "?" : ",?");
+
+        String sql = "SELECT VariantID, ProductID, Size, Price, IsActive FROM ProductVariants " +
+                     "WHERE IsActive = 1 AND ProductID IN (" + placeholders + ") " +
+                     "ORDER BY ProductID, Price";
+
+        Map<Integer, List<ProductVariant>> byProduct = new HashMap<>();
+        try (Connection con = Database.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 0; i < products.size(); i++) {
+                ps.setInt(i + 1, products.get(i).getProductId());
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProductVariant v = new ProductVariant();
+                    v.setVariantId(rs.getInt("VariantID"));
+                    v.setProductId(rs.getInt("ProductID"));
+                    v.setSize(rs.getString("Size"));
+                    v.setPrice(rs.getBigDecimal("Price"));
+                    v.setActive(rs.getBoolean("IsActive"));
+                    byProduct.computeIfAbsent(v.getProductId(), k -> new ArrayList<>()).add(v);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("ProductDao.attachVariants thất bại", e);
+        }
+
+        for (Product p : products) {
+            p.setVariants(byProduct.getOrDefault(p.getProductId(), new ArrayList<>()));
         }
     }
 

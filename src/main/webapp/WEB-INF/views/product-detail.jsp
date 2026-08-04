@@ -105,14 +105,17 @@
         background:linear-gradient(170deg,#FFFFFF 0%,var(--et-surface-muted) 100%);
         box-shadow:0 2px 4px rgba(var(--et-dark-rgb),.03), 0 14px 34px -12px rgba(var(--et-dark-rgb),.14);
       }
-      .pd-cup { width:min(188px, 50vw); }
-      @media (min-width:1024px) { .pd-cup { width:200px; } }
-      @media (min-width:1440px) { .pd-cup { width:214px; } }
+      .pd-cup { width:min(260px, 62vw); }
+      @media (min-width:1024px) { .pd-cup { width:280px; } }
+      @media (min-width:1440px) { .pd-cup { width:300px; } }
       .pd #pdCupWrap { transition: transform .45s cubic-bezier(.22,1,.36,1); }
-      .pd .pd-layer { transition: opacity .35s ease; }
-      .pd-hint {
-        display:flex; align-items:flex-start; justify-content:center; gap:6px;
-        margin-top:6px; font-size:.7rem; line-height:1.4; color:var(--et-text-muted);
+      .pd-cup-img {
+        display:block; width:100%; height:auto; aspect-ratio:600/770;
+        object-fit:cover; border-radius:20px;
+      }
+      .pd-cup-fallback {
+        display:block; width:100%; aspect-ratio:600/770; border-radius:20px;
+        background:linear-gradient(178deg,var(--et-accent-muted),var(--et-primary-hover));
       }
 
       /* ── KHỐI CẤU HÌNH ───────────────────────────────────────────────
@@ -366,23 +369,6 @@
   <%-- ══════════ TRANG CHI TIẾT ══════════ --%>
   <c:otherwise>
 
-  <%-- Bảng màu nước theo nhóm món — dùng chung với khu trình chiếu & "món tủ" ở trang chủ --%>
-  <c:set var="teaTop"    value="#E9CBA4"/>
-  <c:set var="teaBottom" value="#A9611B"/>
-  <c:set var="hasFoam"   value="${true}"/>
-  <c:if test="${product.categoryName == 'Trà Trái Cây & Trà Tắc'}">
-    <c:set var="teaTop" value="#F7D46B"/><c:set var="teaBottom" value="#DE9226"/><c:set var="hasFoam" value="${false}"/>
-  </c:if>
-  <c:if test="${product.categoryName == 'Soda'}">
-    <c:set var="teaTop" value="#8FD3E4"/><c:set var="teaBottom" value="#2F8FA9"/><c:set var="hasFoam" value="${false}"/>
-  </c:if>
-  <c:if test="${product.categoryName == 'Latte'}">
-    <c:set var="teaTop" value="#E4C6A2"/><c:set var="teaBottom" value="#8C5A2B"/>
-  </c:if>
-  <c:if test="${product.categoryName == 'Sữa Chua & Sữa Tươi'}">
-    <c:set var="teaTop" value="#F6E7D6"/><c:set var="teaBottom" value="#DFB77C"/>
-  </c:if>
-
   <section class="pt-24 sm:pt-28 pb-14">
     <div class="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -454,91 +440,24 @@
           </c:if>
         </div>
 
-        <!-- ══ CỘT TRÁI: ly xem trước, đổi theo lựa chọn ══ -->
+        <!-- ══ CỘT TRÁI: ảnh sản phẩm ══ -->
         <div class="pd-visual">
           <div class="pd-cup-card">
 
             <div id="pdCupWrap" class="pd-cup">
-              <svg viewBox="0 0 300 470" fill="none" xmlns="http://www.w3.org/2000/svg"
-                   role="img" aria-label="Hình minh hoạ ly ${fn:escapeXml(product.name)}">
-                <defs>
-                  <linearGradient id="pdTea" x1="0" y1="0" x2="0" y2="1">
-                    <stop id="pdTeaTop"    offset="0%"   stop-color="${teaTop}"/>
-                    <stop id="pdTeaBottom" offset="100%" stop-color="${teaBottom}"/>
-                  </linearGradient>
-                  <linearGradient id="pdGlass" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%"   stop-color="#ffffff" stop-opacity=".32"/>
-                    <stop offset="45%"  stop-color="#ffffff" stop-opacity=".05"/>
-                    <stop offset="100%" stop-color="#ffffff" stop-opacity=".20"/>
-                  </linearGradient>
-                  <clipPath id="pdClip">
-                    <path d="M67,146 L100,372 Q102,384 113,384 L187,384 Q198,384 200,372 L233,146 Z"/>
-                  </clipPath>
-                </defs>
-
-                <%-- Khói: chỉ hiện khi chọn "Nóng / Ít đá" --%>
-                <g id="pdSteam" class="pd-layer" opacity="0">
-                  <path d="M120,96 C108,78 132,68 120,48" stroke="#C9BCAF" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M152,92 C140,72 164,62 152,40" stroke="#C9BCAF" stroke-width="5" stroke-linecap="round"/>
-                  <path d="M184,96 C172,78 196,68 184,48" stroke="#C9BCAF" stroke-width="5" stroke-linecap="round"/>
-                </g>
-
-                <%-- Ống hút --%>
-                <path d="M178,112 L216,24" stroke="#A9531A" stroke-width="18" stroke-linecap="round"/>
-                <path d="M178,112 L216,24" stroke="#E8A33D" stroke-width="9"  stroke-linecap="round"/>
-
-                <g clip-path="url(#pdClip)">
-                  <c:if test="${hasFoam}">
-                    <rect x="50" y="138" width="200" height="70" fill="#F8EBDA"/>
-                    <path d="M50,204 C86,190 112,220 148,206 C184,191 214,218 250,204 L250,240 L50,240 Z" fill="#F0D8B6"/>
-                  </c:if>
-                  <rect id="pdLiquid" x="50" y="${hasFoam ? 234 : 138}" width="200" height="240" fill="url(#pdTea)"/>
-
-                  <%-- Đá: số viên hiện theo mức đá đã chọn --%>
-                  <g id="pdIce" class="pd-layer" fill="#ffffff" opacity=".34">
-                    <rect class="pd-ice-cube" x="106" y="250" width="34" height="34" rx="7" transform="rotate(-14 123 267)"/>
-                    <rect class="pd-ice-cube" x="152" y="288" width="30" height="30" rx="6" transform="rotate(11 167 303)"/>
-                    <rect class="pd-ice-cube" x="112" y="318" width="28" height="28" rx="6" transform="rotate(22 126 332)"/>
-                    <rect class="pd-ice-cube" x="160" y="240" width="26" height="26" rx="6" transform="rotate(-8 173 253)"/>
-                  </g>
-
-                  <%-- Trân châu: hiện khi tick topping có chữ "trân châu" --%>
-                  <g id="pdBoba" class="pd-layer" opacity="0">
-                    <g fill="#241610">
-                      <circle cx="124" cy="358" r="11"/><circle cx="152" cy="351" r="11"/><circle cx="180" cy="358" r="11"/>
-                      <circle cx="115" cy="375" r="11"/><circle cx="144" cy="373" r="11"/><circle cx="173" cy="375" r="11"/>
-                    </g>
-                    <g fill="#5A4030" opacity=".85">
-                      <circle cx="120" cy="354" r="3"/><circle cx="148" cy="347" r="3"/><circle cx="176" cy="354" r="3"/>
-                    </g>
-                  </g>
-
-                  <path d="M78,140 L106,384 L122,384 L94,140 Z" fill="#ffffff" opacity=".11"/>
-                </g>
-
-                <path d="M62,140 L96,376 Q98,390 112,390 L188,390 Q202,390 204,376 L238,140 Z" fill="url(#pdGlass)"/>
-                <path d="M58,124 Q150,78 242,124 Z" fill="#EFE3D4"/>
-                <rect x="50" y="120" width="200" height="26" rx="9" fill="#FBF3E9"/>
-                <rect x="50" y="120" width="200" height="9"  rx="4.5" fill="#ffffff" opacity=".7"/>
-
-                <%-- Nhãn dung tích dán trên ly, đổi theo size --%>
-                <text id="pdCupLabel" x="150" y="432" text-anchor="middle"
-                      font-family="'IBM Plex Mono', ui-monospace, monospace"
-                      font-size="19" font-weight="600" letter-spacing="3" fill="#9C918B">700ML</text>
-              </svg>
+              <c:choose>
+                <c:when test="${not empty product.imageUrl}">
+                  <img src="${ctx}${product.imageUrl}" alt="${fn:escapeXml(product.name)}"
+                       width="600" height="770" decoding="async" fetchpriority="high"
+                       class="pd-cup-img">
+                </c:when>
+                <c:otherwise>
+                  <%-- Chưa có ảnh: ly vẽ bằng CSS, cùng kiểu với thẻ sản phẩm ở khu danh sách --%>
+                  <span class="pd-cup-fallback" role="img" aria-label="${fn:escapeXml(product.name)}"></span>
+                </c:otherwise>
+              </c:choose>
             </div>
           </div>
-
-          <%-- Ba chỉ số rút gọn của lựa chọn hiện tại — không lặp lại cả form ở cột trái --%>
-          <c:if test="${not empty product.variants}">
-          </c:if>
-
-          <p class="pd-hint">
-            <svg class="w-3.5 h-3.5 shrink-0 mt-[2px] text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span>Hình minh hoạ thay đổi theo lựa chọn, không phải ảnh chụp thật.</span>
-          </p>
         </div>
 
         <!-- ══ CỘT PHẢI: khối cấu hình ══ -->
@@ -866,16 +785,6 @@
       var topMore = document.getElementById('pdTopMore');
       var topMoreText = document.getElementById('pdTopMoreText');
       var cupWrap = document.getElementById('pdCupWrap');
-      var cupLabel = document.getElementById('pdCupLabel');
-      var iceCubes = Array.prototype.slice.call(document.querySelectorAll('.pd-ice-cube'));
-      var iceGroup = document.getElementById('pdIce');
-      var steam = document.getElementById('pdSteam');
-      var boba = document.getElementById('pdBoba');
-      var teaTopStop = document.getElementById('pdTeaTop');
-      var teaBottomStop = document.getElementById('pdTeaBottom');
-
-      var BASE_TOP = '${teaTop}';
-      var BASE_BOTTOM = '${teaBottom}';
 
       function clampQty(v) {
         v = parseInt(v, 10);
@@ -890,44 +799,11 @@
         return Array.prototype.slice.call(document.querySelectorAll('.pd-top-input:checked'));
       }
 
-      /* Pha màu về phía trắng (t>0) — dùng để nước nhạt dần khi giảm đường. */
-      function lighten(hex, t) {
-        var n = parseInt(hex.slice(1), 16);
-        var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-        r = Math.round(r + (255 - r) * t);
-        g = Math.round(g + (255 - g) * t);
-        b = Math.round(b + (255 - b) * t);
-        return 'rgb(' + r + ',' + g + ',' + b + ')';
-      }
-
-      /* Ly phản chiếu lựa chọn: size đổi kích thước, đường đổi độ đậm của nước,
-         đá hiện số viên tương ứng (chọn "Nóng" thì hiện khói thay cho đá),
-         topping có "trân châu" thì hiện lớp trân châu dưới đáy. */
+      /* Ảnh hơi phóng to khi chọn size L, cho cảm giác ly lớn hơn. */
       function paintCup() {
         var size = checkedInput('pdSize');
         var isLarge = size && (size.dataset.size || '').toUpperCase() === 'L';
         if (cupWrap) cupWrap.style.transform = isLarge ? 'scale(1.08)' : 'scale(1)';
-        // Dung tích do JSP truyền qua data-volume, không hardcode trong JS
-        if (cupLabel && size && size.dataset.volume) cupLabel.textContent = size.dataset.volume;
-
-        var sugarEl = checkedInput('pdSugar');
-        var sugar = sugarEl ? parseInt(sugarEl.value, 10) : 70;
-        // 100% đường -> đúng màu gốc; 0% -> nhạt nhất (pha 45% về trắng)
-        var t = (100 - sugar) / 100 * 0.45;
-        if (teaTopStop) teaTopStop.setAttribute('stop-color', lighten(BASE_TOP, t));
-        if (teaBottomStop) teaBottomStop.setAttribute('stop-color', lighten(BASE_BOTTOM, t));
-
-        var iceEl = checkedInput('pdIce');
-        var iceCount = iceEl ? parseInt(iceEl.dataset.ice, 10) : 2;
-        if (iceGroup) iceGroup.setAttribute('opacity', iceCount > 0 ? '.34' : '0');
-        iceCubes.forEach(function (cube, i) { cube.style.opacity = i < iceCount ? '1' : '0'; });
-        if (steam) steam.setAttribute('opacity', iceCount === 0 ? '1' : '0');
-
-        var hasBoba = checkedToppings().some(function (t2) {
-          return (t2.dataset.name || '').toLowerCase().indexOf('trân châu') !== -1
-              || (t2.dataset.name || '').toLowerCase().indexOf('tran chau') !== -1;
-        });
-        if (boba) boba.setAttribute('opacity', hasBoba ? '1' : '0');
       }
 
       function unitPrice() {
