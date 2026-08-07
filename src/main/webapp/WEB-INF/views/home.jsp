@@ -411,7 +411,7 @@
                          hoãn tải sẽ làm chậm chính chỉ số LCP. --%>
                     <img src="${ctx}${p.imageUrl}" alt="${fn:escapeXml(p.name)}"
                          width="600" height="770" decoding="async" fetchpriority="high"
-                         class="w-[220px] sm:w-[340px] lg:w-[480px] h-auto object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
+                         class="w-[310px] sm:w-[475px] lg:w-[670px] max-w-none h-auto object-contain rotate-[13deg] -translate-x-5 drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
                   </c:when>
                   <c:otherwise>
                   <svg class="w-[220px] sm:w-[340px] lg:w-[480px] h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]"

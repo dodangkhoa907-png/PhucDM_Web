@@ -388,7 +388,7 @@
               <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🧋</span>
               <h3 class="relative text-ink font-extrabold text-[1.3rem]">Trà Sữa <span class="text-muted text-sm font-medium">(<c:out value="${cntTraSua}"/> món)</span></h3>
             </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Trà Sữa'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
@@ -404,7 +404,7 @@
               <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🍹</span>
               <h3 class="relative text-ink font-extrabold text-[1.3rem]">Trà Trái Cây &amp; Trà Tắc <span class="text-muted text-sm font-medium">(<c:out value="${cntTraiCay}"/> món)</span></h3>
             </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Trà Trái Cây & Trà Tắc'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
@@ -420,7 +420,7 @@
               <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🥛</span>
               <h3 class="relative text-ink font-extrabold text-[1.3rem]">Latte <span class="text-muted text-sm font-medium">(<c:out value="${cntLatte}"/> món)</span></h3>
             </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Latte'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
@@ -436,7 +436,7 @@
               <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🫧</span>
               <h3 class="relative text-ink font-extrabold text-[1.3rem]">Soda <span class="text-muted text-sm font-medium">(<c:out value="${cntSoda}"/> món)</span></h3>
             </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Soda'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
@@ -452,7 +452,7 @@
               <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🍓</span>
               <h3 class="relative text-ink font-extrabold text-[1.3rem]">Sữa Chua &amp; Sữa Tươi <span class="text-muted text-sm font-medium">(<c:out value="${cntSuaChua}"/> món)</span></h3>
             </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Sữa Chua & Sữa Tươi'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
