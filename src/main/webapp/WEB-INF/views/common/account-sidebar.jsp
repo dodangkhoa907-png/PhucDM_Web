@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%-- Sidebar tài khoản dùng chung cho mọi trang /account/*.
      Cần request attribute "accountTab" ("overview" | "orders" | "profile" | "addresses"
-     | "preferences" | "security") để tô active. --%>
+     | "security") để tô active. --%>
 <aside class="account-sidebar">
     <nav class="account-nav">
         <a href="${pageContext.request.contextPath}/account" class="${accountTab == 'overview' ? 'active' : ''}">
@@ -18,9 +18,8 @@
         <a href="${pageContext.request.contextPath}/account/addresses" class="${accountTab == 'addresses' ? 'active' : ''}">
             <i class="fa-solid fa-location-dot"></i> Sổ địa chỉ
         </a>
-        <a href="${pageContext.request.contextPath}/account/preferences" class="${accountTab == 'preferences' ? 'active' : ''}">
-            <i class="fa-solid fa-heart"></i> Sở thích
-        </a>
+        <%-- Mục "Sở thích" đã gỡ theo yêu cầu: nội dung form là của mẫu shop cây cảnh
+             (loại cây, phong cách decor, không gian đặt cây), không dùng cho quán trà. --%>
         <a href="${pageContext.request.contextPath}/account/security" class="${accountTab == 'security' ? 'active' : ''}">
             <i class="fa-solid fa-shield-halved"></i> Bảo mật
         </a>

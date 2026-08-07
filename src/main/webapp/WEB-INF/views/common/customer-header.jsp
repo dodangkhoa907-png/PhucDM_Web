@@ -44,7 +44,6 @@
                             <a href="${pageContext.request.contextPath}/account/orders" role="menuitem"><i class="fa-solid fa-box"></i> Đơn hàng của tôi</a>
                             <a href="${pageContext.request.contextPath}/account/profile" role="menuitem"><i class="fa-solid fa-user"></i> Hồ sơ cá nhân</a>
                             <a href="${pageContext.request.contextPath}/account/addresses" role="menuitem"><i class="fa-solid fa-location-dot"></i> Sổ địa chỉ</a>
-                            <a href="${pageContext.request.contextPath}/account/preferences" role="menuitem"><i class="fa-solid fa-heart"></i> Sở thích của tôi</a>
                             <a href="${pageContext.request.contextPath}/account/security" role="menuitem"><i class="fa-solid fa-shield-halved"></i> Bảo mật</a>
                             <div class="nav-user-menu-divider"></div>
                             <form method="post" action="${pageContext.request.contextPath}/logout" class="nav-user-logout-form">

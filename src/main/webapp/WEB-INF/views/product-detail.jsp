@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><c:out value="${not empty product ? product.name : 'Không tìm thấy món'}"/> — Eight Tea</title>
-    <meta name="description" content="<c:out value="${not empty product.description ? product.description : 'Eight Tea — pha theo đơn, giao 20–30 phút tại TP. Bà Rịa.'}"/>">
+    <meta name="description" content="<c:out value="${not empty product.description ? product.description : 'Eight Tea — pha theo đơn, giao 10–15 phút tại TP. Bà Rịa.'}"/>">
     <meta name="csrf-token" content="${sessionScope._csrf}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -634,23 +634,13 @@
           </c:if>
           <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
             <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Bao bì</dt>
-            <dd class="flex-1 text-[.88rem] text-ink m-0">
-              <%-- Latte có lớp bọt/topping trên mặt (khoai môn, matcha...) — ép màng dễ làm xô lớp
-                   mặt khi xé màng, nên dùng giấy chống tràn + nắp + băng keo thay vì ép màng kín. --%>
-              <c:choose>
-                <c:when test="${product.categoryName == 'Latte'}">Ly PP an toàn thực phẩm, dùng giấy chống tràn, đậy nắp và dán băng keo chắc chắn trước khi giao (không ép màng)</c:when>
-                <c:otherwise>Ly PP an toàn thực phẩm, ép màng kín trước khi giao</c:otherwise>
-              </c:choose>
-            </dd>
+            <%-- Quán không dùng máy ép màng: mọi món đều đậy nắp + dán băng keo, kèm giấy
+                 chống tràn. Trước đây chỉ áp cho Latte/Matcha, nay thống nhất toàn bộ. --%>
+            <dd class="flex-1 text-[.88rem] text-ink m-0">Ly PP an toàn thực phẩm, dùng giấy chống tràn, đậy nắp và dán băng keo chắc chắn trước khi giao</dd>
           </div>
           <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5">
             <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Pha chế</dt>
-            <dd class="flex-1 text-[.88rem] text-ink m-0">
-              <c:choose>
-                <c:when test="${product.categoryName == 'Latte'}">Pha sau khi nhận đơn · giao 10–15 phút tại TP. Bà Rịa</c:when>
-                <c:otherwise>Pha sau khi nhận đơn · giao 20–30 phút tại TP. Bà Rịa</c:otherwise>
-              </c:choose>
-            </dd>
+            <dd class="flex-1 text-[.88rem] text-ink m-0">Pha sau khi nhận đơn · giao 10–15 phút tại TP. Bà Rịa</dd>
           </div>
         </dl>
       </div>
@@ -694,14 +684,7 @@
             </svg>
           </span>
           <span>
-            <c:choose>
-              <c:when test="${product.categoryName == 'Latte'}">
-                <span class="block text-[.88rem] font-bold text-ink">Giao 10–15 phút</span>
-              </c:when>
-              <c:otherwise>
-                <span class="block text-[.88rem] font-bold text-ink">Giao 20–30 phút</span>
-              </c:otherwise>
-            </c:choose>
+            <span class="block text-[.88rem] font-bold text-ink">Giao 10–15 phút</span>
             <span class="block text-[.76rem] text-muted">Bán kính 7–10km tại TP. Bà Rịa</span>
           </span>
         </div>
@@ -712,16 +695,8 @@
             </svg>
           </span>
           <span>
-            <c:choose>
-              <c:when test="${product.categoryName == 'Latte'}">
-                <span class="block text-[.88rem] font-bold text-ink">Nắp + băng keo</span>
-                <span class="block text-[.76rem] text-muted">Giấy chống tràn, không ép màng</span>
-              </c:when>
-              <c:otherwise>
-                <span class="block text-[.88rem] font-bold text-ink">Ép màng kín</span>
-                <span class="block text-[.76rem] text-muted">Không tràn khi di chuyển</span>
-              </c:otherwise>
-            </c:choose>
+            <span class="block text-[.88rem] font-bold text-ink">Nắp + băng keo</span>
+            <span class="block text-[.76rem] text-muted">Giấy chống tràn, không tràn khi di chuyển</span>
           </span>
         </div>
         <div class="bg-surface shadow-soft rounded-[20px] px-6 py-5 flex items-center gap-4">

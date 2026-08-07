@@ -218,7 +218,7 @@
             <strong class="text-white font-semibold"><c:out value="${fn:length(categories)}"/></strong> nhóm
           </span>
           <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Size M 700ml · L 900ml</span>
-          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Giao 20–30 phút · TP. Bà Rịa</span>
+          <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Giao 10–15 phút · TP. Bà Rịa</span>
           <a href="#san-pham-grid" class="ml-auto inline-flex items-center gap-2.5 font-mono text-[.64rem] tracking-[.14em] uppercase text-[#A9C285] hover:text-white transition no-underline">
             Xem thực đơn
             <span class="w-8 h-8 rounded-full grid place-items-center" style="background:rgba(255,255,255,.14);">
@@ -241,6 +241,7 @@
       <c:set var="cntTraSua" value="${0}"/>
       <c:set var="cntTraiCay" value="${0}"/>
       <c:set var="cntLatte" value="${0}"/>
+      <c:set var="cntMatcha" value="${0}"/>
       <c:set var="cntSoda" value="${0}"/>
       <c:set var="cntSuaChua" value="${0}"/>
       <c:set var="cntTopping" value="${0}"/>
@@ -248,6 +249,7 @@
         <c:if test="${p.categoryName == 'Trà Sữa'}"><c:set var="cntTraSua" value="${cntTraSua + 1}"/></c:if>
         <c:if test="${p.categoryName == 'Trà Trái Cây & Trà Tắc'}"><c:set var="cntTraiCay" value="${cntTraiCay + 1}"/></c:if>
         <c:if test="${p.categoryName == 'Latte'}"><c:set var="cntLatte" value="${cntLatte + 1}"/></c:if>
+        <c:if test="${p.categoryName == 'Matcha'}"><c:set var="cntMatcha" value="${cntMatcha + 1}"/></c:if>
         <c:if test="${p.categoryName == 'Soda'}"><c:set var="cntSoda" value="${cntSoda + 1}"/></c:if>
         <c:if test="${p.categoryName == 'Sữa Chua & Sữa Tươi'}"><c:set var="cntSuaChua" value="${cntSuaChua + 1}"/></c:if>
         <c:if test="${p.categoryName == 'Topping'}"><c:set var="cntTopping" value="${cntTopping + 1}"/></c:if>
@@ -263,6 +265,7 @@
             <c:if test="${cntTraSua > 0}"><a href="#cat-tra-sua" data-cat-anchor="cat-tra-sua" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🧋 Trà Sữa</a></c:if>
             <c:if test="${cntTraiCay > 0}"><a href="#cat-trai-cay" data-cat-anchor="cat-trai-cay" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🍹 Trà Trái Cây</a></c:if>
             <c:if test="${cntLatte > 0}"><a href="#cat-latte" data-cat-anchor="cat-latte" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🥛 Latte</a></c:if>
+            <c:if test="${cntMatcha > 0}"><a href="#cat-matcha" data-cat-anchor="cat-matcha" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🍵 Matcha</a></c:if>
             <c:if test="${cntSoda > 0}"><a href="#cat-soda" data-cat-anchor="cat-soda" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🫧 Soda</a></c:if>
             <c:if test="${cntSuaChua > 0}"><a href="#cat-sua-chua" data-cat-anchor="cat-sua-chua" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">🍓 Sữa Chua</a></c:if>
             <c:if test="${cntTopping > 0}"><a href="#cat-topping" data-cat-anchor="cat-topping" class="cat-tab shrink-0 font-mono text-[.68rem] font-semibold tracking-[.08em] uppercase px-4 py-2.5 rounded-full transition no-underline">✨ Topping</a></c:if>
@@ -351,6 +354,24 @@
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               <c:forEach var="p" items="${products}">
                 <c:if test="${p.categoryName == 'Latte'}">
+                  <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
+                </c:if>
+              </c:forEach>
+            </div>
+          </div>
+          </c:if>
+
+          <%-- Matcha tách khỏi Latte cho khớp menu in: menu chia riêng "KHOAI MÔN - CACAO"
+               và "MATCHA" thành hai nhóm, nên thực đơn web cũng phải tách đúng như vậy. --%>
+          <c:if test="${cntMatcha > 0}">
+          <div id="cat-matcha" class="category-section mb-16" style="scroll-margin-top:140px;">
+            <div class="relative mb-6">
+              <span class="absolute -top-5 -left-1 text-[4.5rem] leading-none select-none pointer-events-none opacity-[.06]" aria-hidden="true">🍵</span>
+              <h3 class="relative text-ink font-extrabold text-[1.3rem]">Matcha <span class="text-muted text-sm font-medium">(<c:out value="${cntMatcha}"/> món)</span></h3>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+              <c:forEach var="p" items="${products}">
+                <c:if test="${p.categoryName == 'Matcha'}">
                   <%@ include file="/WEB-INF/views/common/_product-card.jspf" %>
                 </c:if>
               </c:forEach>
@@ -476,9 +497,21 @@
                  class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
             </div>
 
-            <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
-              © 2026 Eight Tea. 123 Nguyễn Đình Chiểu
-            </p>
+            <%-- Địa chỉ + hotline: giữ y hệt khuôn chân trang ở trang chủ để hai trang
+                 không lệch thông tin liên hệ. --%>
+            <div class="text-center sm:text-right">
+              <p class="flex items-center justify-center sm:justify-end gap-1.5 text-[.72rem] leading-relaxed text-[rgba(255,255,255,.74)] m-0 mb-1.5">
+                <svg class="w-3 h-3 shrink-0 text-[#6E8649]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                123 Nguyễn Đình Chiểu
+              </p>
+              <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
+                <a href="tel:0938299752" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
+                <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
+                © 2026 Eight Tea
+              </p>
+            </div>
           </div>
         </div>
       </div>

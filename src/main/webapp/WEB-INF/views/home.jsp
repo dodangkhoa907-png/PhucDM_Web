@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eight Tea — Đậm vị trà, nhanh tận nhà</title>
-    <meta name="description" content="Eight Tea — trà sữa, trà trái cây và latte pha theo đơn. Trà mộc Cầu Đất, giao 20–30 phút tại TP. Bà Rịa.">
+    <meta name="description" content="Eight Tea — trà sữa, trà trái cây và latte pha theo đơn. Trà mộc Cầu Đất, giao 10–15 phút tại TP. Bà Rịa.">
     <meta name="csrf-token" content="${sessionScope._csrf}">
 
     <%-- SEO: thẻ chia sẻ mạng xã hội. Khi dán link lên Facebook/Zalo/Messenger sẽ hiện
@@ -21,7 +21,7 @@
     <meta property="og:site_name"   content="Eight Tea">
     <meta property="og:locale"      content="vi_VN">
     <meta property="og:title"       content="Eight Tea — Đậm vị trà, nhanh tận nhà">
-    <meta property="og:description" content="Trà sữa, trà trái cây và latte pha theo đơn. Giao 20–30 phút tại TP. Bà Rịa.">
+    <meta property="og:description" content="Trà sữa, trà trái cây và latte pha theo đơn. Giao 10–15 phút tại TP. Bà Rịa.">
     <meta property="og:url"         content="${siteUrl}/">
     <meta property="og:image"       content="${siteUrl}/images/logo-full.jpg">
     <meta name="twitter:card"       content="summary_large_image">
@@ -38,12 +38,12 @@
       "description": "Trà sữa, trà trái cây và latte pha theo đơn tại TP. Bà Rịa.",
       "url": "${siteUrl}/",
       "image": "${siteUrl}/images/logo-full.jpg",
-      "telephone": "+84364523553",
+      "telephone": "+84938299752",
       "servesCuisine": "Trà sữa",
       "priceRange": "15.000₫ - 42.000₫",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "139 Võ Văn Kiệt, P. Tam Long",
+        "streetAddress": "123 Nguyễn Đình Chiểu",
         "addressLocality": "TP. Bà Rịa",
         "addressRegion": "Bà Rịa - Vũng Tàu",
         "addressCountry": "VN"
@@ -383,7 +383,10 @@
                          tỉ lệ ngay từ đầu, tránh nội dung nhảy khi ảnh tải xong (CLS).
                          KHÔNG lazy-load: đây là ảnh lớn nhất trong khung nhìn đầu tiên,
                          hoãn tải sẽ làm chậm chính chỉ số LCP. --%>
-                    <img src="${ctx}${p.imageUrl}" alt="${fn:escapeXml(p.name)}"
+                    <%-- Ly hero dùng BẢN TÁCH NỀN riêng (hero-tra-trai-cay.png), KHÔNG dùng
+                         p.imageUrl: ảnh trong thực đơn là ảnh chụp thật nền trắng, đặt nghiêng 13°
+                         trên nền tối ở đây sẽ lộ nguyên khối vuông trắng. --%>
+                    <img src="${ctx}/images/hero-tra-trai-cay.png" alt="${fn:escapeXml(p.name)}"
                          width="600" height="770" decoding="async" fetchpriority="high"
                          class="w-[310px] sm:w-[475px] lg:w-[670px] max-w-none h-auto object-contain rotate-[13deg] -translate-x-[70px] drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
                   </c:when>
@@ -563,22 +566,31 @@
                                text-white bg-accent px-2.5 py-1 rounded-full">Quán chọn</span>
                 </c:if>
 
-                <%-- Ly rút gọn: phẳng, ít chi tiết hơn ly ở khu trình chiếu để hai khu không
-                     bị nhìn như nhau, dù cùng ngôn ngữ hình. --%>
-                <svg class="mx-auto h-auto ${isTop ? 'w-[104px]' : 'w-[82px]'}"
-                     viewBox="0 0 120 168" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="hlTea${s.index}" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%"   stop-color="${teaTop}"/>
-                      <stop offset="100%" stop-color="${teaBottom}"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M74,40 L88,12" stroke="#A9531A" stroke-width="8" stroke-linecap="round"/>
-                  <path d="M23,50 L31,146 Q32,156 42,156 L78,156 Q88,156 89,146 L97,50 Z" fill="url(#hlTea${s.index})"/>
-                  <path d="M29,52 L36,148 L44,148 L37,52 Z" fill="#ffffff" opacity=".16"/>
-                  <rect x="16" y="38" width="88" height="15" rx="6.5" fill="#FBF3E9"/>
-                  <rect x="16" y="38" width="88" height="6"  rx="3"   fill="#ffffff" opacity=".75"/>
-                </svg>
+                <%-- Ảnh chụp thật của món (giống thẻ ở trang thực đơn). Chỉ khi món chưa có
+                     ảnh mới rơi về ly vẽ SVG — không để thẻ trống. --%>
+                <c:choose>
+                  <c:when test="${not empty p.imageUrl}">
+                    <img src="${ctx}${p.imageUrl}" alt="${fn:escapeXml(p.name)}"
+                         loading="lazy" decoding="async" width="640" height="640"
+                         class="mx-auto h-auto rounded-[18px] object-cover ${isTop ? 'w-[150px]' : 'w-[120px]'}">
+                  </c:when>
+                  <c:otherwise>
+                    <svg class="mx-auto h-auto ${isTop ? 'w-[104px]' : 'w-[82px]'}"
+                         viewBox="0 0 120 168" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="hlTea${s.index}" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%"   stop-color="${teaTop}"/>
+                          <stop offset="100%" stop-color="${teaBottom}"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M74,40 L88,12" stroke="#A9531A" stroke-width="8" stroke-linecap="round"/>
+                      <path d="M23,50 L31,146 Q32,156 42,156 L78,156 Q88,156 89,146 L97,50 Z" fill="url(#hlTea${s.index})"/>
+                      <path d="M29,52 L36,148 L44,148 L37,52 Z" fill="#ffffff" opacity=".16"/>
+                      <rect x="16" y="38" width="88" height="15" rx="6.5" fill="#FBF3E9"/>
+                      <rect x="16" y="38" width="88" height="6"  rx="3"   fill="#ffffff" opacity=".75"/>
+                    </svg>
+                  </c:otherwise>
+                </c:choose>
 
                 <p class="font-mono text-[.56rem] font-medium tracking-[.14em] uppercase text-muted mt-5 mb-2">
                   <c:out value="${p.categoryName}"/>
@@ -690,62 +702,13 @@
         </span>
       </div>
 
-      <!-- ── KHỐI 01 — ĐẬM VỊ TRÀ ── -->
+      <%-- KHỐI 01 ("100% Trà Lài") đã gỡ theo yêu cầu — khối D2C bên dưới đứng một mình,
+           nên bỏ luôn số thứ tự chìm 02 và margin-top vốn dùng để tách hai khối. --%>
+
+      <!-- ── KHỐI D2C — NHANH TẬN NHÀ ── -->
       <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-        <div class="relative order-2 lg:order-1">
-          <%-- Số chìm: nằm sau chữ, chỉ làm mốc thị giác --%>
-          <span class="st-ghost absolute -top-10 -left-3 text-[7rem] lg:text-[10rem] font-bold pointer-events-none select-none z-0"
-                aria-hidden="true">01</span>
-
-          <div class="relative z-10">
-            <p class="font-mono text-[.64rem] font-semibold tracking-[.18em] uppercase text-accent bg-surface shadow-soft inline-block px-4 py-2 rounded-full mb-6">
-              Storytelling 01 · Nguyên bản
-            </p>
-
-            <h3 class="st-title text-dark uppercase leading-[1.02] tracking-[.03em] text-[clamp(1.9rem,4.2vw,3.1rem)] mb-5"
-                style="text-wrap:balance;">
-              100% Trà Lài — Đậm Vị Từ Lần Nhấp Đầu Tiên
-            </h3>
-
-            <p class="text-[.95rem] leading-relaxed text-ink-2 max-w-xl mb-9">
-              Eight Tea chỉ <strong class="font-bold text-ink">CÓ</strong> một nguyên tắc duy nhất: cốt trà
-              nguyên bản, tuyệt đối không si-rô công nghiệp hay hương liệu tạo mùi giả. Chúng tớ chọn những búp
-              trà Ô Long nướng được thu hái thủ công tại cao nguyên Cầu Đất, ủ chuẩn nhiệt độ 92°C trong đúng
-              12 phút. Kết quả là cốt trà đậm đà, chát nhẹ tinh tế và đọng lại hậu vị ngọt thanh tự nhiên.
-            </p>
-
-            <ul class="grid sm:grid-cols-3 gap-7 sm:gap-6 max-w-xl">
-              <li>
-                <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5 tnum">92°C</p>
-                <p class="text-[.82rem] leading-relaxed text-ink-2">Nhiệt độ chiết xuất chuẩn xác để không làm cháy lá trà.</p>
-              </li>
-              <li>
-                <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5">0% Chemical</p>
-                <p class="text-[.82rem] leading-relaxed text-ink-2">Không chất bảo quản, không phụ gia độc hại.</p>
-              </li>
-              <li>
-                <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5">Fresh Brewed</p>
-                <p class="text-[.82rem] leading-relaxed text-ink-2">Ủ mới theo từng mẻ nhỏ, dùng tối đa trong 4 giờ.</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="order-1 lg:order-2 flex justify-center">
-          <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-shade">
-            <img src="${ctx}/images/story.jpg" alt="Ly trà trái cây Eight Tea pha theo đơn, bày cùng trái cây tươi"
-                 loading="lazy" decoding="async"
-                 class="w-full h-full object-cover">
-          </div>
-        </div>
-      </div>
-
-      <!-- ── KHỐI 02 — NHANH TẬN NHÀ ── -->
-      <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mt-24 lg:mt-32">
-
-        <%-- Ảnh bên trái ở khổ lớn (đảo so với khối 01), nhưng trên mobile vẫn
-             đứng trước chữ để nhịp đọc mỗi khối giống nhau. --%>
+        <%-- Ảnh bên trái ở khổ lớn, trên mobile vẫn đứng trước chữ. --%>
         <div class="order-1 flex justify-center">
           <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-dark grid place-items-center overflow-hidden">
             <img src="${ctx}/images/story-delivery.jpg" alt="Ly trà Eight Tea đang được giao nhanh"
@@ -754,12 +717,9 @@
         </div>
 
         <div class="relative order-2">
-          <span class="st-ghost absolute -top-10 -left-3 text-[7rem] lg:text-[10rem] font-bold pointer-events-none select-none z-0"
-                aria-hidden="true">02</span>
-
           <div class="relative z-10">
             <p class="font-mono text-[.64rem] font-semibold tracking-[.18em] uppercase text-accent bg-surface shadow-soft inline-block px-4 py-2 rounded-full mb-6">
-              Storytelling 02 · Mô hình D2C
+              Mô hình D2C
             </p>
 
             <h3 class="st-title text-dark uppercase leading-[1.02] tracking-[.03em] text-[clamp(1.9rem,4.2vw,3.1rem)] mb-5"
@@ -776,7 +736,7 @@
 
             <ul class="grid sm:grid-cols-3 gap-7 sm:gap-6 max-w-xl">
               <li>
-                <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5 tnum">20–30 Phút</p>
+                <p class="font-mono text-[.78rem] font-semibold tracking-[.1em] uppercase text-accent mb-1.5 tnum">10–15 Phút</p>
                 <p class="text-[.82rem] leading-relaxed text-ink-2">Tốc độ giao hàng siêu tốc trong bán kính 7–10km.</p>
               </li>
               <li>
@@ -878,7 +838,7 @@
               123 Nguyễn Đình Chiểu
             </p>
             <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
-              <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
+              <a href="tel:0938299752" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
               <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
               © 2026 Eight Tea
             </p>
