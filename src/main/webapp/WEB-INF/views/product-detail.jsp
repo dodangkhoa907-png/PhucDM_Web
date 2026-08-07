@@ -634,11 +634,23 @@
           </c:if>
           <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5" style="box-shadow:0 1px 0 rgba(var(--et-dark-rgb),.05);">
             <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Bao bì</dt>
-            <dd class="flex-1 text-[.88rem] text-ink m-0">Ly PP an toàn thực phẩm, ép màng kín trước khi giao</dd>
+            <dd class="flex-1 text-[.88rem] text-ink m-0">
+              <%-- Latte có lớp bọt/topping trên mặt (khoai môn, matcha...) — ép màng dễ làm xô lớp
+                   mặt khi xé màng, nên dùng giấy chống tràn + nắp + băng keo thay vì ép màng kín. --%>
+              <c:choose>
+                <c:when test="${product.categoryName == 'Latte'}">Ly PP an toàn thực phẩm, dùng giấy chống tràn, đậy nắp và dán băng keo chắc chắn trước khi giao (không ép màng)</c:when>
+                <c:otherwise>Ly PP an toàn thực phẩm, ép màng kín trước khi giao</c:otherwise>
+              </c:choose>
+            </dd>
           </div>
           <div class="flex flex-wrap gap-x-6 gap-y-1 py-3.5">
             <dt class="w-40 shrink-0 text-[.84rem] text-muted m-0">Pha chế</dt>
-            <dd class="flex-1 text-[.88rem] text-ink m-0">Pha sau khi nhận đơn · giao 20–30 phút tại TP. Bà Rịa</dd>
+            <dd class="flex-1 text-[.88rem] text-ink m-0">
+              <c:choose>
+                <c:when test="${product.categoryName == 'Latte'}">Pha sau khi nhận đơn · giao 10–15 phút tại TP. Bà Rịa</c:when>
+                <c:otherwise>Pha sau khi nhận đơn · giao 20–30 phút tại TP. Bà Rịa</c:otherwise>
+              </c:choose>
+            </dd>
           </div>
         </dl>
       </div>
@@ -682,7 +694,14 @@
             </svg>
           </span>
           <span>
-            <span class="block text-[.88rem] font-bold text-ink">Giao 20–30 phút</span>
+            <c:choose>
+              <c:when test="${product.categoryName == 'Latte'}">
+                <span class="block text-[.88rem] font-bold text-ink">Giao 10–15 phút</span>
+              </c:when>
+              <c:otherwise>
+                <span class="block text-[.88rem] font-bold text-ink">Giao 20–30 phút</span>
+              </c:otherwise>
+            </c:choose>
             <span class="block text-[.76rem] text-muted">Bán kính 7–10km tại TP. Bà Rịa</span>
           </span>
         </div>
@@ -693,8 +712,16 @@
             </svg>
           </span>
           <span>
-            <span class="block text-[.88rem] font-bold text-ink">Ép màng kín</span>
-            <span class="block text-[.76rem] text-muted">Không tràn khi di chuyển</span>
+            <c:choose>
+              <c:when test="${product.categoryName == 'Latte'}">
+                <span class="block text-[.88rem] font-bold text-ink">Nắp + băng keo</span>
+                <span class="block text-[.76rem] text-muted">Giấy chống tràn, không ép màng</span>
+              </c:when>
+              <c:otherwise>
+                <span class="block text-[.88rem] font-bold text-ink">Ép màng kín</span>
+                <span class="block text-[.76rem] text-muted">Không tràn khi di chuyển</span>
+              </c:otherwise>
+            </c:choose>
           </span>
         </div>
         <div class="bg-surface shadow-soft rounded-[20px] px-6 py-5 flex items-center gap-4">
