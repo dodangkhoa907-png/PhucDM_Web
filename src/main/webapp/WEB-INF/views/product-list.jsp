@@ -177,7 +177,7 @@
                 Đậm vị trà,<br><span class="text-[#A9C285]">nhanh tận nhà.</span>
               </h1>
               <p class="et-in text-[1rem] leading-[1.75] text-[rgba(255,255,255,.78)] max-w-md mb-8" style="animation-delay:.25s">
-                <c:out value="${fn:length(products)}"/> món pha theo đơn. Chọn size, chỉnh đường và đá
+                <c:out value="${drinkCount}"/> món pha theo đơn. Chọn size, chỉnh đường và đá
                 theo khẩu vị — quầy bắt đầu pha ngay khi bạn đặt.
               </p>
 
@@ -201,60 +201,9 @@
                 </text>
               </svg>
 
-              <%-- Ly trà sữa: nắp vòm, ống hút, lớp sữa – lớp trà – trân châu lắng đáy --%>
-              <svg class="et-in w-[170px] sm:w-[250px] lg:w-[320px] h-auto drop-shadow-2xl" style="animation-delay:.3s"
-                   viewBox="0 0 300 420" fill="none" xmlns="http://www.w3.org/2000/svg"
-                   role="img" aria-label="Ly trà sữa Eight Tea với lớp sữa, lớp trà và trân châu">
-                <defs>
-                  <linearGradient id="etTea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#D89334"/>
-                    <stop offset="55%" stop-color="#A9611B"/>
-                    <stop offset="100%" stop-color="#6E3D0F"/>
-                  </linearGradient>
-                  <linearGradient id="etCupGlass" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%"   stop-color="#ffffff" stop-opacity=".26"/>
-                    <stop offset="45%"  stop-color="#ffffff" stop-opacity=".04"/>
-                    <stop offset="100%" stop-color="#ffffff" stop-opacity=".16"/>
-                  </linearGradient>
-                  <clipPath id="etCupClip">
-                    <path d="M67,138 L100,364 Q102,376 113,376 L187,376 Q198,376 200,364 L233,138 Z"/>
-                  </clipPath>
-                </defs>
-
-                <!-- ống hút -->
-                <path d="M178,104 L214,20" stroke="#C25A16" stroke-width="17" stroke-linecap="round"/>
-                <path d="M178,104 L214,20" stroke="#E8A33D" stroke-width="9" stroke-linecap="round"/>
-
-                <!-- nội dung trong ly -->
-                <g clip-path="url(#etCupClip)">
-                  <rect x="50" y="130" width="200" height="86" fill="#F7E9D7"/>
-                  <path d="M50,208 C86,193 112,224 148,209 C184,194 214,222 250,207 L250,246 L50,246 Z" fill="#EFD5B0"/>
-                  <rect x="50" y="240" width="200" height="150" fill="url(#etTea)"/>
-                  <!-- bọt nổi lên trong lớp trà -->
-                  <circle class="et-bub" cx="118" cy="322" r="4"   fill="#FFE7C4" style="animation-delay:.4s"/>
-                  <circle class="et-bub" cx="152" cy="336" r="3"   fill="#FFE7C4" style="animation-delay:1.9s"/>
-                  <circle class="et-bub" cx="186" cy="318" r="4.5" fill="#FFE7C4" style="animation-delay:3.1s"/>
-                  <!-- trân châu lắng đáy -->
-                  <g fill="#241610">
-                    <circle cx="124" cy="352" r="11"/><circle cx="152" cy="345" r="11"/><circle cx="180" cy="352" r="11"/>
-                    <circle cx="115" cy="369" r="11"/><circle cx="144" cy="367" r="11"/><circle cx="173" cy="369" r="11"/>
-                    <circle cx="195" cy="360" r="10"/>
-                  </g>
-                  <g fill="#5A4030" opacity=".85">
-                    <circle cx="120" cy="348" r="3"/><circle cx="148" cy="341" r="3"/><circle cx="176" cy="348" r="3"/>
-                  </g>
-                  <!-- vệt sáng dọc thân ly -->
-                  <path d="M78,132 L106,376 L122,376 L94,132 Z" fill="#ffffff" opacity=".10"/>
-                </g>
-
-                <!-- thành ly (kính mờ) -->
-                <path d="M62,132 L96,368 Q98,382 112,382 L188,382 Q202,382 204,368 L238,132 Z" fill="url(#etCupGlass)"/>
-
-                <!-- nắp: vòm + vành -->
-                <path d="M58,116 Q150,70 242,116 Z" fill="#F0E4D6"/>
-                <rect x="50" y="112" width="200" height="26" rx="9" fill="#FBF3E9"/>
-                <rect x="50" y="112" width="200" height="9"  rx="4.5" fill="#ffffff" opacity=".7"/>
-              </svg>
+              <%-- Ảnh thật ly Trà Sữa Lài — nền trắng đã tách bỏ (trong suốt) để nổi trên nền tối của hero --%>
+              <img src="${ctx}/images/tra-lai-cup.png" alt="Ly Trà Sữa Lài Eight Tea"
+                   class="et-in w-[170px] sm:w-[250px] lg:w-[320px] h-auto drop-shadow-2xl" style="animation-delay:.3s">
             </div>
 
           </div>
@@ -265,7 +214,7 @@
       <div class="relative z-10 w-full" style="box-shadow:0 -1px 0 rgba(251,246,239,.12);">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-wrap items-center gap-x-8 gap-y-3">
           <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">
-            <strong class="text-white font-semibold"><c:out value="${fn:length(products)}"/></strong> món ·
+            <strong class="text-white font-semibold"><c:out value="${drinkCount}"/></strong> món ·
             <strong class="text-white font-semibold"><c:out value="${fn:length(categories)}"/></strong> nhóm
           </span>
           <span class="font-mono text-[.64rem] tracking-[.14em] uppercase text-[rgba(255,255,255,.72)]">Size M 700ml · L 900ml</span>
@@ -357,7 +306,7 @@
       <c:if test="${not empty products}">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
           <p class="text-sm text-ink-2 mb-10">
-            Hiển thị <strong class="text-ink font-bold"><c:out value="${fn:length(products)}"/></strong> sản phẩm
+            Hiển thị <strong class="text-ink font-bold"><c:out value="${drinkCount}"/></strong> sản phẩm
             <c:if test="${not empty keyword}"> cho "<c:out value="${keyword}"/>"</c:if>.
           </p>
 
@@ -474,39 +423,9 @@
     <section id="cau-chuyen" class="py-16 lg:py-24">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
-        <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 lg:mb-28">
-          <div class="st-photo-frame rounded-[28px] overflow-hidden shadow-card aspect-[4/3]">
-            <img src="${ctx}/images/trà lài.jpg" alt="Búp trà mộc vùng Cầu Đất" loading="lazy" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Nguồn trà</p>
-            <h2 class="text-ink font-extrabold tracking-[-.03em] leading-[1.08] text-[clamp(1.6rem,3.2vw,2.4rem)] mb-5">
-              Búp trà mộc,<br>hái tay ở Cầu Đất.
-            </h2>
-            <p class="text-[.98rem] leading-[1.7] text-ink-2 mb-4">
-              Toàn bộ trà nền của Eight Tea đến từ vùng Cầu Đất — nơi độ cao và biên độ nhiệt
-              ngày đêm cho lá trà hậu ngọt sâu, ít chát gắt.
-            </p>
-            <p class="text-[.98rem] leading-[1.7] text-ink-2 mb-6">
-              Trà được ủ lạnh cold-brew tám tiếng thay vì hãm nóng nhanh, giữ trọn hương
-              mà không kéo theo vị đắng.
-            </p>
-            <div class="grid grid-cols-2 gap-px bg-mist rounded-2xl overflow-hidden shadow-soft max-w-md">
-              <div class="bg-surface px-5 py-4">
-                <dt class="font-mono text-[.56rem] tracking-[.14em] uppercase text-muted mb-1.5">Cold-brew</dt>
-                <dd class="font-extrabold text-ink text-[1.1rem] tnum">8 giờ</dd>
-              </div>
-              <div class="bg-surface px-5 py-4">
-                <dt class="font-mono text-[.56rem] tracking-[.14em] uppercase text-muted mb-1.5">Trà mộc</dt>
-                <dd class="font-extrabold text-ink text-[1.1rem] tnum">100%</dd>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div class="lg:order-2 st-photo-frame rounded-[28px] overflow-hidden shadow-card bg-gradient-to-br from-canvas to-mist aspect-[4/3] grid place-items-center p-8">
-            <img src="${ctx}/images/category/poster (2).png" alt="Trái cây tươi và sữa thanh trùng" loading="lazy" class="w-full h-full object-contain rounded-[18px]">
+          <div class="lg:order-2 st-photo-frame rounded-[28px] overflow-hidden shadow-card aspect-[4/3]">
+            <img src="${ctx}/images/category/moi.jpg" alt="Trái cây tươi sơ chế tại quầy mỗi sáng" loading="lazy" class="w-full h-full object-cover">
           </div>
           <div class="lg:order-1">
             <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Nguyên liệu</p>
@@ -558,7 +477,7 @@
             </div>
 
             <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
-              © 2026 Eight Tea. 123 nguyễn đình chiểu
+              © 2026 Eight Tea. 123 Nguyễn Đình Chiểu
             </p>
           </div>
         </div>

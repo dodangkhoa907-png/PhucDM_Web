@@ -100,11 +100,18 @@ public class ProductController extends HttpServlet {
         // được giữ lại làm "activeCategoryId" để JS biết tab nào cần bật sẵn lúc tải trang.
         List<Product> products = productDao.findActiveForShop(null, keyword, sort);
 
+        // Số "món pha theo đơn" hiển thị ở hero: chỉ tính đồ uống thật, không tính Topping
+        // (trân châu, phô mai viên...) — topping không phải một món uống độc lập.
+        long drinkCount = products.stream()
+                .filter(p -> !"Topping".equalsIgnoreCase(p.getCategoryName()))
+                .count();
+
         // Query string dùng lại (không đổi danh mục) khi search/sort đổi — build sẵn ở server, JSP không tự ghép URL.
         String keepQuerySuffix = buildQuerySuffix(keyword, sort);
 
         req.setAttribute("categories", categories);
         req.setAttribute("products", products);
+        req.setAttribute("drinkCount", drinkCount);
         req.setAttribute("activeCategoryId", categoryId);
         req.setAttribute("keyword", keyword);
         req.setAttribute("activeSort", sort.getParam());
