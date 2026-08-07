@@ -14,10 +14,7 @@
     <meta name="description" content="<c:out value="${not empty product.description ? product.description : 'Eight Tea — pha theo đơn, giao 10–15 phút tại TP. Bà Rịa.'}"/>">
     <meta name="csrf-token" content="${sessionScope._csrf}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="${ctx}/css/icons.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/style.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/product.css?v=${initParam.assetVer}">
     <%-- Nạp SAU cùng: design system Eight Tea ghi đè da cũ (kèm @import font) --%>

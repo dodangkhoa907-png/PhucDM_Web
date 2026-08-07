@@ -7,7 +7,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "CacheHeaderFilter", urlPatterns = {"/css/*", "/images/*"}, asyncSupported = true)
+/**
+ * Gắn Cache-Control cho tài nguyên tĩnh.
+ *
+ * LƯU Ý (đã từng là lỗi thật): bên dưới có sẵn nhánh xử lý .woff2/.woff/.ttf và .js,
+ * nhưng urlPatterns lại chỉ liệt kê /css/* và /images/* — nên toàn bộ file trong
+ * /fonts/* và /js/* KHÔNG hề nhận header cache, trình duyệt phải hỏi lại máy chủ mỗi
+ * lần tải trang. Thêm đường dẫn mới vào đây thì nhớ bổ sung cả urlPatterns.
+ */
+@WebFilter(filterName = "CacheHeaderFilter",
+           urlPatterns = {"/css/*", "/images/*", "/fonts/*", "/js/*"},
+           asyncSupported = true)
 public class CacheHeaderFilter implements Filter {
 
     @Override

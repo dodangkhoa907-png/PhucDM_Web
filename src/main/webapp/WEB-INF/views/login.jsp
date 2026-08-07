@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Đăng nhập — Eight Tea</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${ctx}/css/icons.css?v=${initParam.assetVer}">
 <link rel="stylesheet" href="${ctx}/css/eighttea.css?v=${initParam.assetVer}">
 <style>
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;overflow-x:hidden}

@@ -15,10 +15,7 @@
         content="Thực đơn Eight Tea — trà sữa, trà trái cây pha theo đơn. Trà mộc 100% Cầu Đất, cold-brew 8 tiếng, giao trong 15 phút.">
     <meta name="csrf-token" content="${sessionScope._csrf}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="${ctx}/css/icons.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/style.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/product.css?v=${initParam.assetVer}">
     <%-- Nạp SAU cùng: design system Eight Tea ghi đè da cũ (kèm @import font) --%>

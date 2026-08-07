@@ -103,6 +103,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
+                <configuration>
+                    <!-- TaiNguyen/ là ẢNH GỐC chưa xử lý (~6.2MB) do quán gửi, chỉ dùng lúc
+                         thiết kế để cắt ra ảnh trong images/products. Trước đây nó nằm trong
+                         webapp nên bị đóng gói vào WAR VÀ phục vụ công khai trên Internet
+                         (ai cũng tải được ảnh gốc dung lượng lớn). Loại khỏi WAR: gói nhẹ đi
+                         ~6MB, deploy nhanh hơn, không đổi gì về giao diện vì không trang nào
+                         tham chiếu tới thư mục này. File vẫn nằm nguyên trong repo. -->
+                    <packagingExcludes>TaiNguyen/**</packagingExcludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

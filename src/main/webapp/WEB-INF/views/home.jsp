@@ -56,17 +56,7 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <%-- Bổ sung trục nghiêng (italic) + nét mảnh cho Plus Jakarta Sans: bản nạp trong
-         eighttea.css chỉ có 400–800 thẳng, thiếu thì trình duyệt phải "bẻ nghiêng" giả. --%>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,500;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
-    <%-- Baloo 2 — chữ tròn kiểu "bong bóng", dùng riêng cho tên món trong khu trình chiếu.
-         Chọn font này vì đúng chất "trà sữa TRÂN CHÂU" (bong bóng), có bộ dấu tiếng Việt đầy đủ
-         (Google Fonts subset "vietnamese" chuẩn), và tách biệt rõ với Plus Jakarta Sans của phần thân. --%>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="${ctx}/css/icons.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/style.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/product.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/eighttea.css?v=${initParam.assetVer}">
@@ -115,7 +105,10 @@
          eighttea.css chỉ là selector phần tử (0,0,1), thấp hơn class (0,1,0). */
       @font-face {
         font-family: 'UVN Mot Moi';
-        src: url('${ctx}/fonts/UVNMotMoi.ttf') format('truetype');
+        <%-- woff2 nhẹ hơn ttf ~60% (65KB -> 25KB) mà cùng một khuôn chữ. Giữ ttf làm
+             phương án dự phòng cho trình duyệt quá cũ không đọc được woff2. --%>
+        src: url('${ctx}/fonts/UVNMotMoi.woff2') format('woff2'),
+             url('${ctx}/fonts/UVNMotMoi.ttf') format('truetype');
         font-weight: 400;
         font-style: normal;
         font-display: swap;
