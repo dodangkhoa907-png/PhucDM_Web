@@ -411,7 +411,7 @@
                          hoãn tải sẽ làm chậm chính chỉ số LCP. --%>
                     <img src="${ctx}${p.imageUrl}" alt="${fn:escapeXml(p.name)}"
                          width="600" height="770" decoding="async" fetchpriority="high"
-                         class="w-[310px] sm:w-[475px] lg:w-[670px] max-w-none h-auto object-contain rotate-[13deg] -translate-x-5 drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
+                         class="w-[310px] sm:w-[475px] lg:w-[670px] max-w-none h-auto object-contain rotate-[13deg] -translate-x-[70px] drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]">
                   </c:when>
                   <c:otherwise>
                   <svg class="w-[220px] sm:w-[340px] lg:w-[480px] h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.45)]"
@@ -774,7 +774,7 @@
              đứng trước chữ để nhịp đọc mỗi khối giống nhau. --%>
         <div class="order-1 flex justify-center">
           <div class="st-arch shadow-card w-full max-w-[380px] aspect-[4/5] bg-dark grid place-items-center overflow-hidden">
-            <img src="${ctx}/TaiNguyen/giaohang.jpg" alt="Ly trà Eight Tea đang được giao nhanh"
+            <img src="${ctx}/images/story-delivery.jpg" alt="Ly trà Eight Tea đang được giao nhanh"
                  loading="lazy" decoding="async" class="w-full h-full object-cover">
           </div>
         </div>
