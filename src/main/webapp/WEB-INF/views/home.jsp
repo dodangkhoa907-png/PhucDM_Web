@@ -904,10 +904,10 @@
                 <svg class="w-3 h-3 shrink-0 text-[#6E8649]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
-                139 Võ Văn Kiệt, P. Tam Long, TP. Bà Rịa
+                123 nguyễn đình chiểu
               </p>
               <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
-                <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0364 523 553</a>
+                <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
                 <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
                 © 2026 Eight Tea
               </p>

@@ -107,24 +107,26 @@ public class HomeController extends HttpServlet {
     }
 
     /**
-     * Chọn {@value #HIGHLIGHT_COUNT} món cho Section 2, LOẠI TRỪ các món đã lên khu trình
-     * chiếu để trang không khoe trùng một ly hai lần. Ưu tiên mỗi nhóm trong
-     * {@link #HIGHLIGHT_CATEGORIES} một món, thiếu thì lấp bằng món còn lại bất kỳ.
+     * Chọn {@value #HIGHLIGHT_COUNT} món cho Section 2. {@link #HIGHLIGHT_NAMES} là lựa chọn
+     * cố định của quán nên được ưu tiên tuyệt đối — kể cả khi trùng với món đang ở khu trình
+     * chiếu đầu trang. Chỉ phần lấp chỗ trống theo {@link #HIGHLIGHT_CATEGORIES}/bất kỳ mới
+     * LOẠI TRỪ các món đã lên khu trình chiếu, để không tình cờ khoe trùng một ly hai lần.
      */
     private List<Product> pickHighlights(List<Product> active, List<Product> exclude) {
+        List<Product> all = new ArrayList<>();
         List<Product> pool = new ArrayList<>();
         for (Product p : active) {
             if (p.getVariants() != null && !p.getVariants().isEmpty()
-                    && !"Topping".equalsIgnoreCase(p.getCategoryName())
-                    && !exclude.contains(p)) {
-                pool.add(p);
+                    && !"Topping".equalsIgnoreCase(p.getCategoryName())) {
+                all.add(p);
+                if (!exclude.contains(p)) pool.add(p);
             }
         }
 
         List<Product> picked = new ArrayList<>();
         for (String name : HIGHLIGHT_NAMES) {
             if (picked.size() >= HIGHLIGHT_COUNT) break;
-            for (Product p : pool) {
+            for (Product p : all) {
                 if (name.equalsIgnoreCase(p.getName()) && !picked.contains(p)) {
                     picked.add(p);
                     break;
