@@ -71,37 +71,11 @@
     <link rel="stylesheet" href="${ctx}/css/product.css?v=${initParam.assetVer}">
     <link rel="stylesheet" href="${ctx}/css/eighttea.css?v=${initParam.assetVer}">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    // preflight:false — BẮT BUỘC. Trang này dùng chung style.css/product.css/eighttea.css
-    // với các trang còn lại; bật preflight sẽ reset sạch các style đó và vỡ navbar/footer.
-    //
-    // MÀU: ánh xạ 1-1 sang token --et-* của eighttea.css nhưng ghi bằng hex, KHÔNG dùng
-    // var(--et-*). Lý do đã kiểm chứng: markup trang này dùng alpha modifier (bg-accent/15,
-    // text-accent/…); Tailwind phải tự tổng hợp rgba từ giá trị màu, việc nó không làm được
-    // với một chuỗi var(). Dạng 'rgb(var(--x) / <alpha-value>)' cũng không dùng được vì
-    // --et-primary-rgb là danh sách ngăn bằng dấu phẩy ("71, 112, 35") — ghép với cú pháp
-    // gạch chéo sẽ sinh ra CSS không hợp lệ. Hex chỉ xuất hiện tại đây, không lặp trong markup.
-    tailwind.config = {
-      corePlugins: { preflight: false },
-      theme: { extend: {
-        colors: {
-          canvas:'#F4F6EF', surface:'#FFFFFF', shade:'#E9EEE1',
-          accent:'#477023', 'accent-deep':'#2D531A',
-          dark:'#071E07', 'dark-2':'#0D330E', ink:'#071E07', 'ink-2':'#66705E', muted:'#8A9382'
-        },
-        fontFamily: {
-          sans:['Plus Jakarta Sans','system-ui','sans-serif'],
-          mono:['IBM Plex Mono','ui-monospace','monospace']
-        },
-        boxShadow: {
-          soft:'0 1px 2px rgba(7,30,7,.04), 0 4px 14px rgba(7,30,7,.04)',
-          card:'0 2px 4px rgba(7,30,7,.03), 0 14px 34px -12px rgba(7,30,7,.14)',
-          cta:'0 12px 26px -10px rgba(71,112,35,.55)'
-        }
-      }}
-    }
-    </script>
+    <%-- Trước đây nhúng Tailwind Play CDN (script ngoài 407KB, JIT-compile ngay trên trình
+         duyệt mỗi lần tải trang — chặn render, phụ thuộc mạng tới CDN ngoài). Giờ dùng bản
+         build sẵn (npm run build:css, xem tailwind.config.js ở gốc repo) — cùng nội dung
+         theme/preflight:false, chỉ khác là CSS tĩnh, không tốn JS/CPU phía client. --%>
+    <link rel="stylesheet" href="${ctx}/css/tailwind-built.css?v=${initParam.assetVer}">
 
     <style>
       html { scroll-behavior: smooth; }

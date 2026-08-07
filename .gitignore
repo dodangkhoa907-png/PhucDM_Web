@@ -4,6 +4,11 @@ target/
 !**/src/test/**/target/
 .kotlin
 
+### Tailwind CLI build tool — chỉ chạy lúc dev (npm run build:css), Maven đóng WAR
+### không cần Node. src/main/webapp/css/tailwind-built.css LÀ file được commit (asset
+### tĩnh thật sự được serve), chỉ node_modules/ là cache cài đặt nên bỏ qua.
+node_modules/
+
 ### Secrets — NEVER commit (chứa mật khẩu DB, SMTP, PayOS) ###
 **/db.properties
 src/main/resources/db.properties

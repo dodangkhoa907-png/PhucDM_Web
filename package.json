@@ -1,0 +1,12 @@
+{
+  "name": "eighttea-web-assets",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build-time Tailwind CSS compiler for Eight Tea. Output is a committed static file (src/main/webapp/css/tailwind-built.css) served like any other CSS asset — no Node.js required at deploy/runtime, only when a page's Tailwind classes change.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./tailwind-input.css -o ./src/main/webapp/css/tailwind-built.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
