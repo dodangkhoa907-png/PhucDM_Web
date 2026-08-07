@@ -194,6 +194,8 @@ public class ProductController extends HttpServlet {
         List<Product> anyCategory = productDao.findActiveForShop(null, null, ProductSort.DEFAULT);
         for (Product p : anyCategory) {
             if (p.getProductId() == current.getProductId()) continue;
+            // Topping (Milk Foam, trân châu...) không phải món uống độc lập — không gợi ý ở đây.
+            if (TOPPING_CATEGORY.equalsIgnoreCase(p.getCategoryName())) continue;
             if (result.stream().anyMatch(r -> r.getProductId() == p.getProductId())) continue;
             result.add(p);
             if (result.size() >= OTHER_PRODUCTS_LIMIT) break;

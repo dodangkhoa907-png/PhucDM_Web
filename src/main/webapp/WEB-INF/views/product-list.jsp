@@ -47,6 +47,10 @@
       }
       /* Ràng buộc borderless — giới hạn trong khu nội dung Tailwind để không đụng navbar/footer chung */
       .lp *, .lp *::before, .lp *::after { border: 0 !important; }
+      /* Ảnh storytelling "Búp trà mộc": viền lộ khung nền (--et-canvas) quanh ảnh full-bleed,
+         như ảnh lồng khung — phá lệ borderless có chủ đích cho riêng khối này, cần !important
+         để thắng luật ".lp * { border:0 !important }" phía trên. */
+      .lp .st-photo-frame { border: 10px solid var(--et-canvas) !important; }
       .lp .tnum { font-variant-numeric: tabular-nums; }
       .lp .no-bar { scrollbar-width: none; }
       .lp .no-bar::-webkit-scrollbar { display: none; }
@@ -193,7 +197,7 @@
                         d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/>
                 </defs>
                 <text fill="#A9C285" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="500" letter-spacing="1.6">
-                  <textPath href="#etArcPath" startOffset="0">TRÀ MỘC CẦU ĐẤT • Ủ LẠNH 8 TIẾNG • PHA THEO ĐƠN • </textPath>
+                  <textPath href="#etArcPath" startOffset="0">TRÀ LÀI • Ủ LẠNH 8 TIẾNG • PHA THEO ĐƠN • </textPath>
                 </text>
               </svg>
 
@@ -471,8 +475,8 @@
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
         <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 lg:mb-28">
-          <div class="rounded-[28px] overflow-hidden shadow-card bg-gradient-to-br from-canvas to-mist aspect-[4/3] grid place-items-center p-10">
-            <img src="${ctx}/images/story.jpg" alt="Búp trà mộc vùng Cầu Đất" loading="lazy" class="w-4/5 h-4/5 object-contain">
+          <div class="st-photo-frame rounded-[28px] overflow-hidden shadow-card aspect-[4/3]">
+            <img src="${ctx}/images/trà lài.jpg" alt="Búp trà mộc vùng Cầu Đất" loading="lazy" class="w-full h-full object-cover">
           </div>
           <div>
             <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Nguồn trà</p>
@@ -501,8 +505,8 @@
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div class="lg:order-2 rounded-[28px] overflow-hidden shadow-card bg-gradient-to-br from-canvas to-mist aspect-[4/3] grid place-items-center p-10">
-            <img src="${ctx}/images/thom.png" alt="Trái cây tươi và sữa thanh trùng" loading="lazy" class="w-4/5 h-4/5 object-contain">
+          <div class="lg:order-2 st-photo-frame rounded-[28px] overflow-hidden shadow-card bg-gradient-to-br from-canvas to-mist aspect-[4/3] grid place-items-center p-8">
+            <img src="${ctx}/images/category/poster (2).png" alt="Trái cây tươi và sữa thanh trùng" loading="lazy" class="w-full h-full object-contain rounded-[18px]">
           </div>
           <div class="lg:order-1">
             <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Nguyên liệu</p>
@@ -554,7 +558,7 @@
             </div>
 
             <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
-              © 2026 Eight Tea. Trà mộc Cầu Đất.
+              © 2026 Eight Tea. 123 nguyễn đình chiểu
             </p>
           </div>
         </div>
