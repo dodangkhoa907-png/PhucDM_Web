@@ -872,52 +872,47 @@
     </div>
   </section>
 
-  <!-- ══════════════ FOOTER SECTION — dải tối khép trang ══════════════ -->
-  <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-8 lg:pt-10">
+  <!-- ═══════════════ FOOTER — bỏ khung thẻ tối bo góc nổi, giữ nội dung footer ═══════════════ -->
+  <footer class="bg-dark text-[rgba(255,255,255,.72)] pb-10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
 
-      <!-- ═══════════════ FOOTER ═══════════════ -->
-      <footer class="pb-10">
-        <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
+            <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
+            <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
+          </a>
 
-            <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
-              <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
-              <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
-            </a>
+          <div class="flex items-center gap-2.5">
+            <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
+               class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
+            <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
+               class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
+            <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
+               class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
+          </div>
 
-            <div class="flex items-center gap-2.5">
-              <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
-              <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
-              <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
-                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
-            </div>
-
-            <%-- Địa chỉ + hotline: tín hiệu "quán local có thật" cho mô hình D2C.
-                 Để chìm (cỡ nhỏ, màu mờ) nên không tranh chấp với logo bên trái. --%>
-            <div class="text-center sm:text-right">
-              <p class="flex items-center justify-center sm:justify-end gap-1.5 text-[.72rem] leading-relaxed text-[rgba(255,255,255,.74)] m-0 mb-1.5">
-                <%-- Trên nền tối phải dùng sắc Reseda sáng hơn; --et-primary đặt trên
-                     --et-dark gần như không đọc được. --%>
-                <svg class="w-3 h-3 shrink-0 text-[#6E8649]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-                123 nguyễn đình chiểu
-              </p>
-              <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
-                <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
-                <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
-                © 2026 Eight Tea
-              </p>
-            </div>
+          <%-- Địa chỉ + hotline: tín hiệu "quán local có thật" cho mô hình D2C.
+               Để chìm (cỡ nhỏ, màu mờ) nên không tranh chấp với logo bên trái. --%>
+          <div class="text-center sm:text-right">
+            <p class="flex items-center justify-center sm:justify-end gap-1.5 text-[.72rem] leading-relaxed text-[rgba(255,255,255,.74)] m-0 mb-1.5">
+              <%-- Trên nền tối phải dùng sắc Reseda sáng hơn; --et-primary đặt trên
+                   --et-dark gần như không đọc được. --%>
+              <svg class="w-3 h-3 shrink-0 text-[#6E8649]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              123 nguyễn đình chiểu
+            </p>
+            <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] m-0">
+              <a href="tel:0364523553" class="text-[rgba(255,255,255,.74)] hover:text-white transition no-underline">0938 299 752</a>
+              <span class="mx-1.5 text-[rgba(255,255,255,.28)]">·</span>
+              © 2026 Eight Tea
+            </p>
           </div>
         </div>
-      </footer>
-
+      </div>
     </div>
-  </section>
+  </footer>
 
 </div><!-- /.hp-scope -->
 

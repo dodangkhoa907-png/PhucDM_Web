@@ -558,122 +558,33 @@
       </div>
     </section>
 
-    <!-- ═══════════════ TECH SPECS — Dark Mode ═══════════════ -->
-    <section id="thong-so" class="bg-dark text-[rgba(255,255,255,.72)] rounded-t-[32px] lg:rounded-t-[44px] mx-2 sm:mx-3 pt-16 lg:pt-24">
+    <!-- ═══════════════ FOOTER — bỏ khung "Bảng thông số" dark-card + CTA, giữ nội dung footer ═══════════════ -->
+    <footer class="bg-dark text-[rgba(255,255,255,.72)] pb-10">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
 
-        <div class="max-w-2xl mb-12 lg:mb-16">
-          <p class="font-mono text-[.62rem] font-medium tracking-[.18em] uppercase text-accent mb-4">Bảng thông số</p>
-          <h2 class="font-extrabold tracking-[-.032em] leading-[1.06] text-[clamp(1.8rem,3.8vw,2.9rem)] text-white mb-4">
-            Một ly trà,<br>đọc như một chiếc máy.
-          </h2>
-          <p class="text-[.98rem] leading-[1.65] text-[rgba(255,255,255,.74)]">
-            Đồ uống ngon là thứ đo đếm được: nhiệt độ chiết xuất, vòng đời mẻ trà, dung tích ly.
-            Tất cả nằm ở đây — không chữ nhỏ.
-          </p>
-        </div>
+            <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
+              <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
+              <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
+            </a>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-          <div class="bg-dark-2 rounded-3xl p-6">
-            <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5">
-              <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3a2 2 0 0 0-2 2v9.3a4 4 0 1 0 4 0V5a2 2 0 0 0-2-2z"/><line x1="12" y1="9" x2="12" y2="14.5"/>
-              </svg>
-            </span>
-            <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Nhiệt độ chiết xuất</h3>
-            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">92–95°C</p>
-            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ngưỡng giữ hương mà không kéo vị đắng của tannin.</p>
-          </div>
+            <div class="flex items-center gap-2.5">
+              <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
+              <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
+              <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
+                 class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
+            </div>
 
-          <div class="bg-dark-2 rounded-3xl p-6">
-            <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5">
-              <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="2" x2="12" y2="5"/>
-                <circle cx="12" cy="14" r="8"/><polyline points="12 10 12 14 15 16"/>
-              </svg>
-            </span>
-            <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Thời gian lưu hương</h3>
-            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">4 giờ</p>
-            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Hết 4 giờ là bỏ mẻ, ủ mẻ mới — không để qua buổi.</p>
-          </div>
-
-          <div class="bg-dark-2 rounded-3xl p-6">
-            <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5">
-              <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2.5c2.4 3 4.2 5.4 4.2 9a4.2 4.2 0 0 1-8.4 0c0-1.2.4-2.2 1.1-3.1-.2 2 .8 3.1 2 3.1s2-1 2-2.2c0-2.1-1.1-3.3-.9-6.8z"/>
-              </svg>
-            </span>
-            <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Hàm lượng calo</h3>
-            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] tnum mb-2">180–240 kcal</p>
-            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Theo size và mức đường bạn chọn, chưa tính topping.</p>
-          </div>
-
-          <div class="bg-dark-2 rounded-3xl p-6">
-            <span class="w-10 h-10 rounded-xl bg-accent/15 grid place-items-center text-accent mb-5">
-              <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 7.5l-9-4.5-9 4.5 9 4.5 9-4.5z"/><path d="M3 7.5v9l9 4.5 9-4.5v-9"/><polyline points="8.8 11.8 10.6 13.6 15 9.2"/>
-              </svg>
-            </span>
-            <h3 class="font-mono text-[.6rem] font-medium tracking-[.18em] uppercase text-accent mb-3">Quy chuẩn bao bì</h3>
-            <p class="font-extrabold text-white text-[1.7rem] tracking-[-.02em] mb-2">Ép màng kín</p>
-            <p class="text-[.85rem] leading-relaxed text-[rgba(255,255,255,.74)]">Ly PP an toàn thực phẩm, dán tem niêm phong trước khi giao.</p>
-          </div>
-        </div>
-
-        <div class="relative overflow-hidden bg-dark-2 rounded-[28px] mt-5 lg:mt-6 px-6 sm:px-10 py-12 lg:py-16 text-center">
-          <div class="absolute inset-0 pointer-events-none"
-               style="background:radial-gradient(60% 100% at 50% 0%, rgba(var(--et-primary-rgb),.22) 0%, transparent 70%);"></div>
-          <div class="relative">
-            <h2 class="font-extrabold text-white tracking-[-.032em] leading-[1.08] text-[clamp(1.6rem,3.6vw,2.6rem)] max-w-[20ch] mx-auto mb-4">
-              Ly trà kế tiếp cách bạn 15 phút
-            </h2>
-            <p class="text-[.98rem] leading-relaxed text-[rgba(255,255,255,.74)] max-w-[46ch] mx-auto mb-8">
-              Chọn size, chỉnh đường và đá theo khẩu vị — phần còn lại để quầy lo.
+            <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
+              © 2026 Eight Tea. Trà mộc Cầu Đất.
             </p>
-            <div class="flex flex-wrap gap-3 justify-center">
-              <a href="#san-pham-grid" class="inline-flex items-center gap-2.5 bg-accent text-white font-semibold text-[.95rem]
-                        px-7 py-4 rounded-full shadow-cta hover:bg-accent-deep hover:-translate-y-0.5 transition no-underline">
-                <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6.5 8h11l1 12.2a2 2 0 0 1-2 2.1H7.5a2 2 0 0 1-2-2.1L6.5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>
-                </svg> Đặt thức uống
-              </a>
-              <a href="${ctx}${empty sessionScope.user ? '/login' : '/account/orders'}"
-                 class="inline-flex items-center gap-2.5 bg-white/10 text-[#EBE3DB] font-semibold text-[.95rem]
-                        px-7 py-4 rounded-full hover:bg-white/20 hover:-translate-y-0.5 transition no-underline">
-                ${empty sessionScope.user ? 'Đăng nhập' : 'Đơn của tôi'}
-              </a>
-            </div>
           </div>
         </div>
-
-        <!-- ═══════════════ FOOTER ═══════════════ -->
-        <footer class="mt-14 lg:mt-20 pb-10">
-          <div class="pt-10" style="box-shadow:0 -1px 0 rgba(255,255,255,.12);">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-
-              <a href="${ctx}/" class="flex items-center gap-2.5 no-underline">
-                <span class="w-9 h-9 rounded-xl bg-accent grid place-items-center text-white font-extrabold text-sm">8</span>
-                <span class="font-extrabold text-white tracking-tight">Eight Tea</span>
-              </a>
-
-              <div class="flex items-center gap-2.5">
-                <a href="https://www.facebook.com/share/1BZV5Ap9xB/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-facebook-f text-[15px]"></i></a>
-                <a href="https://www.instagram.com/eight.tea?igsh=azhkdGxhNDk1OGk0" target="_blank" rel="noopener" aria-label="Instagram"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-instagram text-[16px]"></i></a>
-                <a href="https://www.tiktok.com/@eight.tea?_r=1&amp;_t=ZS-98OfvighJ13" target="_blank" rel="noopener" aria-label="TikTok"
-                   class="w-10 h-10 rounded-full bg-dark-2 grid place-items-center text-[rgba(255,255,255,.78)] hover:bg-accent hover:text-white transition"><i class="fa-brands fa-tiktok text-[15px]"></i></a>
-              </div>
-
-              <p class="font-mono text-[.62rem] tracking-[.08em] text-[rgba(255,255,255,.55)] text-center sm:text-right m-0">
-                © 2026 Eight Tea. Trà mộc Cầu Đất.
-              </p>
-            </div>
-          </div>
-        </footer>
-
       </div>
-    </section>
+    </footer>
 
 </div><!-- /.lp -->
 
